@@ -7,7 +7,12 @@ export function DragonWrapper() {
         OpenSeadragon({
             id: "a1",
             prefixUrl: "./openseadragon/images/",
-            tileSources: "PrivateHistory/Families/Layous/Layous.dzi"
+            tileSources: "PrivateHistory/Families/Layous/Layous.dzi",
+            ajaxWithCredentials: true,
+            loadTilesWithAjax: true,
+            ajaxHeaders: {
+                Authorization: `Bearer ASD`
+            }
         });
     }, []);
 

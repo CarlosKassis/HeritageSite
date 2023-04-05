@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Http;
+using Miilya2023.Services.Abstract;
 using System;
 using System.Threading.Tasks;
 
@@ -8,17 +9,35 @@ namespace Miilya2023.Middlewares
 
     public class PrivateHistoryMiddleware
     {
+        private const string _privateHistoryPathStartSegment = "/PrivateHistory/";
+
         private readonly RequestDelegate _next;
 
-        public PrivateHistoryMiddleware(RequestDelegate next)
+        private readonly IUserAuthenticationService _userAuthenticationService;
+
+        public PrivateHistoryMiddleware(RequestDelegate next, IUserAuthenticationService userAuthenticationService)
         {
             _next = next;
+            _userAuthenticationService = userAuthenticationService;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            Console.WriteLine(context.Request.Path.Value);
-            // Call the next delegate/middleware in the pipeline.
+            if (!context.Request.Path.Value.StartsWith(_privateHistoryPathStartSegment, StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+
+            string jwtHeader = context.Request.Headers["Authorization"];
+
+            bool userLoggedIn = await _userAuthenticationService.IsUserLoggedIn(jwtHeader);
+            if (!userLoggedIn)
+            {
+                context.Response.StatusCode = 404;
+                return;
+            }
+
             await _next(context);
         }
     }

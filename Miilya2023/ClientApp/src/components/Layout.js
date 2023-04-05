@@ -1,9 +1,8 @@
 import React, { Component, useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './NavMenu';
+import NavMenu from './NavMenu';
 
 export function Layout(props)  {
-    const displayName = Layout.name;
 
     useEffect(() => {
         console.log(props.children);
@@ -20,10 +19,10 @@ export function Layout(props)  {
 
     return (
         <div>
-        <NavMenu />
+            <NavMenu onClickLanguage={() => props.onClickLanguage()} language={props.language} />
             <Container>
-            {props.children}
-        </Container>
+                {props.children}
+            </Container>
         </div>
     );
 }

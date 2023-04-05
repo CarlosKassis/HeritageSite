@@ -1,22 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
 
 import './custom.css'
 
-export default class App extends Component {
-  static displayName = App.name;
+export default function App() {
 
-  render () {
+    const [language, setLanguage] = useState('en');
+
+    useEffect(() => {
+        setLanguage('es');
+    }, []);
+
+    function onClickLanguage() {
+        setLanguage(language == "en" ? "es" : "en");
+    }
+
     return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} />
-      </Layout>
+        <Layout onClickLanguage={onClickLanguage} language={language}>
+            <Route exact path='/' render={() => <Home language={language} />} />
+            <Route exact path='/counter' component={Counter} />
+        </Layout>
     );
-  }
 }
