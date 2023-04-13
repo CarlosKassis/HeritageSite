@@ -5,9 +5,9 @@ export function DragonWrapper() {
 
     useEffect(() => {
         OpenSeadragon({
-            id: "a1",
+            id: "dragon1",
             prefixUrl: "./openseadragon/images/",
-            tileSources: "PrivateHistory/Families/Layous/Layous.dzi",
+            tileSources: "PrivateHistory/Media/Families/Layous/Layous.dzi",
             ajaxWithCredentials: true,
             loadTilesWithAjax: true,
             ajaxHeaders: {
@@ -17,7 +17,7 @@ export function DragonWrapper() {
     }, []);
 
     return (
-        <div id="a1" style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>
+        <div id="dragon1" style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>
         </div>
     );
 }

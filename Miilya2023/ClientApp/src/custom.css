@@ -16,3 +16,26 @@ code {
 .container {
     min-width: 100%
 }
+
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+
+.middle-east {
+    font-family: 'Droid Arabic Kufi', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+.hoverable {
+    background-color: #2196f3;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+}
+
+.hoverable:hover {
+    background-color: #0d47a1;
+}

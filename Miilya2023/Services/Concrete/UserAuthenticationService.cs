@@ -13,7 +13,8 @@ namespace Miilya2023.Services.Abstract
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(jwt.StartsWith(_jwtStart) && jwt.Substring(_jwtStart.Length) == "ASD");
+            bool isAuthenticatedJwt = jwt.StartsWith(_jwtStart) && jwt.Substring(_jwtStart.Length) == "ASD";
+            return Task.FromResult(isAuthenticatedJwt);
         }
 
         public Task TryLogin(string auth)

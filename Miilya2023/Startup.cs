@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Miilya2023.Constants;
 using Miilya2023.Middlewares;
 using Miilya2023.Services.Abstract;
+using Miilya2023.Services.Concrete;
+using MongoDB.Driver;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Miilya2023
 {
@@ -24,11 +25,11 @@ namespace Miilya2023
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            PrivateHistoryConstants.RootPath = configuration.GetValue<string>("PrivateHistoryRoot");
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
@@ -39,6 +40,8 @@ namespace Miilya2023
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSingleton<IImageService, ImageService>();
+            services.AddSingleton<IFamilyService, FamilyService>();
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
         }
 
@@ -62,11 +65,12 @@ namespace Miilya2023
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "PrivateHistory")),
-                RequestPath = "/PrivateHistory",
+                FileProvider = new PhysicalFileProvider(Path.Combine(PrivateHistoryConstants.RootPath, "Media")),
+                RequestPath = PrivateHistoryConstants.MediaUrlPrefix,
                 ServeUnknownFileTypes = true
             });
 
+            /*
             var key = GenerateRsaCryptoServiceProviderKey();
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
 
@@ -89,7 +93,7 @@ namespace Miilya2023
 
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
-            Console.WriteLine("JWT token: " + token);
+            Console.WriteLine("JWT token: " + token);*/
 
             app.UseSpaStaticFiles();
 

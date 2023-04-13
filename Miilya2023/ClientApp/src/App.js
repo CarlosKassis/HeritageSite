@@ -5,22 +5,24 @@ import { Home } from './components/Home';
 import { Counter } from './components/Counter';
 
 import './custom.css'
+import { FamilyPage } from './components/FamilyPage';
 
 export default function App() {
 
-    const [language, setLanguage] = useState('en');
+    const [language, setLanguage] = useState('ar');
 
     useEffect(() => {
-        setLanguage('es');
+        setLanguage('ar');
     }, []);
 
     function onClickLanguage() {
-        setLanguage(language == "en" ? "es" : "en");
+        setLanguage(language == "ar" ? "he" : "ar");
     }
 
     return (
         <Layout onClickLanguage={onClickLanguage} language={language}>
             <Route exact path='/' render={() => <Home language={language} />} />
+            <Route exact path='/Family' render={() => <FamilyPage language={language} />} />
             <Route exact path='/counter' component={Counter} />
         </Layout>
     );
