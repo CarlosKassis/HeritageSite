@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import LocalizedStrings from 'localized-strings'
 import { HistoryPostPage } from './HistoryPostPage';
+import GoogleAuth from './GoogleAuth';
 
 export function Home(props) {
 
@@ -21,6 +22,7 @@ export function Home(props) {
     return (
         <div style={{ height: '90vh', width: '100%' }} className="middle-east">
             <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
+            <GoogleAuth />
             <HistoryPostPage />
         </div>
     );
