@@ -40,7 +40,7 @@ namespace Miilya2023
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddSingleton<IImageService, ImageService>();
+            services.AddSingleton<IHistoryPostService, HistoryPostService>();
             services.AddSingleton<IFamilyService, FamilyService>();
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
         }

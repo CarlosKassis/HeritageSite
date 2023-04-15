@@ -3,10 +3,10 @@
 namespace Miilya2023.Services.Concrete
 {
     using Miilya2023.Services.Abstract;
-    using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using static Miilya2023.Services.Utils.Documents;
 
     public class FamilyService : IFamilyService
     {
@@ -26,14 +26,5 @@ namespace Miilya2023.Services.Concrete
 
             return results;
         }
-    }
-
-
-    [BsonIgnoreExtraElements]
-    public class FamilyDocument
-    {
-        public string Name { get; set; }
-
-        public string Identifier { get; set; }
     }
 }

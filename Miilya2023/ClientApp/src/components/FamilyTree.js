@@ -1,8 +1,11 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import { DragonWrapper } from './DragonWrapper';
 import LocalizedStrings from 'localized-strings'
+import { useParams } from "react-router-dom"
+ 
+export function FamilyTree(props) {
 
-export function FamilyPage(props) {
+    const { id } = useParams();
 
     const strings = new LocalizedStrings({
         ar: {
@@ -20,7 +23,7 @@ export function FamilyPage(props) {
 
     return (
         <div style={{ height: '90vh', width: '100%' }}>
-            <DragonWrapper />
+            {id && <DragonWrapper familyId={id.split('=')[1]} />}
         </div>
     );
 }

@@ -1,13 +1,9 @@
 ﻿
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.HttpSys;
-using Miilya2023.Constants;
-using Miilya2023.Services.Abstract;
-using System;
-using System.Threading.Tasks;
-
 namespace Miilya2023.Middlewares
 {
+    using Microsoft.AspNetCore.Http;
+    using Miilya2023.Services.Abstract;
+    using System.Threading.Tasks;
 
     public class PrivateHistoryMiddleware
     {

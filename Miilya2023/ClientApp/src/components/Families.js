@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { DragonWrapper } from './DragonWrapper';
 import LocalizedStrings from 'localized-strings'
+import { Link } from 'react-router-dom'
 
 export function Families(props) {
 
@@ -33,18 +33,19 @@ export function Families(props) {
         <div style={{ alignContent: 'center', display: 'block' }}>
             {
                 families.map((family) => (
-                    <div key={family.identifier}
-                        onClick={() => console.log(family.name)}
-                        className={ 'hoverable' }
-                        style={{
-                            margin: '20px auto 20px auto',
-                            padding: '20px',
-                            borderRadius: '10px',
-                            maxWidth: '300px',
-                            boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'
-                        }}>
-                        <h3 style={{ textAlign: 'center' }}>{family.name}</h3>
-                    </div>
+                    <Link key={family.identifier} to={`./FamilyTree&id=${family.identifier}`}>
+                        <div
+                            className={'hoverable'}
+                            style={{
+                                margin: '20px auto 20px auto',
+                                padding: '20px',
+                                borderRadius: '10px',
+                                maxWidth: '300px',
+                                boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'
+                            }}>
+                            <h3 style={{ textAlign: 'center' }}>{family.name}</h3>
+                        </div>
+                    </Link>
                 ))
             }
         </div>

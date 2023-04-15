@@ -1,7 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { DragonWrapper } from './DragonWrapper';
 import LocalizedStrings from 'localized-strings'
-import { Families } from './Families';
+import { HistoryPostPage } from './HistoryPostPage';
 
 export function Home(props) {
 
@@ -14,17 +13,6 @@ export function Home(props) {
         },
     });
 
-    useEffect(() => {
-        console.log('testt')
-        fetch('PrivateHistory/Image')
-            .then(response => response.json())
-            .then(data => {
-                //console.log(data);
-                // callback function to handle the data
-                //handleData(data);
-            });
-    }, []);
-
     function getString(language, str) {
         strings.setLanguage(language);
         return strings[str];
@@ -32,8 +20,8 @@ export function Home(props) {
 
     return (
         <div style={{ height: '90vh', width: '100%' }} className="middle-east">
-            <h1>{getString(props.language, 'title')}</h1>
-            <Families language={props.language} />
+            <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
+            <HistoryPostPage />
         </div>
     );
 }

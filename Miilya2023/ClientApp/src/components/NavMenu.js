@@ -2,6 +2,7 @@
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import LocalizedStrings from 'localized-strings'
 
 export default function NavMenu(props) {
 
@@ -9,6 +10,22 @@ export default function NavMenu(props) {
         ar: "معليا",
         he: "מעיליא"
     };
+
+    const strings = new LocalizedStrings({
+        ar: {
+            home: 'المنزل',
+            families: 'عائلات',
+        },
+        he: {
+            home: 'בית',
+            families: 'משפחות'
+        },
+    });
+
+    function getString(language, str) {
+        strings.setLanguage(language);
+        return strings[str];
+    }
 
     const [state, setState] = useState({ collaped: true });
 
@@ -26,16 +43,10 @@ export default function NavMenu(props) {
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.collapsed} navbar>
                         <ul className="navbar-nav flex-grow">
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'home')}</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/Family">Family</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/PrivateHistory/Families">{getString(props.language, 'families')}</NavLink>
                             </NavItem>
                         </ul>
                     </Collapse>

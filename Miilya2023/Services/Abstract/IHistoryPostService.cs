@@ -5,8 +5,8 @@ namespace Miilya2023.Services.Abstract
     using System.Threading.Tasks;
     using static Miilya2023.Services.Utils.Documents;
 
-    public interface IFamilyService
+    public interface IHistoryPostService
     {
-        public Task<List<FamilyDocument>> GetAll();
+        public Task<List<HistoryPostDocument>> GetFirstBatchGreaterEqualThanIndex(int index, int batchSize = 20);
     }
 }
