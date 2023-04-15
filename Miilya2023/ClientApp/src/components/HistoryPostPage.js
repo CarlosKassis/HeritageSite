@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import LocalizedStrings from 'localized-strings'
-import { HistoryPost } from './HistoryPost';
+import LocalizedStrings from 'localized-strings';
 
 export function HistoryPostPage(props) {
 
@@ -21,7 +20,11 @@ export function HistoryPostPage(props) {
     }
 
     useEffect(() => {
-        fetch('PrivateHistory/HistoryPost')
+        fetch('PrivateHistory/HistoryPost', {
+            headers: {
+                'Authorization': props.loginInfo.jwt
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 setHistoryPosts(data);
@@ -45,6 +48,7 @@ export function HistoryPostPage(props) {
                         padding: '20px', borderRadius: '10px',
                         boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)' } }>
                         <h3 style={{ padding: '10px' }}>{historyPost.Title}</h3>
+
                         <img
                             style={{
                                 width: '100%',

@@ -23,7 +23,7 @@ export function FamilyTree(props) {
 
     return (
         <div style={{ height: '90vh', width: '100%' }}>
-            {id && <DragonWrapper familyId={id.split('=')[1]} />}
+            {id && <DragonWrapper familyId={props.match.params.id} />}
         </div>
     );
 }

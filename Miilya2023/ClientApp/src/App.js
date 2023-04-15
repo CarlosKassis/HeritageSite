@@ -5,24 +5,52 @@ import { Home } from './components/Home';
 import './custom.css'
 import { Families } from './components/Families';
 import { FamilyTree } from './components/FamilyTree';
+import Cookies from 'universal-cookie';
+import MiilyaApi from './MiilyaApi';
 
 export default function App() {
 
+    const cookies = new Cookies();
     const [language, setLanguage] = useState('ar');
+    const [loginInfo, setLoginInfo] = useState({ loggedIn: false })
 
     useEffect(() => {
         setLanguage('ar');
+
+        // Validate login token and try set state to logged in
+        const loginJwt = cookies.get(`login-jwt`);
+        if (loginJwt) {
+            if (MiilyaApi.validateLoginJwt(loginJwt)) {
+                onValidLoginJwt(loginJwt);
+            } else {
+                cookies.remove('login-jwt', { path: '/' });
+            }
+        }
+
     }, []);
+
+    function onValidLoginJwt(loginJwt, setCookie) {
+        setLoginInfo({ loggedIn: true, jwt: loginJwt });
+        if (setCookie) {
+            cookies.set(`login-jwt`, loginJwt, { path: '/' });
+        }
+    }
 
     function onClickLanguage() {
         setLanguage(language == "ar" ? "he" : "ar");
     }
 
+    function onLogOut() {
+        cookies.remove('login-jwt', { path: '/' });
+        setLoginInfo({ loggedIn: false });
+    }
+
     return (
-        <Layout onClickLanguage={onClickLanguage} language={language}>
-            <Route exact path='/' render={() => <Home language={language} />} />
-            <Route exact path='/PrivateHistory/Families' render={() => <Families language={language} />} />
-            <Route path='/PrivateHistory/FamilyTree:id' render={() => <FamilyTree language={language} />} />
+        <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language}>
+            <Route exact path='/' render={() => <Home onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
+            <Route exact path='/PrivateHistory/Families' render={() => <Families loginInfo={loginInfo} language={language} />} />
+            <Route path='/PrivateHistory/FamilyTree/:id' render={() => <FamilyTree loginInfo={loginInfo} language={language} />} />
+            <Route exact path='/Logout' render={() => <Home logout={true} onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
         </Layout>
     );
 }

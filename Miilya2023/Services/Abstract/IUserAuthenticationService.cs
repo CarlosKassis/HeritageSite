@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
-
+﻿
 namespace Miilya2023.Services.Abstract
 {
+    using System.Threading.Tasks;
+    using static Miilya2023.Services.Abstract.Authentication;
+
     public interface IUserAuthenticationService
     {
-        public Task TryLogin(string auth);
+        public Task<string> CreateSiteLoginJwtFromThirdPartyLoginJwt(string jwt, AccountAuthentication accountAuthentication);
 
-        public Task<bool> IsUserLoggedIn(string jwt);
+        public Task<bool> IsLoginJwtValid(string jwt);
     }
 }

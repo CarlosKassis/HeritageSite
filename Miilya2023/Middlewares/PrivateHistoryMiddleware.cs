@@ -2,6 +2,7 @@
 namespace Miilya2023.Middlewares
 {
     using Microsoft.AspNetCore.Http;
+    using Miilya2023.Constants;
     using Miilya2023.Services.Abstract;
     using System.Threading.Tasks;
 
@@ -19,13 +20,18 @@ namespace Miilya2023.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            string jwtHeader = context.Request.Headers["Authorization"];
+            if (!context.Request.Path.HasValue || !context.Request.Path.Value.StartsWith(PrivateHistoryConstants.UrlPrefix))
+            {
+                await _next(context);
+                return;
+            }
 
-            bool userLoggedIn = await _userAuthenticationService.IsUserLoggedIn(jwtHeader);
+            string jwtHeader = context.Request.Headers["Authorization"];
+            bool userLoggedIn = await _userAuthenticationService.IsLoginJwtValid(jwtHeader);
             if (!userLoggedIn)
             {
-                //context.Response.StatusCode = 404;
-                //return;
+                context.Response.StatusCode = 404;
+                return;
             }
 
             await _next(context);

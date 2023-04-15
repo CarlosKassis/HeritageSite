@@ -17,7 +17,7 @@ export function Layout(props)  {
 
     return (
         <div>
-            <NavMenu onClickLanguage={props.onClickLanguage} language={props.language} />
+            <NavMenu loginInfo={props.loginInfo} onClickLanguage={props.onClickLanguage} language={props.language} />
             <Container>
                 {props.children}
             </Container>

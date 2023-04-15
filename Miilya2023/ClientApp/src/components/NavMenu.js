@@ -15,10 +15,14 @@ export default function NavMenu(props) {
         ar: {
             home: 'المنزل',
             families: 'عائلات',
+            login: 'الدخول',
+            logout: 'الخروج',
         },
         he: {
             home: 'בית',
-            families: 'משפחות'
+            families: 'משפחות',
+            login: 'כניסה',
+            logout: 'יציאה'
         },
     });
 
@@ -41,14 +45,24 @@ export default function NavMenu(props) {
                     <NavLink href="#" className="text-dark" onClick={props.onClickLanguage}>{props.language == "ar" ? 'עברית' : 'عربية'}</NavLink>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.collapsed} navbar>
-                        <ul className="navbar-nav flex-grow">
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'home')}</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/PrivateHistory/Families">{getString(props.language, 'families')}</NavLink>
-                            </NavItem>
-                        </ul>
+                        {props.loginInfo.loggedIn &&
+                            <ul className="navbar-nav flex-grow">
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'home')}</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/PrivateHistory/Families">{getString(props.language, 'families')}</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/Logout">{getString(props.language, 'logout')}</NavLink>
+                                </NavItem>
+                            </ul>}
+                        {!props.loginInfo.loggedIn &&
+                            <ul className="navbar-nav flex-grow">
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'login')}</NavLink>
+                                </NavItem>
+                            </ul>}
                     </Collapse>
                 </Container>
             </Navbar>

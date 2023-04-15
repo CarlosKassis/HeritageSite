@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import LocalizedStrings from 'localized-strings'
 import { Link } from 'react-router-dom'
+import MiilyaApi from '../MiilyaApi';
 
 export function Families(props) {
 
@@ -21,19 +22,17 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        fetch('PrivateHistory/Family/All')
-            .then(response => response.json())
-            .then(data => {
-                setFamilies(data);
-            })
-            .catch(error => {});
+        const families = MiilyaApi.getFamilies(props.loginInfo.jwt);
+        if (families) {
+            setFamilies(families);
+        }
     }, []);
 
     return (
         <div style={{ alignContent: 'center', display: 'block' }}>
             {
                 families.map((family) => (
-                    <Link key={family.identifier} to={`./FamilyTree&id=${family.identifier}`}>
+                    <Link key={family.identifier} to={`./FamilyTree/${family.identifier}`}>
                         <div
                             className={'hoverable'}
                             style={{

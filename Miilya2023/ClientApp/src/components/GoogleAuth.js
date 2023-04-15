@@ -10,7 +10,7 @@ const loadScript = (src) =>
         document.body.appendChild(script)
     })
 
-const GoogleAuth = () => {
+const GoogleAuth = (props) => {
 
     const googleButton = useRef(null);
 
@@ -20,7 +20,6 @@ const GoogleAuth = () => {
 
         loadScript(src)
             .then(() => {
-                console.log(google)
                 google.accounts.id.initialize({
                     client_id: id,
                     callback: handleCredentialResponse,
@@ -39,8 +38,16 @@ const GoogleAuth = () => {
     }, [])
 
     function handleCredentialResponse(response) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                props.onLogin(request.responseText);
+            }
+        }
 
-        console.log("Encoded JWT ID token: " + response.credential);
+        request.open("POST", "/UserAuthentication/Google/Login", true);
+        request.setRequestHeader("google-credentials", response.credential);
+        request.send();
     }
 
     return (
