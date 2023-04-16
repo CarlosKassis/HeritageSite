@@ -3,18 +3,6 @@ import { Container } from 'reactstrap';
 import NavMenu from './NavMenu';
 
 export function Layout(props)  {
-
-    useEffect(() => {
-        var counter = sessionStorage.getItem('counter');
-
-        if (!counter) {
-            counter = 0;
-        }
-        counter++;
-        var counter = sessionStorage.setItem('counter', counter);
-
-    }, [props.children]);
-
     return (
         <div>
             <NavMenu loginInfo={props.loginInfo} onClickLanguage={props.onClickLanguage} language={props.language} />

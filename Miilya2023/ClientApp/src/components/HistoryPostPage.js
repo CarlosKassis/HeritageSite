@@ -22,22 +22,34 @@ export function HistoryPostPage(props) {
     }
 
     useEffect(() => {
-        MiilyaApi.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
+        if (!props.loginInfo.loggedIn) {
+            return;
+        }
 
+        MiilyaApi.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
             if (historyPosts) {
                 setHistoryPosts(historyPosts);
             }
         });
-    }, []);
+    }, [props.loginInfo]);
 
     useEffect(() => {
         for (const historyPost of historyPosts) {
+            // Check if image was already fetched
+            if (historyImages[historyPost.ImageName]) {
+                continue;
+            }
+
             MiilyaApi.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
-                if (historyImage) {
-                    const newHistoryImages = { ...historyImages };
-                    newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImage);
-                    setHistoryImages(newHistoryImages);
+                // Failed fetch
+                if (!historyImage) {
+                    continue;
                 }
+
+                // Replace image dict state with new dict with additional image
+                const newHistoryImages = { ...historyImages };
+                newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImage);
+                setHistoryImages(newHistoryImages);
             });
         }
     }, [historyPosts]);
@@ -51,7 +63,10 @@ export function HistoryPostPage(props) {
                 historyPosts.map((historyPost) => (
                     <div key={historyPost.Index} className={"history-post"}>
                         <h3 style={{ padding: '10px' }}>{historyPost.Title}</h3>
-                        {historyImages[historyPost.ImageName] && <img className={"history-post-image"} alt={historyPost.ImageName} src={historyImages[historyPost.ImageName]} />}
+                        {
+                            historyImages[historyPost.ImageName] &&
+                            <img className={"history-post-image"} alt={historyPost.ImageName} src={historyImages[historyPost.ImageName]} />
+                        }
                         <h5 style={{ paddingTop: '20px' }}>{historyPost.Description}</h5>
                     </div>
                 ))
