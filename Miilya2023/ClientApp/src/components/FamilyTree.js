@@ -20,10 +20,6 @@ export function FamilyTree(props) {
         return strings[str];
     }
 
-    useEffect(() => {
-        console.log(id);
-    }, [])
-
     return (
         <div style={{ height: '90vh', width: '100%' }}>
             {

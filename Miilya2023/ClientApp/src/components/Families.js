@@ -22,8 +22,8 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        MiilyaApi.getFamilies(props.loginInfo.jwt).then(families => {
-            console.log(families);
+        MiilyaApi.getFamilies(props.loginInfo.jwt)
+            .then(families => {
             if (families) {
                 setFamilies(families);
             }
