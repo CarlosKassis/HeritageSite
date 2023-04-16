@@ -6,6 +6,7 @@ export function HistoryPostPage(props) {
 
     const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);
+    const historyImagesRef = useRef({});
     const [historyImages, setHistoryImages] = useState({}); 
 
     const strings = new LocalizedStrings({
@@ -31,33 +32,47 @@ export function HistoryPostPage(props) {
     function setHistoryPostsVariables(newHistoryPosts) {
         setHistoryPosts(newHistoryPosts);
         historyPostsRef.current = newHistoryPosts;
+
+        console.log(newHistoryPosts);
+        for (const historyPost of newHistoryPosts) {
+            // Check if image was already fetched
+            if (!historyImagesRef.current[historyPost.ImageName]) {
+                MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImageResponse => {
+                    // Failed fetch
+                    if (historyImageResponse) {
+                        // Replace image dict state with new dict with additional image
+                        const newHistoryImages = { ...historyImagesRef.current };
+                        newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImageResponse);
+                        setHistoryImagesVariables(newHistoryImages);
+                    }
+                });
+            }
+        }
+    }
+
+    function setHistoryImagesVariables(newHistoryImages) {
+        setHistoryImages(newHistoryImages);
+        historyImagesRef.current = newHistoryImages;
     }
 
     // Reset if reched page bottom
-    const canLoadMorePostsFlag = useRef(true);
     const loadPostsCoolingDownFlag = useRef(false);
     const scrollBottomMargin = 5;
 
     function checkIfPageBottomAndLoadMorePosts() {
-        if (loadPostsCoolingDownFlag.current) {
-            return;
-        }
-
         const scrollTop = window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
         if (scrollTop >= maxScroll - scrollBottomMargin) {
-            if (canLoadMorePostsFlag.current) {
-                console.log('bottom loading more');
-                canLoadMorePostsFlag.current = false;
-                tryLoadMorePosts();
-            }
-        } else {
-            canLoadMorePostsFlag.current = true;
+            tryLoadMorePosts();
         }
     }
 
     function tryLoadMorePosts() {
+        if (loadPostsCoolingDownFlag.current) {
+            return;
+        }
+
         if (!props.loginInfo.loggedIn) {
             return;
         }
@@ -111,7 +126,6 @@ export function HistoryPostPage(props) {
 
                         setTimeout(() => {
                             console.log('reset cooldown')
-                            canLoadMorePostsFlag.current = true;
                             checkIfPageBottomAndLoadMorePosts();
                             loadPostsCoolingDownFlag.current = false;
                         }, 1000)
@@ -120,23 +134,6 @@ export function HistoryPostPage(props) {
             });
         }
     }
-
-    useEffect(() => {
-        for (const historyPost of historyPosts) {
-            // Check if image was already fetched
-            if (!historyImages[historyPost.ImageName]) {
-                MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImageResponse => {
-                    // Failed fetch
-                    if (historyImageResponse) {
-                        // Replace image dict state with new dict with additional image
-                        const newHistoryImages = { ...historyImages };
-                        newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImageResponse);
-                        setHistoryImages(newHistoryImages);
-                    }
-                });
-            }
-        }
-    }, [historyPosts]);
 
     return (
         <div onTouchMove={(e) => checkIfPageBottomAndLoadMorePosts()} onWheel={(e) => checkIfPageBottomAndLoadMorePosts()} style={{
