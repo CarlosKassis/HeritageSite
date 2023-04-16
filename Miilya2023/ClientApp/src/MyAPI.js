@@ -1,4 +1,3 @@
-import { parseJSON } from "openseadragon";
 
 export default class MyAPI {
      static async validateLoginJwt(jwt) {
@@ -39,8 +38,10 @@ export default class MyAPI {
         return null;
     }
 
-    static async getHistoryPosts(jwt) {
-        const response = await fetch('PrivateHistory/HistoryPost', {
+    static async getHistoryPosts(jwt, startingFromIndex) {
+        // If start index is empty then don't pass it
+        var url = startingFromIndex !== null ? `PrivateHistory/HistoryPost/${startingFromIndex}` : 'PrivateHistory/HistoryPost';
+        const response = await fetch(url, {
             headers: {
                 'Authorization': jwt
             }

@@ -18,10 +18,11 @@ namespace Miilya2023.Controllers.PrivateHistory
         }
 
         [HttpGet]
-        public async Task<string> GetImageBatchAfter(int index)
+        [Route("{startIndex:int?}")]
+        public async Task<IActionResult> GetHistoryPostsBatchStartingFromIndex(int startIndex = -1)
         {
-            var results = await _historyPostService.GetFirstBatchGreaterEqualThanIndex(index);
-            return JsonConvert.SerializeObject(results);
+            var results = await _historyPostService.GetFirstBatchGreaterEqualThanIndex(startIndex);
+            return Content(JsonConvert.SerializeObject(results));
         }
     }
 }

@@ -4,6 +4,7 @@ import MyAPI from '../MyAPI';
 
 export function HistoryPostPage(props) {
 
+    const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);
     const [historyImages, setHistoryImages] = useState({}); 
 
@@ -21,26 +22,110 @@ export function HistoryPostPage(props) {
         return strings[str];
     }
 
+    // Initial history posts load
     useEffect(() => {
+        tryLoadMorePosts();
+    }, [props.loginInfo]);
+
+    // Update posts ref to use in scroll callback
+    useEffect(() => {
+        historyPostsRef.current = historyPosts;
+        checkIfPageBottomAndLoadMorePosts();
+    }, [historyPosts])
+
+
+
+    // Track scroll to append posts at the bottom of page
+    useEffect(() => {
+        const handleScroll = () => {
+            checkIfPageBottomAndLoadMorePosts();
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [])
+
+    // Reset if reched page bottom
+    const canLoadMorePostsFlag = useRef(true);
+    const loadPostsCoolingDownFlag = useRef(false);
+    const scrollBottomMargin = 5;
+
+    function checkIfPageBottomAndLoadMorePosts() {
+        if (loadPostsCoolingDownFlag.current) {
+            return;
+        }
+
+        const scrollTop = window.pageYOffset;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollTop >= maxScroll - scrollBottomMargin) {
+            if (canLoadMorePostsFlag.current) {
+                console.log('bottom loading more');
+                canLoadMorePostsFlag.current = false;
+                tryLoadMorePosts();
+            }
+        } else {
+            canLoadMorePostsFlag.current = true;
+        }
+    }
+
+    function tryLoadMorePosts() {
+        if (!props.loginInfo.loggedIn) {
+            return;
+        }
+
+        var startingFromIndex = null;
+        if (historyPostsRef.current != null && historyPostsRef.current.length > 0) {
+            startingFromIndex = Math.max(...historyPostsRef.current.map(historyPost => historyPost.Index)) + 1;
+        }
+
         if (props.loginInfo.loggedIn) {
-            MyAPI.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
-                if (historyPosts) {
-                    setHistoryPosts(historyPosts);
+            MyAPI.getHistoryPosts(props.loginInfo.jwt, startingFromIndex).then(historyPostsResponse => {
+                if (historyPostsResponse) {
+                    if (historyPostsResponse.length == 0) {
+                        console.log('No more posts in site')
+                        return;
+                    }
+
+                    // Use Ref instead of State History Posts because this function could be called from callback
+                    // And there's no access to State variables from callback since the callback captures only
+                    // The initial value of the State variable
+                    if (historyPostsRef.current) {
+                        var newCombinedHistoryPosts = historyPostsRef.current.concat(historyPostsResponse);
+                        setHistoryPosts(newCombinedHistoryPosts);
+                    } else {
+                        setHistoryPosts(historyPostsResponse);
+                    }
+
+
+                    // Cooldown loading posts
+                    if (!loadPostsCoolingDownFlag.current) {
+                        console.log('cooldown load')
+                        loadPostsCoolingDownFlag.current = true;
+
+                        setTimeout(() => {
+                            console.log('reset cooldown')
+                            canLoadMorePostsFlag.current = true;
+                            checkIfPageBottomAndLoadMorePosts();
+                            loadPostsCoolingDownFlag.current = false;
+                        }, 1000)
+                    }
                 }
             });
         }
-    }, [props.loginInfo]);
+    }
 
     useEffect(() => {
         for (const historyPost of historyPosts) {
             // Check if image was already fetched
             if (!historyImages[historyPost.ImageName]) {
-                MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
+                MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImageResponse => {
                     // Failed fetch
-                    if (historyImage) {
+                    if (historyImageResponse) {
                         // Replace image dict state with new dict with additional image
                         const newHistoryImages = { ...historyImages };
-                        newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImage);
+                        newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImageResponse);
                         setHistoryImages(newHistoryImages);
                     }
                 });
@@ -51,7 +136,8 @@ export function HistoryPostPage(props) {
     return (
         <div style={{
             alignContent: 'center',
-            display: 'block'
+            display: 'block',
+            overflow: 'hidden'
         }}>
             {
                 historyPosts.map((historyPost) => (
@@ -65,6 +151,7 @@ export function HistoryPostPage(props) {
                     </div>
                 ))
             }
+            <div style={{ height: '20vh' }} />
         </div>
     );
 }

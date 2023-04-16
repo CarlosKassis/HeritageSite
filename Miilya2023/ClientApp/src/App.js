@@ -7,6 +7,7 @@ import { Families } from './components/Families';
 import { FamilyTree } from './components/FamilyTree';
 import Cookies from 'universal-cookie';
 import MyAPI from './MyAPI';
+import { Logout } from './components/Logout';
 
 export default function App() {
 
@@ -43,7 +44,6 @@ export default function App() {
     }
 
     function onLogOut() {
-        console.log('qqqqqqqqqq');
         cookies.remove('login-jwt', { path: '/' });
         setLoginInfo({ loggedIn: false });
     }
@@ -53,7 +53,7 @@ export default function App() {
             <Route exact path='/' render={() => <Home onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
             <Route exact path='/PrivateHistory/Families' render={() => <Families loginInfo={loginInfo} language={language} />} />
             <Route path='/PrivateHistory/FamilyTree/:id' render={() => <FamilyTree loginInfo={loginInfo} language={language} />} />
-            <Route exact path='/Logout' render={() => <Home logout={true} onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
+            <Route exact path='/Logout' render={() => <Logout onLogOut={onLogOut} />} />
         </Layout>
     );
 }

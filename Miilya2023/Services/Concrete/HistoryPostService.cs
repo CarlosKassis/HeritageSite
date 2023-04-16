@@ -25,6 +25,7 @@ namespace Miilya2023.Services.Concrete
             var filter = Builders<HistoryPostDocument>.Filter.Gte(x => x.Index, index);
             var results = await _collection
                 .Find(filter)
+                .SortBy(x => x.Index)
                 .Limit(batchSize)
                 .ToListAsync();
 

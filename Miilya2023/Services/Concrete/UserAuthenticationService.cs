@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
@@ -32,6 +33,8 @@ namespace Miilya2023.Services.Abstract
                 ValidateAudience = false
             };
 
+        private static readonly ConcurrentDictionary<string, bool> _loginJwtsValidationResults = new ConcurrentDictionary<string, bool>();
+
         public async Task<bool> IsLoginJwtValid(string jwt)
         {
             if (jwt == null)
@@ -39,7 +42,14 @@ namespace Miilya2023.Services.Abstract
                 return false;
             }
 
+            if (_loginJwtsValidationResults.TryGetValue(jwt, out bool valid))
+            {
+                return valid;
+            }
+
             var validationResult = await _tokenHandler.ValidateTokenAsync(jwt, _tokenValidationParameters);
+            _loginJwtsValidationResults.TryAdd(jwt, validationResult.IsValid);
+
             return validationResult.IsValid;
         }
 
