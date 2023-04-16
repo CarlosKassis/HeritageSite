@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import LocalizedStrings from 'localized-strings'
 import { Link } from 'react-router-dom'
-import MiilyaApi from '../MiilyaApi';
+import MyAPI from '../MyAPI';
 
 export function Families(props) {
 
@@ -22,7 +22,7 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        MiilyaApi.getFamilies(props.loginInfo.jwt)
+        MyAPI.getFamilies(props.loginInfo.jwt)
             .then(families => {
             if (families) {
                 setFamilies(families);

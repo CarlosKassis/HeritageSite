@@ -1,6 +1,6 @@
 import { parseJSON } from "openseadragon";
 
-export default class MiilyaApi {
+export default class MyAPI {
      static async validateLoginJwt(jwt) {
          const response = await fetch('/UserAuthentication/Validate', {
              headers: {

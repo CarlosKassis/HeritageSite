@@ -6,7 +6,7 @@ import './custom.css'
 import { Families } from './components/Families';
 import { FamilyTree } from './components/FamilyTree';
 import Cookies from 'universal-cookie';
-import MiilyaApi from './MiilyaApi';
+import MyAPI from './MyAPI';
 
 export default function App() {
 
@@ -20,7 +20,7 @@ export default function App() {
         // Validate login token and try set state to logged in
         const loginJwt = cookies.get(`login-jwt`);
         if (loginJwt) {
-            if (MiilyaApi.validateLoginJwt(loginJwt)) {
+            if (MyAPI.validateLoginJwt(loginJwt)) {
                 console.log('Successful login JWT')
                 onValidLoginJwt(loginJwt);
             } else {

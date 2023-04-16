@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState, useRef } from 'react';
 import LocalizedStrings from 'localized-strings';
-import MiilyaApi from '../MiilyaApi';
+import MyAPI from '../MyApi';
 
 export function HistoryPostPage(props) {
 
@@ -26,7 +26,7 @@ export function HistoryPostPage(props) {
             return;
         }
 
-        MiilyaApi.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
+        MyAPI.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
             if (historyPosts) {
                 setHistoryPosts(historyPosts);
             }
@@ -40,7 +40,7 @@ export function HistoryPostPage(props) {
                 continue;
             }
 
-            MiilyaApi.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
+            MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
                 // Failed fetch
                 if (!historyImage) {
                     continue;

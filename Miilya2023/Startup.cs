@@ -10,12 +10,7 @@ using Miilya2023.Constants;
 using Miilya2023.Middlewares;
 using Miilya2023.Services.Abstract;
 using Miilya2023.Services.Concrete;
-using MongoDB.Driver;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace Miilya2023
