@@ -4,10 +4,7 @@ namespace Miilya2023.Controllers.PrivateHistory
     using Microsoft.AspNetCore.Mvc;
     using Miilya2023.Services.Abstract;
     using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using static Miilya2023.Services.Utils.Documents;
 
     [ApiController]
     [Route("PrivateHistory/[Controller]")]

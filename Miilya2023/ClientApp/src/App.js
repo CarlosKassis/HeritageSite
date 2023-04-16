@@ -23,7 +23,7 @@ export default function App() {
             if (MiilyaApi.validateLoginJwt(loginJwt)) {
                 onValidLoginJwt(loginJwt);
             } else {
-                cookies.remove('login-jwt', { path: '/' });
+                //cookies.remove('login-jwt', { path: '/' });
             }
         }
 
@@ -41,7 +41,7 @@ export default function App() {
     }
 
     function onLogOut() {
-        cookies.remove('login-jwt', { path: '/' });
+        //cookies.remove('login-jwt', { path: '/' });
         setLoginInfo({ loggedIn: false });
     }
 
