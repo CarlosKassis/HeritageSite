@@ -12,7 +12,7 @@ export default class MiilyaApi {
     }
 
     static async getFamilies(jwt) {
-        let response = await fetch('PrivateHistory/Family/All', {
+        const response = await fetch('PrivateHistory/Family/All', {
             headers: {
                 'Authorization': jwt
             }
@@ -34,6 +34,20 @@ export default class MiilyaApi {
 
         if (response.ok) {
             return await response.blob();
+        }
+
+        return null;
+    }
+
+    static async getHistoryPosts(jwt) {
+        const response = await fetch('PrivateHistory/HistoryPost', {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
         }
 
         return null;
