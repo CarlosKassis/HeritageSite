@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState, useRef } from 'react';
 import LocalizedStrings from 'localized-strings';
-import MyAPI from '../MyApi';
+import MyAPI from '../MyAPI';
 
 export function HistoryPostPage(props) {
 
@@ -22,35 +22,29 @@ export function HistoryPostPage(props) {
     }
 
     useEffect(() => {
-        if (!props.loginInfo.loggedIn) {
-            return;
+        if (props.loginInfo.loggedIn) {
+            MyAPI.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
+                if (historyPosts) {
+                    setHistoryPosts(historyPosts);
+                }
+            });
         }
-
-        MyAPI.getHistoryPosts(props.loginInfo.jwt).then(historyPosts => {
-            if (historyPosts) {
-                setHistoryPosts(historyPosts);
-            }
-        });
     }, [props.loginInfo]);
 
     useEffect(() => {
         for (const historyPost of historyPosts) {
             // Check if image was already fetched
-            if (historyImages[historyPost.ImageName]) {
-                continue;
+            if (!historyImages[historyPost.ImageName]) {
+                MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
+                    // Failed fetch
+                    if (historyImage) {
+                        // Replace image dict state with new dict with additional image
+                        const newHistoryImages = { ...historyImages };
+                        newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImage);
+                        setHistoryImages(newHistoryImages);
+                    }
+                });
             }
-
-            MyAPI.getHistoryImage(props.loginInfo.jwt, historyPost.ImageName).then(historyImage => {
-                // Failed fetch
-                if (!historyImage) {
-                    continue;
-                }
-
-                // Replace image dict state with new dict with additional image
-                const newHistoryImages = { ...historyImages };
-                newHistoryImages[historyPost.ImageName] = URL.createObjectURL(historyImage);
-                setHistoryImages(newHistoryImages);
-            });
         }
     }, [historyPosts]);
 
