@@ -27,25 +27,11 @@ export function HistoryPostPage(props) {
         tryLoadMorePosts();
     }, [props.loginInfo]);
 
-    // Update posts ref to use in scroll callback
-    useEffect(() => {
-        historyPostsRef.current = historyPosts;
-        checkIfPageBottomAndLoadMorePosts();
-    }, [historyPosts])
-
-
-
-    // Track scroll to append posts at the bottom of page
-    useEffect(() => {
-        const handleScroll = () => {
-            checkIfPageBottomAndLoadMorePosts();
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [])
+    // To keep everything in sync
+    function setHistoryPostsVariables(newHistoryPosts) {
+        setHistoryPosts(newHistoryPosts);
+        historyPostsRef.current = newHistoryPosts;
+    }
 
     // Reset if reched page bottom
     const canLoadMorePostsFlag = useRef(true);
@@ -59,6 +45,7 @@ export function HistoryPostPage(props) {
 
         const scrollTop = window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
         if (scrollTop >= maxScroll - scrollBottomMargin) {
             if (canLoadMorePostsFlag.current) {
                 console.log('bottom loading more');
@@ -92,12 +79,30 @@ export function HistoryPostPage(props) {
                     // And there's no access to State variables from callback since the callback captures only
                     // The initial value of the State variable
                     if (historyPostsRef.current) {
-                        var newCombinedHistoryPosts = historyPostsRef.current.concat(historyPostsResponse);
-                        setHistoryPosts(newCombinedHistoryPosts);
-                    } else {
-                        setHistoryPosts(historyPostsResponse);
-                    }
+                        // Keep track of which posts were already fetched
+                        const setOfHistoryPostsIndexes = new Set(historyPostsRef.current.map(historyPost => historyPost.Index));
+                        console.log(setOfHistoryPostsIndexes);
 
+                        // Create new array with new reference
+                        var newCombinedHistoryPosts = [].concat(historyPostsRef.current);
+
+                        console.log(newCombinedHistoryPosts);
+                        for (const historyPost of historyPostsResponse) {
+
+                            if (!(historyPost.Index in setOfHistoryPostsIndexes)) {
+                                console.log('added ' + historyPost.Index)
+                                newCombinedHistoryPosts.push(historyPost);
+                            } else {
+                                console.log('Not added ' + historyPost.Index)
+                            }
+                        }
+
+                        console.log('consecutive load!!')
+                        setHistoryPostsVariables(newCombinedHistoryPosts);
+                    } else {
+                        console.log('first load!!')
+                        setHistoryPostsVariables(historyPostsResponse);
+                    }
 
                     // Cooldown loading posts
                     if (!loadPostsCoolingDownFlag.current) {
@@ -134,7 +139,7 @@ export function HistoryPostPage(props) {
     }, [historyPosts]);
 
     return (
-        <div style={{
+        <div onTouchMove={(e) => checkIfPageBottomAndLoadMorePosts()} onWheel={(e) => checkIfPageBottomAndLoadMorePosts()} style={{
             alignContent: 'center',
             display: 'block',
             overflow: 'hidden'
