@@ -1,3 +1,4 @@
+import { parseJSON } from "openseadragon";
 
 export default class MiilyaApi {
      static async validateLoginJwt(jwt) {
@@ -11,14 +12,14 @@ export default class MiilyaApi {
     }
 
     static async getFamilies(jwt) {
-        const response = await fetch('PrivateHistory/Family/All', {
+        let response = await fetch('PrivateHistory/Family/All', {
             headers: {
                 'Authorization': jwt
             }
         });
 
         if (response.ok) {
-            return response.json();
+            return await response.json();
         }
 
         return null;
@@ -32,7 +33,7 @@ export default class MiilyaApi {
         });
 
         if (response.ok) {
-            return response.blob();
+            return await response.blob();
         }
 
         return null;

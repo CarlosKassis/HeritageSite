@@ -11,7 +11,7 @@ export function DragonWrapper(props) {
             ajaxWithCredentials: true,
             loadTilesWithAjax: true,
             ajaxHeaders: {
-                Authorization: `Bearer ASD`
+                Authorization: props.loginInfo.jwt
             }
         });
     }, [props.familyId]);

@@ -13,14 +13,14 @@ namespace Miilya2023.Services.Utils
         public class FamilyDocument
         {
             /// <summary>
-            /// Display name in Arabic of the family
+            /// Display name of the family
             /// </summary>
-            public string Name { get; set; }
+            public string Name;
 
             /// <summary>
             /// Used to search family tree files on server
             /// </summary>
-            public string Identifier { get; set; }
+            public string Identifier;
         }
 
         [BsonIgnoreExtraElements]

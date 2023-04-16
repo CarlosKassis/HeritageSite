@@ -22,17 +22,19 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        const families = MiilyaApi.getFamilies(props.loginInfo.jwt);
-        if (families) {
-            setFamilies(families);
-        }
+        MiilyaApi.getFamilies(props.loginInfo.jwt).then(families => {
+            console.log(families);
+            if (families) {
+                setFamilies(families);
+            }
+        });
     }, []);
 
     return (
         <div style={{ alignContent: 'center', display: 'block' }}>
             {
                 families.map((family) => (
-                    <Link key={family.identifier} to={`./FamilyTree/${family.identifier}`}>
+                    <Link key={family.Identifier} to={`./FamilyTree/${family.Identifier}`}>
                         <div
                             className={'hoverable'}
                             style={{
@@ -42,7 +44,7 @@ export function Families(props) {
                                 maxWidth: '300px',
                                 boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'
                             }}>
-                            <h3 style={{ textAlign: 'center' }}>{family.name}</h3>
+                            <h3 style={{ textAlign: 'center' }}>{family.Name}</h3>
                         </div>
                     </Link>
                 ))

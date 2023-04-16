@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Amazon.SecurityToken.Model;
 using Google.Apis.Auth;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using static Miilya2023.Services.Abstract.Authentication;
 
 namespace Miilya2023.Services.Abstract
@@ -14,7 +15,7 @@ namespace Miilya2023.Services.Abstract
     {
         private const string _googleAppId = "774040641386-74otf6r69gv7nd92efvbh5kf5l6j8jf8.apps.googleusercontent.com";
 
-        private static readonly SecurityKey _jwtSecurityKey = GenerateRsaCryptoServiceProviderKey();
+        private static readonly SecurityKey _jwtSecurityKey = GetRsaCryptoServiceProviderKey();
 
         private static readonly SigningCredentials _jwtSigningCredentials = new SigningCredentials(_jwtSecurityKey, SecurityAlgorithms.RsaSha256);
 
@@ -97,11 +98,22 @@ namespace Miilya2023.Services.Abstract
             return payload.Email;
         }
 
-        private static SecurityKey GenerateRsaCryptoServiceProviderKey()
+        private static SecurityKey GetRsaCryptoServiceProviderKey()
         {
-            var rsaProvider = new RSACryptoServiceProvider(512);
-            SecurityKey key = new RsaSecurityKey(rsaProvider);
-            return key;
+            string rsaFile = ".\\RSA.txt";
+            if (File.Exists(rsaFile))
+            {
+                string rsaJson = File.ReadAllText(rsaFile);
+                var rsaParameters = JsonConvert.DeserializeObject<RSAParameters>(rsaJson);
+                return new RsaSecurityKey(rsaParameters);
+            }
+            else
+            {
+                var rsaProvider = new RSACryptoServiceProvider(512);
+                var rsaParameters = rsaProvider.ExportParameters(true);
+                File.WriteAllText(rsaFile, JsonConvert.SerializeObject(rsaParameters));
+                return new RsaSecurityKey(rsaParameters);
+            }
         }
     }
 }

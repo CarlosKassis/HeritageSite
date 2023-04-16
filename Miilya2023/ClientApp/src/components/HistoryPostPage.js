@@ -63,7 +63,7 @@ export function HistoryPostPage(props) {
                         boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)' } }>
                         <h3 style={{ padding: '10px' }}>{historyPost.Title}</h3>
 
-                        {images !== null && <img
+                        { images && <img
                             style={{
                                 width: '100%',
                                 maxHeight: '50vh',

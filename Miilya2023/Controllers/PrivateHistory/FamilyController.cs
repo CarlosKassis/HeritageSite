@@ -2,10 +2,8 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Miilya2023.Services.Abstract;
-    using System.Collections.Generic;
-    using System.Linq;
+    using Newtonsoft.Json;
     using System.Threading.Tasks;
-    using static Miilya2023.Services.Utils.Documents;
 
     [ApiController]
     [Route("PrivateHistory/[Controller]")]
@@ -20,10 +18,10 @@
 
         [HttpGet]
         [Route("All")]
-        public async Task<List<FamilyDocument>> GetAll()
+        public async Task<string> GetAll()
         {
             var results = await _familyService.GetAll();
-            return results.ToList();
+            return JsonConvert.SerializeObject(results);
         }
     }
 }

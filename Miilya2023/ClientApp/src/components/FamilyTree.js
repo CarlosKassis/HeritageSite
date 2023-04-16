@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom"
 export function FamilyTree(props) {
 
     const { id } = useParams();
-
     const strings = new LocalizedStrings({
         ar: {
             title: 'موقع تراث معليا'
@@ -21,9 +20,15 @@ export function FamilyTree(props) {
         return strings[str];
     }
 
+    useEffect(() => {
+        console.log(id);
+    }, [])
+
     return (
         <div style={{ height: '90vh', width: '100%' }}>
-            {id && <DragonWrapper familyId={props.match.params.id} />}
+            {
+                id && <DragonWrapper loginInfo={props.loginInfo} familyId={id} />
+            }
         </div>
     );
 }
