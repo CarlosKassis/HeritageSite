@@ -1,6 +1,7 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import LocalizedStrings from 'localized-strings'
-import { HistoryPostPage } from './HistoryPostPage';
+import { InfinitePage } from './InfinitePage';
+import { HistoryPostsContainer } from './HistoryPostsContainer'
 import GoogleAuth from './GoogleAuth';
 
 export function Home(props) {
@@ -31,7 +32,12 @@ export function Home(props) {
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
             <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
             {!props.loginInfo.loggedIn && <GoogleAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} />}
-            {props.loginInfo.loggedIn && < HistoryPostPage loginInfo={props.loginInfo} />}
+            {
+                props.loginInfo.loggedIn &&
+                <InfinitePage loginInfo={props.loginInfo}>
+                        <HistoryPostsContainer />
+                    </InfinitePage>
+            }
         </div>
     );
 }
