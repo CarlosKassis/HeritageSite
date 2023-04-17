@@ -38,11 +38,28 @@ export function HistoryPostPage(props) {
     const scrollBottomMargin = 5;
 
     function checkIfPageBottomAndLoadMorePosts() {
+        if (loadPostsCoolingDownFlag.current) {
+            return;
+        }
+
         const scrollTop = window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
         if (scrollTop >= maxScroll - scrollBottomMargin) {
             tryLoadMorePosts();
+        }
+    }
+
+    function cooldownLoadingPosts() {
+        // Cooldown loading posts
+        if (!loadPostsCoolingDownFlag.current) {
+            console.log('cooldown load')
+            loadPostsCoolingDownFlag.current = true;
+
+            setTimeout(() => {
+                console.log('reset cooldown')
+                loadPostsCoolingDownFlag.current = false;
+            }, 1000)
         }
     }
 
@@ -61,10 +78,12 @@ export function HistoryPostPage(props) {
         }
 
         if (props.loginInfo.loggedIn) {
+            cooldownLoadingPosts();
             MyAPI.getHistoryPosts(props.loginInfo.jwt, startingFromIndex).then(historyPostsResponse => {
                 if (historyPostsResponse) {
                     if (historyPostsResponse.length == 0) {
                         console.log('No more posts in site')
+                        cooldownLoadingPosts();
                         return;
                     }
 
@@ -81,7 +100,7 @@ export function HistoryPostPage(props) {
 
                         console.log(newCombinedHistoryPosts);
                         for (const historyPost of historyPostsResponse) {
-
+                            console.log()
                             if (!(historyPost.Index in setOfHistoryPostsIndexes)) {
                                 console.log('added ' + historyPost.Index)
                                 newCombinedHistoryPosts.push(historyPost);
@@ -96,42 +115,45 @@ export function HistoryPostPage(props) {
                         console.log('first load!!')
                         setHistoryPostsVariables(historyPostsResponse);
                     }
-
-                    // Cooldown loading posts
-                    if (!loadPostsCoolingDownFlag.current) {
-                        console.log('cooldown load')
-                        loadPostsCoolingDownFlag.current = true;
-
-                        setTimeout(() => {
-                            console.log('reset cooldown')
-                            checkIfPageBottomAndLoadMorePosts();
-                            loadPostsCoolingDownFlag.current = false;
-                        }, 1000)
-                    }
                 }
             });
         }
     }
 
+    const previousPointerY = useRef(null);
+
     return (
-        <div onTouchMove={(e) => checkIfPageBottomAndLoadMorePosts()} onWheel={(e) => checkIfPageBottomAndLoadMorePosts()} style={{
-            alignContent: 'center',
-            display: 'block',
-            overflow: 'hidden'
-        }}>
-            {
-                historyPosts.map((historyPost) => (
-                    <HistoryPost
-                        key={historyPost.Index}
-                        index={historyPost.Index}
-                        imageName={historyPost.ImageName}
-                        title={historyPost.Title}
-                        description={historyPost.Description}
-                        loginInfo={props.loginInfo}
-                    />
-                ))
-            }
-            <div style={{ height: '20vh' }} />
+        <div
+            onTouchMove={(e) => {
+                if (!previousPointerY.current) {
+                    previousPointerY.current = e.touches[0].screenY;
+                    return;
+                }
+
+                if (previousPointerY.current - e.touches[0].screenY < 0) {
+                    checkIfPageBottomAndLoadMorePosts()
+                }
+             }}
+            onWheel={(e) => {
+                if (e.deltaY > 0) {
+                    checkIfPageBottomAndLoadMorePosts()
+                }
+            }}>
+            <div className={"history-posts-container"}>
+                {
+                    historyPosts.map((historyPost) => (
+                        <HistoryPost
+                            key={historyPost.Index}
+                            index={historyPost.Index}
+                            imageName={historyPost.ImageName}
+                            title={historyPost.Title}
+                            description={historyPost.Description}
+                            loginInfo={props.loginInfo}
+                        />
+                    ))
+                }
+                <div style={{ height: '20vh' }} />
+            </div>
         </div>
     );
 }

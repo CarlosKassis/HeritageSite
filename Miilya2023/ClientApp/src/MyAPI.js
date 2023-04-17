@@ -39,6 +39,8 @@ export default class MyAPI {
     }
 
     static async getHistoryPosts(jwt, startingFromIndex) {
+
+        console.log('getHistoryPosts: ' + startingFromIndex)
         // If start index is empty then don't pass it
         var url = startingFromIndex !== null ? `PrivateHistory/HistoryPost/${startingFromIndex}` : 'PrivateHistory/HistoryPost';
         const response = await fetch(url, {
