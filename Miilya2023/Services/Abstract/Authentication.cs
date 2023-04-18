@@ -4,8 +4,8 @@
     {
         public enum AccountAuthentication
         {
-            Google,
-            Microsoft
+            Microsoft,
+            Google
         }
     }
 }

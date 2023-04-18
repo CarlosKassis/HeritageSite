@@ -21,6 +21,7 @@ namespace Miilya2023
         {
             Configuration = configuration;
             PrivateHistoryConstants.RootPath = configuration.GetValue<string>("PrivateHistoryRoot");
+            AuthenticationConstants.MicrosoftClientSecret = configuration.GetValue<string>("MicrosoftClientSecret");
         }
 
         public IConfiguration Configuration { get; }

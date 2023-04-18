@@ -4,9 +4,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using Miilya2023.Constants;
 using Newtonsoft.Json;
 using static Miilya2023.Services.Abstract.Authentication;
 
@@ -14,7 +17,9 @@ namespace Miilya2023.Services.Abstract
 {
     public class UserAuthenticationService : IUserAuthenticationService
     {
-        private const string _googleAppId = "774040641386-74otf6r69gv7nd92efvbh5kf5l6j8jf8.apps.googleusercontent.com";
+        private const string _googleClientId = "774040641386-74otf6r69gv7nd92efvbh5kf5l6j8jf8.apps.googleusercontent.com";
+        
+        private const string _microsoftClientId = "3ee7d2ed-3ea7-4790-b63c-e06ccd058189";
 
         private static readonly SecurityKey _jwtSecurityKey = GetRsaCryptoServiceProviderKey();
 
@@ -57,14 +62,12 @@ namespace Miilya2023.Services.Abstract
         public async Task<string> CreateSiteLoginJwtFromThirdPartyLoginJwt(string jwt, AccountAuthentication accountAuthentication)
         {
             string email = null;
-            if (accountAuthentication == AccountAuthentication.Google)
+            email = accountAuthentication switch
             {
-                email = await ValidateGoogleLoginJwt(jwt);
-            }
-            else
-            {
-                throw new NotSupportedException("Only Google accounts are currently supported");
-            }
+                AccountAuthentication.Google => await ValidateGoogleLoginJwt(jwt),
+                AccountAuthentication.Microsoft => await ValidateMicrosoftLoginJwt(jwt),
+                _ => throw new NotSupportedException("Only Microsoft or Google accounts are supported")
+            };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -79,11 +82,35 @@ namespace Miilya2023.Services.Abstract
             return _tokenHandler.CreateEncodedJwt(tokenDescriptor);
         }
 
+        private static readonly IConfidentialClientApplication _microsoftConfidentialClientApplication = ConfidentialClientApplicationBuilder
+                .Create(_microsoftClientId)
+                .WithTenantId("10f100d7-a82a-4e12-8033-7d4c66a96a04")
+                .WithClientSecret(AuthenticationConstants.MicrosoftClientSecret)
+                .Build();
+
+        private async Task<string> ValidateMicrosoftLoginJwt(string jwt)
+        {
+            try
+            {
+                return "asd";
+            }
+            catch (MsalUiRequiredException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (MsalException ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return "asd";
+        }
+
         private async Task<string> ValidateGoogleLoginJwt(string jwt)
         {
             GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(jwt);
 
-            if (!payload.Audience.Equals(_googleAppId))
+            if (!payload.Audience.Equals(_googleClientId))
             {
                 throw new ArgumentException("Invalid Google App ID");
             }

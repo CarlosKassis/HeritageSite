@@ -16,6 +16,8 @@ namespace Miilya2023.Controllers.PrivateHistory
 
         private const string _googleCredentialHeaderKey = "google-credentials";
 
+        private const string _microsoftCredentialHeaderKey = "microsoft-credentials";
+
         private readonly IUserAuthenticationService _userAuthenticationService;
 
         public UserAuthenticationController(IUserAuthenticationService userAuthenticationService)
@@ -38,6 +40,25 @@ namespace Miilya2023.Controllers.PrivateHistory
 
             var googleJwt = googleCredentials.First();
             string loginJwt = await _userAuthenticationService.CreateSiteLoginJwtFromThirdPartyLoginJwt(googleJwt, AccountAuthentication.Google);
+
+            return Content(loginJwt);
+        }
+
+        /// <summary>
+        /// Receives a Microsoft login response from header and returns a login JWT
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Microsoft/Login")]
+        public async Task<IActionResult> MicrosoftLogin()
+        {
+            if (!Request.Headers.TryGetValue(_microsoftCredentialHeaderKey, out var microsoftCredentials))
+            {
+                throw new ArgumentException("Received Microsoft login validation without response credentials");
+            }
+
+            var microsoftJwt = microsoftCredentials.First();
+            string loginJwt = await _userAuthenticationService.CreateSiteLoginJwtFromThirdPartyLoginJwt(microsoftJwt, AccountAuthentication.Microsoft);
 
             return Content(loginJwt);
         }

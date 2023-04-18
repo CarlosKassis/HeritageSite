@@ -3,6 +3,7 @@ import LocalizedStrings from 'localized-strings'
 import { InfinitePage } from './InfinitePage';
 import { HistoryPostsContainer } from './HistoryPostsContainer'
 import GoogleAuth from './GoogleAuth';
+import MicrosoftAuth from './MicrosoftAuth';
 
 export function Home(props) {
 
@@ -31,7 +32,13 @@ export function Home(props) {
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
             <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
-            {!props.loginInfo.loggedIn && <GoogleAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} />}
+            {
+                !props.loginInfo.loggedIn &&
+                <div>
+                    <GoogleAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} />
+                    { props.msalInstance && < MicrosoftAuth msalInstance={props.msalInstance} />}
+                </div>
+            }
             {
                 props.loginInfo.loggedIn &&
                 <InfinitePage loginInfo={props.loginInfo}>

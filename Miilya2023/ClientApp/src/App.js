@@ -8,6 +8,8 @@ import { FamilyTree } from './components/FamilyTree';
 import Cookies from 'universal-cookie';
 import MyAPI from './MyAPI';
 import { Logout } from './components/Logout';
+import { MicrosoftLogin } from './components/MicrosoftLogin';
+import * as msal from "msal";
 
 export default function App() {
 
@@ -48,9 +50,23 @@ export default function App() {
         setLoginInfo({ loggedIn: false });
     }
 
+    const [msalInstance, setMsalInstance] = useState(null);
+
+    useEffect(() => {
+
+        const msalConfig = {
+            auth: {
+                clientId: "3ee7d2ed-3ea7-4790-b63c-e06ccd058189",
+                redirectUri: 'https://localhost:5001/asd',
+            }
+        };
+
+        setMsalInstance(new msal.UserAgentApplication(msalConfig))
+    }, [])
+
     return (
         <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language}>
-            <Route exact path='/' render={() => <Home onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
+            <Route exact path='/' render={() => <Home msalInstance={msalInstance} onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
             <Route exact path='/PrivateHistory/Families' render={() => <Families loginInfo={loginInfo} language={language} />} />
             <Route path='/PrivateHistory/FamilyTree/:id' render={() => <FamilyTree loginInfo={loginInfo} language={language} />} />
             <Route exact path='/Logout' render={() => <Logout onLogOut={onLogOut} />} />

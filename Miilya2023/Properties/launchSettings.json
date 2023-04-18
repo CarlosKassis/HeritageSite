@@ -19,7 +19,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
-      "commandLineArgs": "--PrivateHistoryRoot C:\\PrivateHistory",
+      "commandLineArgs": "--PrivateHistoryRoot C:\\MiilyaSiteFiles\\PrivateHistory --MicrosoftClientSecret jKl8Q~L03AyK_mCAj0yut.Ydp.TBoLpt8lV56aTx",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
