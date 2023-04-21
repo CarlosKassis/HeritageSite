@@ -7,14 +7,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
-using Miilya2023.Constants;
 using Newtonsoft.Json;
 using static Miilya2023.Services.Abstract.Authentication;
 

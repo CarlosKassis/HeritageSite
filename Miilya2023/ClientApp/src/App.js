@@ -54,15 +54,19 @@ export default function App() {
     const [msalInstance, setMsalInstance] = useState(null);
 
     useEffect(() => {
-
-        const msalConfig = {
+        const newMsalInstance = new msal.UserAgentApplication({
             auth: {
                 clientId: "3ee7d2ed-3ea7-4790-b63c-e06ccd058189",
-                redirectUri: 'https://10.0.0.14:5001/',
+                authority: 'https://login.microsoftonline.com/10f100d7-a82a-4e12-8033-7d4c66a96a04',
+                redirectUri: window.location.origin
+            },
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false
             }
-        };
+        });
 
-        setMsalInstance(new msal.UserAgentApplication(msalConfig))
+        setMsalInstance(newMsalInstance)
     }, [])
 
     return (
