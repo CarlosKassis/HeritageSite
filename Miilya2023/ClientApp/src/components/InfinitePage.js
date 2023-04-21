@@ -6,7 +6,7 @@ export function InfinitePage(props) {
     const [loadMoreFlag, setLoadMoreFlag] = useState(0);
 
     const loadPostsCoolingDownFlag = useRef(false);
-    const scrollBottomMargin = 20;
+    const scrollBottomMargin = 300;
 
     function checkIfPageBottomAndLoadMorePosts() {
         // Check if hit page bottom

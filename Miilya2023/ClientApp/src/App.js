@@ -8,7 +8,6 @@ import { FamilyTree } from './components/FamilyTree';
 import Cookies from 'universal-cookie';
 import MyAPI from './MyAPI';
 import { Logout } from './components/Logout';
-import { MicrosoftLogin } from './components/MicrosoftLogin';
 import * as msal from "msal";
 
 export default function App() {
@@ -23,13 +22,15 @@ export default function App() {
         // Validate login token and try set state to logged in
         const loginJwt = cookies.get(`login-jwt`);
         if (loginJwt) {
-            if (MyAPI.validateLoginJwt(loginJwt)) {
-                console.log('Successful login JWT')
-                onValidLoginJwt(loginJwt);
-            } else {
-                console.log('Invalid login JWT')
+            MyAPI.validateLoginJwt(loginJwt).then(validJwt => {
+                if (validJwt) {
+                    onValidLoginJwt(loginJwt);
+                } else {
+                    cookies.remove('login-jwt', { path: '/' });
+                }
+            }).catch(ex => {
                 cookies.remove('login-jwt', { path: '/' });
-            }
+            })
         }
 
     }, []);
@@ -57,7 +58,7 @@ export default function App() {
         const msalConfig = {
             auth: {
                 clientId: "3ee7d2ed-3ea7-4790-b63c-e06ccd058189",
-                redirectUri: 'https://localhost:5001/asd',
+                redirectUri: 'https://10.0.0.14:5001/',
             }
         };
 

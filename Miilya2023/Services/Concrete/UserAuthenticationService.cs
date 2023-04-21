@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Miilya2023.Constants;
@@ -17,6 +22,7 @@ namespace Miilya2023.Services.Abstract
 {
     public class UserAuthenticationService : IUserAuthenticationService
     {
+        private const string _microsoftJwkAquireUrl = "https://login.microsoftonline.com/common/discovery/v2.0/keys";
         private const string _googleClientId = "774040641386-74otf6r69gv7nd92efvbh5kf5l6j8jf8.apps.googleusercontent.com";
         
         private const string _microsoftClientId = "3ee7d2ed-3ea7-4790-b63c-e06ccd058189";
@@ -40,6 +46,20 @@ namespace Miilya2023.Services.Abstract
 
         private static readonly ConcurrentDictionary<string, bool> _loginJwtsValidationResults = new ConcurrentDictionary<string, bool>();
 
+        private static Task _microsoftJwkRetrieverDaemon;
+
+        private static IEnumerable<JsonWebKey> _microsoftJsonWebKeys;
+
+        private static readonly JwtSecurityTokenHandler _microsoftTokenHandler = new JwtSecurityTokenHandler();
+
+        private ILogger<UserAuthenticationService> _logger;
+
+        public UserAuthenticationService(ILogger<UserAuthenticationService> logger)
+        {
+            _logger = logger;
+            _microsoftJwkRetrieverDaemon ??= Task.Factory.StartNew(() => RetrieveMicrosoftJsonWebKeysLoop(logger));
+        }
+
         public async Task<bool> IsLoginJwtValid(string jwt)
         {
             if (jwt == null)
@@ -61,12 +81,11 @@ namespace Miilya2023.Services.Abstract
 
         public async Task<string> CreateSiteLoginJwtFromThirdPartyLoginJwt(string jwt, AccountAuthentication accountAuthentication)
         {
-            string email = null;
-            email = accountAuthentication switch
+            string email = accountAuthentication switch
             {
                 AccountAuthentication.Google => await ValidateGoogleLoginJwt(jwt),
-                AccountAuthentication.Microsoft => await ValidateMicrosoftLoginJwt(jwt),
-                _ => throw new NotSupportedException("Only Microsoft or Google accounts are supported")
+                AccountAuthentication.Microsoft => ValidateMicrosoftLoginJwt(jwt),
+                _ => throw new NotSupportedException("Only Microsoft and Google accounts are supported")
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -82,28 +101,46 @@ namespace Miilya2023.Services.Abstract
             return _tokenHandler.CreateEncodedJwt(tokenDescriptor);
         }
 
-        private static readonly IConfidentialClientApplication _microsoftConfidentialClientApplication = ConfidentialClientApplicationBuilder
-                .Create(_microsoftClientId)
-                .WithTenantId("10f100d7-a82a-4e12-8033-7d4c66a96a04")
-                .WithClientSecret(AuthenticationConstants.MicrosoftClientSecret)
-                .Build();
-
-        private async Task<string> ValidateMicrosoftLoginJwt(string jwt)
+        private string ValidateMicrosoftLoginJwt(string jwt)
         {
-            try
+            if (_microsoftJsonWebKeys == null)
             {
-                return "asd";
-            }
-            catch (MsalUiRequiredException ex)
-            {
-                Console.WriteLine(ex);
-            }
-            catch (MsalException ex)
-            {
-                Console.WriteLine(ex);
+                _logger.LogError($"Microsoft validation keys aren't available. {nameof(_microsoftJsonWebKeys)} is null");
+                throw new Exception("Microsoft validation keys aren't available");
             }
 
-            return "asd";
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(jwt);
+
+            // Log the JWKs
+            foreach (JsonWebKey jwk in _microsoftJsonWebKeys)
+            {
+                try
+                {
+                    TokenValidationParameters validationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = jwtSecurityToken.Issuer,
+                        ValidAudience = jwtSecurityToken.Audiences.First(),
+                        IssuerSigningKey = jwk,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                    };
+
+                    ClaimsPrincipal claimsPrincipal = _microsoftTokenHandler.ValidateToken(jwt, validationParameters, out SecurityToken validatedToken);
+
+                    if (claimsPrincipal.Claims.FirstOrDefault(claim => claim.Type == "aud")?.Value != _microsoftClientId)
+                    {
+                        throw new Exception("Invalid application ID login");
+                    }
+
+                    // Extract the claims from the validated token
+                    return claimsPrincipal.Claims.FirstOrDefault(claim => claim.Type == "preferred_username")?.Value;
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            throw new Exception("Login is invalid");
         }
 
         private async Task<string> ValidateGoogleLoginJwt(string jwt)
@@ -150,6 +187,33 @@ namespace Miilya2023.Services.Abstract
                 var rsaParameters = rsaProvider.ExportParameters(true);
                 File.WriteAllText(rsaFile, JsonConvert.SerializeObject(rsaParameters));
                 return new RsaSecurityKey(rsaParameters);
+            }
+        }
+
+        private static async Task RetrieveMicrosoftJsonWebKeysLoop(ILogger<UserAuthenticationService> logger)
+        {
+            while (true)
+            {
+                try
+                {
+                    using HttpClient httpClient = new HttpClient();
+                    using HttpResponseMessage httpResponse = await httpClient.GetAsync(_microsoftJwkAquireUrl);
+
+                    if (!httpResponse.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"Failed to retrieve JWKs. HTTP status code: {httpResponse.StatusCode}");
+                    }
+
+                    string responseJson = await httpResponse.Content.ReadAsStringAsync();
+                    JsonWebKeySet jwks = new JsonWebKeySet(responseJson);
+                    _microsoftJsonWebKeys = jwks.Keys;
+                    await Task.Delay(TimeSpan.FromHours(1));
+                }
+                catch (Exception ex)
+                {
+                    logger?.LogError(ex.Message, ex);
+                    await Task.Delay(TimeSpan.FromMinutes(10));
+                }
             }
         }
     }

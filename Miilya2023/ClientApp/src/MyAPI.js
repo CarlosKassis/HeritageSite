@@ -1,7 +1,7 @@
 
 export default class MyAPI {
-     static async validateLoginJwt(jwt) {
-         const response = await fetch('/UserAuthentication/Validate', {
+    static async validateLoginJwt(jwt) {
+        const response = await fetch('/UserAuthentication/Validate', {
              headers: {
                  'Authorization': jwt
              }
@@ -40,9 +40,9 @@ export default class MyAPI {
 
     static async getHistoryPosts(jwt, startingFromIndex) {
 
-        console.log('getHistoryPosts: ' + startingFromIndex)
         // If start index is empty then don't pass it
         var url = startingFromIndex !== null ? `PrivateHistory/HistoryPost/${startingFromIndex}` : 'PrivateHistory/HistoryPost';
+
         const response = await fetch(url, {
             headers: {
                 'Authorization': jwt
@@ -51,6 +51,36 @@ export default class MyAPI {
 
         if (response.ok) {
             return await response.json();
+        }
+
+        return null;
+    }
+
+    static async getLoginJwtFromGoogleJwt(jwt) {
+        const response = await fetch('/UserAuthentication/Google/Login', {
+            method: "POST",
+            headers: {
+                'google-credentials': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.text();
+        }
+
+        return null;
+    }
+
+    static async getLoginJwtFromMicrosoftJwt(jwt) {
+        const response = await fetch('/UserAuthentication/Microsoft/Login', {
+            method: "POST",
+            headers: {
+                'microsoft-credentials': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.text();
         }
 
         return null;

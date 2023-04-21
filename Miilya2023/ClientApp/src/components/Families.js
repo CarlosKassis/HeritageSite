@@ -22,8 +22,7 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        MyAPI.getFamilies(props.loginInfo.jwt)
-            .then(families => {
+        MyAPI.getFamilies(props.loginInfo.jwt).then(families => {
             if (families) {
                 setFamilies(families);
             }

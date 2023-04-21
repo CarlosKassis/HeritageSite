@@ -1,4 +1,5 @@
 ﻿import { useEffect, useRef } from 'react'
+import MyAPI from '../MyAPI'
 
 const loadScript = (src) =>
     new Promise((resolve, reject) => {
@@ -38,16 +39,9 @@ const GoogleAuth = (props) => {
     }, [])
 
     function handleCredentialResponse(response) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (request.readyState == 4) {
-                props.onLogin(request.responseText);
-            }
-        }
-
-        request.open("POST", "/UserAuthentication/Google/Login", true);
-        request.setRequestHeader("google-credentials", response.credential);
-        request.send();
+        MyAPI.getLoginJwtFromGoogleJwt(response.credential).then(loginJwt => {
+            props.onLogin(loginJwt);
+        })
     }
 
     return (

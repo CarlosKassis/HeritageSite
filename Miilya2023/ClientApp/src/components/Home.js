@@ -32,11 +32,12 @@ export function Home(props) {
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
             <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
+
             {
                 !props.loginInfo.loggedIn &&
                 <div>
                     <GoogleAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} />
-                    { props.msalInstance && < MicrosoftAuth msalInstance={props.msalInstance} />}
+                    {props.msalInstance && < MicrosoftAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} msalInstance={props.msalInstance} />}
                 </div>
             }
             {
@@ -45,6 +46,7 @@ export function Home(props) {
                         <HistoryPostsContainer />
                     </InfinitePage>
             }
+
         </div>
     );
 }
