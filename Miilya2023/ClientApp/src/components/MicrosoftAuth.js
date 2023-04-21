@@ -6,7 +6,9 @@ function MicrosoftAuth(props) {
             props.msalInstance.loginPopup({
                 scopes: ['user.read']
             }).then(response => {
-                console.log(response);
+                return MyAPI.getLoginJwtFromMicrosoftJwt(response.idToken.rawIdToken);
+            }).then(loginJwt => {
+                props.onLogin(loginJwt);
             }).catch(error => {
                 console.error(error);
             });
