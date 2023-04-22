@@ -47,7 +47,6 @@ const GoogleAuth = (props) => {
     return (
         <div className={"login-button-container"}>
             <div ref={googleButton} />
-            <div style={{ width: '100px', height: '100px', backgroundColor: 'red' }} ></div>
         </div>
     )
 }

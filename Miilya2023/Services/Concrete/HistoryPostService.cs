@@ -20,12 +20,13 @@ namespace Miilya2023.Services.Concrete
             //_collection.InsertMany(docs);
         }
 
-        public async Task<List<HistoryPostDocument>> GetFirstBatchGreaterEqualThanIndex(int index, int batchSize = 20)
+        public async Task<List<HistoryPostDocument>> GetFirstBatchGreaterEqualThanIndex(int? index, int batchSize = 20)
         {
-            var filter = Builders<HistoryPostDocument>.Filter.Gte(x => x.Index, index);
+            index ??= 100;
+            var filter = Builders<HistoryPostDocument>.Filter.Lte(x => x.Index, index);
             var results = await _collection
                 .Find(filter)
-                .SortBy(x => x.Index)
+                .SortByDescending(x => x.Index)
                 .Limit(batchSize)
                 .ToListAsync();
 

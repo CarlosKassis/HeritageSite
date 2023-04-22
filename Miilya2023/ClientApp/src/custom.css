@@ -55,6 +55,10 @@ code {
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+.history-post-image:hover {
+    cursor: pointer;
+}
+
 .history-posts-container {
     align-content: center;
     display: block;
@@ -70,4 +74,8 @@ code {
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
+}
+
+.login-button-container:hover {
+    cursor: pointer;
 }

@@ -19,7 +19,7 @@ namespace Miilya2023.Controllers.PrivateHistory
 
         [HttpGet]
         [Route("{startIndex:int?}")]
-        public async Task<IActionResult> GetHistoryPostsBatchStartingFromIndex(int startIndex = -1)
+        public async Task<IActionResult> GetHistoryPostsBatchStartingFromIndex(int? startIndex)
         {
             var results = await _historyPostService.GetFirstBatchGreaterEqualThanIndex(startIndex);
             return Content(JsonConvert.SerializeObject(results));

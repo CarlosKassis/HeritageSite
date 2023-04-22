@@ -16,9 +16,9 @@ function MicrosoftAuth(props) {
 
     return (
         <div className={"login-button-container"}>
-            {
-            <button onClick={handleLoginClick}>Login with Microsoft</button>
-            }
+            <div onClick={handleLoginClick}>
+                <img src={"/microsoft-login.svg"} alt={"Microsoft Login"} />
+            </div>
         </div>
     );
 }

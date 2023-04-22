@@ -29,7 +29,7 @@ export function HistoryPostsContainer(props) {
 
         var startingFromIndex = null;
         if (historyPostsRef.current != null && historyPostsRef.current.length > 0) {
-            startingFromIndex = Math.max(...historyPostsRef.current.map(historyPost => historyPost.Index)) + 1;
+            startingFromIndex = Math.min(...historyPostsRef.current.map(historyPost => historyPost.Index)) - 1;
         }
 
         if (props.loginInfo.loggedIn) {

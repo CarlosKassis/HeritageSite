@@ -6,14 +6,12 @@ export function InfinitePage(props) {
     const [loadMoreFlag, setLoadMoreFlag] = useState(0);
 
     const loadPostsCoolingDownFlag = useRef(false);
-    const scrollBottomMargin = 300;
+    const scrollBottomMargin = 500;
 
     function checkIfPageBottomAndLoadMorePosts() {
         // Check if hit page bottom
         const scrollTop = window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-
-        //console.log(scrollTop + ' ' + maxScroll);
 
         // Ignore if on load cooldown
         if (loadPostsCoolingDownFlag.current) {
@@ -45,44 +43,45 @@ export function InfinitePage(props) {
     const previousPointerY = useRef(null);
 
     return (
-        <div
+        <div className={"infinite-page-max"}
+            style={{ width: '100%' }}
             onTouchMove={(e) => {
-                if (!previousPointerY.current) {
-                    previousPointerY.current = e.touches[0].screenY;
-                    return;
-                }
+                    if (!previousPointerY.current) {
+                        previousPointerY.current = e.touches[0].screenY;
+                        return;
+                    }
 
-                if (previousPointerY.current - e.touches[0].screenY < 0) {
-                    checkIfPageBottomAndLoadMorePosts()
+                    if (previousPointerY.current - e.touches[0].screenY < 0) {
+                        checkIfPageBottomAndLoadMorePosts()
+                    }
                 }
-            }}
+            }
             onWheel={(e) => {
                 if (e.deltaY > 0) {
                     checkIfPageBottomAndLoadMorePosts()
                 }
-            }}
-            style={{
-                width: '100%',
-                height:'100%'
-                } }>
-            
-            {
-                React.cloneElement(props.children, { loginInfo: props.loginInfo, loadMoreFlag: loadMoreFlag, onLoadingStop: onLoadingStop })
-            }
-            {
-                // Show loading animation or leave space
-                (loading &&
-                    <img
-                        src={"./loading.gif"} alt={"Loading more!!!"}
-                        style={{
-                            display: 'block',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            width: '12vh',
-                            paddingBottom: '4vh'
-                        }} />) ||
-                (!loading && <div style={{ height:'10vh' }} />)
-            }
+            }}>
+            <div
+                className={"infinite-page-container"}>
+
+                {
+                    React.cloneElement(props.children, { loginInfo: props.loginInfo, loadMoreFlag: loadMoreFlag, onLoadingStop: onLoadingStop })
+                }
+                {
+                    // Show loading animation or leave space
+                    (loading &&
+                        <img
+                            src={"./loading.gif"} alt={"Loading more!!!"}
+                            style={{
+                                display: 'block',
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                                width: '12vh',
+                                paddingBottom: '4vh'
+                            }} />) ||
+                    (!loading && <div style={{ height: '10vh' }} />)
+                }
+            </div>
         </div>
     );
 }

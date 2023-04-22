@@ -24,8 +24,22 @@ export default class MyAPI {
         return null;
     }
 
+    static async getHistoryImageLowRes(jwt, name) {
+        const response = await fetch(`PrivateHistory/Image/LowRes/${name}`, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.blob();
+        }
+
+        return null;
+    }
+
     static async getHistoryImage(jwt, name) {
-        const response = await fetch(`PrivateHistory/Media/Images/${name}`, {
+        const response = await fetch(`PrivateHistory/Image/${name}`, {
             headers: {
                 'Authorization': jwt
             }

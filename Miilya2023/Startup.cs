@@ -39,6 +39,7 @@ namespace Miilya2023
             services.AddSingleton<IHistoryPostService, HistoryPostService>();
             services.AddSingleton<IFamilyService, FamilyService>();
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
+            services.AddSingleton<IImageService, ImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
