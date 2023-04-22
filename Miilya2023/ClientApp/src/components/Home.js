@@ -32,7 +32,7 @@ export function Home(props) {
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
             <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
-
+            <br/>
             {
                 !props.loginInfo.loggedIn &&
                 <div>

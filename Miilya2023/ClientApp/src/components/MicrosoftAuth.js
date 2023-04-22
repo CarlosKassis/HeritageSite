@@ -15,8 +15,10 @@ function MicrosoftAuth(props) {
     };
 
     return (
-        <div>
+        <div className={"login-button-container"}>
+            {
             <button onClick={handleLoginClick}>Login with Microsoft</button>
+            }
         </div>
     );
 }
