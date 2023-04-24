@@ -5,7 +5,7 @@ import { HistoryPostsContainer } from './HistoryPostsContainer'
 import GoogleAuth from './GoogleAuth';
 import MicrosoftAuth from './MicrosoftAuth';
 
-export function Home(loginInfo, logout, onLogOut, onLogin, language, msalInstance) {
+export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInstance }) {
 
     const strings = new LocalizedStrings({
         ar: {

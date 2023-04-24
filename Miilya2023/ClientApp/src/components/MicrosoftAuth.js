@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import MyAPI from "../MyAPI";
 
-function MicrosoftAuth(msalInstance, onLogin) {
+function MicrosoftAuth({ msalInstance, onLogin }) {
     const handleLoginClick = async () => {
             msalInstance.loginPopup({
                 scopes: ['user.read']

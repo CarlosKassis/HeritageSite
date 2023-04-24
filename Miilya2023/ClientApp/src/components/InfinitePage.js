@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 
-export function InfinitePage(children, loginInfo) {
+export function InfinitePage({ loginInfo, children }) {
 
     const [loading, setLoading] = useState(false);
     const [loadMoreFlag, setLoadMoreFlag] = useState(0);

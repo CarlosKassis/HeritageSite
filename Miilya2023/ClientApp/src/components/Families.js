@@ -3,7 +3,7 @@ import LocalizedStrings from 'localized-strings'
 import { Link } from 'react-router-dom'
 import MyAPI from '../MyAPI';
 
-export function Families(loginInfo) {
+export function Families({ loginInfo }) {
 
     const [families, setFamilies] = useState([]);
 

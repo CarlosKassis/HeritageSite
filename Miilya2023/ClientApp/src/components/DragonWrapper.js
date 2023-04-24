@@ -1,7 +1,7 @@
 import React, { useEffect, Component } from 'react';
 import OpenSeadragon from 'openseadragon';
 
-export function DragonWrapper(familyId, loginInfo) {
+export function DragonWrapper({ familyId, loginInfo }) {
 
     useEffect(() => {
         OpenSeadragon({

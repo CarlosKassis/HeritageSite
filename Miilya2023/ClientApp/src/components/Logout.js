@@ -1,7 +1,7 @@
 ﻿import React, { useEffect } from 'react';
 import { Redirect } from 'react-router';
 
-export function Logout(onLogOut) {
+export function Logout({ onLogOut }) {
 
     useEffect(() => {
         onLogOut();

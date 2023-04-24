@@ -2,7 +2,7 @@
 import MyAPI from '../MyAPI';
 import { HistoryPost } from './HistoryPost';
 
-export function HistoryPostsContainer(loginInfo, loadMoreFlag, onLoadingStop) {
+export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }) {
 
     const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);

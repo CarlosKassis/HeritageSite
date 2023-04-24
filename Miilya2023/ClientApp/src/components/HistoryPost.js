@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost(loginInfo, imageName, title, index, description) {
+export function HistoryPost({ loginInfo, imageName, title, index, description }) {
     const [imageUrl, setImageUrl] = useState(null);
 
     const strings = new LocalizedStrings({

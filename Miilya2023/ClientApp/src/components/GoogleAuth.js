@@ -11,7 +11,7 @@ const loadScript = (src) =>
         document.body.appendChild(script)
     })
 
-const GoogleAuth = (onLogin) => {
+const GoogleAuth = ({ onLogin }) => {
 
     const googleButton = useRef(null);
 

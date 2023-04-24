@@ -70,7 +70,7 @@ export default function App() {
     }, [])
 
     return (
-        <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language}>
+        <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language} >
             <Route exact path='/' render={() => <Home msalInstance={msalInstance} onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
             <Route exact path='/PrivateHistory/Families' render={() => <Families loginInfo={loginInfo} language={language} />} />
             <Route path='/PrivateHistory/FamilyTree/:id' render={() => <FamilyTree loginInfo={loginInfo} language={language} />} />

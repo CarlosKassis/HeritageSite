@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import LocalizedStrings from 'localized-strings'
 
-export default function NavMenu(language, onClickLanguage, loginInfo) {
+export default function NavMenu({ loginInfo, onClickLanguage, language }) {
 
     const localizedMiilya = {
         ar: "معليا",
@@ -38,7 +38,7 @@ export default function NavMenu(language, onClickLanguage, loginInfo) {
     }
 
     return (
-        <header>
+       <header>
             <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3 middle-east" light>
                 <Container>
                     <NavbarBrand tag={Link} to="/">{localizedMiilya[language]}</NavbarBrand>
