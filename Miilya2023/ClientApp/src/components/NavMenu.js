@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import LocalizedStrings from 'localized-strings'
 
-export default function NavMenu(props) {
+export default function NavMenu(language, onClickLanguage, loginInfo) {
 
     const localizedMiilya = {
         ar: "معليا",
@@ -41,26 +41,26 @@ export default function NavMenu(props) {
         <header>
             <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3 middle-east" light>
                 <Container>
-                    <NavbarBrand tag={Link} to="/">{localizedMiilya[props.language]}</NavbarBrand>
-                    <NavLink href="#" className="text-dark" onClick={props.onClickLanguage}>{props.language == "ar" ? 'עברית' : 'عربية'}</NavLink>
+                    <NavbarBrand tag={Link} to="/">{localizedMiilya[language]}</NavbarBrand>
+                    <NavLink href="#" className="text-dark" onClick={onClickLanguage}>{language == "ar" ? 'עברית' : 'عربية'}</NavLink>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.collapsed} navbar>
-                        {props.loginInfo.loggedIn &&
+                        {loginInfo.loggedIn &&
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'home')}</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/">{getString(language, 'home')}</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/PrivateHistory/Families">{getString(props.language, 'families')}</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/PrivateHistory/Families">{getString(language, 'families')}</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/Logout">{getString(props.language, 'logout')}</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/Logout">{getString(language, 'logout')}</NavLink>
                                 </NavItem>
                             </ul>}
-                        {!props.loginInfo.loggedIn &&
+                        {!loginInfo.loggedIn &&
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/">{getString(props.language, 'login')}</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/">{getString(language, 'login')}</NavLink>
                                 </NavItem>
                             </ul>}
                     </Collapse>

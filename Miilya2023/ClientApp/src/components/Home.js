@@ -5,7 +5,7 @@ import { HistoryPostsContainer } from './HistoryPostsContainer'
 import GoogleAuth from './GoogleAuth';
 import MicrosoftAuth from './MicrosoftAuth';
 
-export function Home(props) {
+export function Home(loginInfo, logout, onLogOut, onLogin, language, msalInstance) {
 
     const strings = new LocalizedStrings({
         ar: {
@@ -24,25 +24,25 @@ export function Home(props) {
 
     // Handle logout URL
     useEffect(() => {
-        if (props.logout) {
-            props.onLogOut();
+        if (logout) {
+            onLogOut();
         }
     }, [])
 
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
-            <h1 style={{ textAlign: 'center' }}><b>{getString(props.language, 'title')}</b></h1>
+            <h1 style={{ textAlign: 'center' }}><b>{getString(language, 'title')}</b></h1>
             <br/>
             {
-                !props.loginInfo.loggedIn &&
+                !loginInfo.loggedIn &&
                 <div>
-                    <GoogleAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} />
-                    {props.msalInstance && < MicrosoftAuth onLogin={(loginJwt) => props.onLogin(loginJwt)} msalInstance={props.msalInstance} />}
+                    <GoogleAuth onLogin={(loginJwt) => onLogin(loginJwt)} />
+                    {msalInstance && < MicrosoftAuth onLogin={(loginJwt) => onLogin(loginJwt)} msalInstance={msalInstance} />}
                 </div>
             }
             {
-                props.loginInfo.loggedIn &&
-                <InfinitePage loginInfo={props.loginInfo}>
+                loginInfo.loggedIn &&
+                <InfinitePage loginInfo={loginInfo}>
                         <HistoryPostsContainer />
                     </InfinitePage>
             }

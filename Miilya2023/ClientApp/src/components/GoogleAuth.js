@@ -11,7 +11,7 @@ const loadScript = (src) =>
         document.body.appendChild(script)
     })
 
-const GoogleAuth = (props) => {
+const GoogleAuth = (onLogin) => {
 
     const googleButton = useRef(null);
 
@@ -40,7 +40,7 @@ const GoogleAuth = (props) => {
 
     function handleCredentialResponse(response) {
         MyAPI.getLoginJwtFromGoogleJwt(response.credential).then(loginJwt => {
-            props.onLogin(loginJwt);
+            onLogin(loginJwt);
         })
     }
 

@@ -1,14 +1,14 @@
 ﻿import React from "react";
 import MyAPI from "../MyAPI";
 
-function MicrosoftAuth(props) {
+function MicrosoftAuth(msalInstance, onLogin) {
     const handleLoginClick = async () => {
-            props.msalInstance.loginPopup({
+            msalInstance.loginPopup({
                 scopes: ['user.read']
             }).then(response => {
                 return MyAPI.getLoginJwtFromMicrosoftJwt(response.idToken.rawIdToken);
             }).then(loginJwt => {
-                props.onLogin(loginJwt);
+                onLogin(loginJwt);
             }).catch(error => {
                 console.error(error);
             });

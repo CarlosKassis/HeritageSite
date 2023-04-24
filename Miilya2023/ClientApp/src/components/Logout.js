@@ -1,10 +1,10 @@
 ﻿import React, { useEffect } from 'react';
 import { Redirect } from 'react-router';
 
-export function Logout(props) {
+export function Logout(onLogOut) {
 
     useEffect(() => {
-        props.onLogOut();
+        onLogOut();
     }, [])
 
     return (

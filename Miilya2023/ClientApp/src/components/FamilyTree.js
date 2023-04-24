@@ -3,7 +3,7 @@ import { DragonWrapper } from './DragonWrapper';
 import LocalizedStrings from 'localized-strings'
 import { useParams } from "react-router-dom"
  
-export function FamilyTree(props) {
+export function FamilyTree(loginInfo) {
 
     const { id } = useParams();
     const strings = new LocalizedStrings({
@@ -23,7 +23,7 @@ export function FamilyTree(props) {
     return (
         <div style={{ height: '90vh', width: '100%' }}>
             {
-                id && props.loginInfo.loggedIn && <DragonWrapper loginInfo={props.loginInfo} familyId={id} />
+                id && loginInfo.loggedIn && <DragonWrapper loginInfo={loginInfo} familyId={id} />
             }
         </div>
     );

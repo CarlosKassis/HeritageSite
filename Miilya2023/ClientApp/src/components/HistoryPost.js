@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost(props) {
+export function HistoryPost(loginInfo, imageName, title, index, description) {
     const [imageUrl, setImageUrl] = useState(null);
 
     const strings = new LocalizedStrings({
@@ -20,23 +20,23 @@ export function HistoryPost(props) {
     }
 
     useEffect(() => {
-        if (!props.loginInfo.loggedIn) {
+        if (!loginInfo.loggedIn) {
             return;
         }
 
-        if (!props.imageName) {
+        if (!imageName) {
             return;
         }
 
-        MyAPI.getHistoryImageLowRes(props.loginInfo.jwt, props.imageName).then(historyImageResponse => {
+        MyAPI.getHistoryImageLowRes(loginInfo.jwt, imageName).then(historyImageResponse => {
             if (historyImageResponse) {
                 setImageUrl(URL.createObjectURL(historyImageResponse));
             }
         });
-    }, [props.imageName, props.loginInfo])
+    }, [imageName, loginInfo])
 
     function onClickHistoryImage(imageName) {
-        MyAPI.getHistoryImage(props.loginInfo.jwt, imageName)
+        MyAPI.getHistoryImage(loginInfo.jwt, imageName)
             .then(historyImage => {
                 const url = URL.createObjectURL(historyImage);
                 window.open(url);
@@ -44,15 +44,15 @@ export function HistoryPost(props) {
     }
 
     return (
-        <div key={props.index} className={"history-post"}>
-            <h3 style={{ padding: '10px' }}>{props.title}</h3>
+        <div key={index} className={"history-post"}>
+            <h3 style={{ padding: '10px' }}>{title}</h3>
             {
                 imageUrl &&
                 <img
-                    onClick={() => onClickHistoryImage(props.imageName)}
+                    onClick={() => onClickHistoryImage(imageName)}
                     className={"history-post-image"}
                     src={imageUrl}
-                    alt={props.imageName}
+                    alt={imageName}
                 />
             }
             {
@@ -61,7 +61,7 @@ export function HistoryPost(props) {
                     <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
                 </div>
             }
-            <h6 style={{ paddingTop: '20px', overflowWrap: 'break-word' }}>{props.description}</h6>
+            <h6 style={{ paddingTop: '20px', overflowWrap: 'break-word' }}>{description}</h6>
         </div>
     );
 }

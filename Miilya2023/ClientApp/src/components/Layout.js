@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Container } from 'reactstrap';
 import NavMenu from './NavMenu';
 
-export function Layout(props)  {
+export function Layout(loginInfo, onClickLanguage, language, children)  {
     return (
         <div>
-            <NavMenu loginInfo={props.loginInfo} onClickLanguage={props.onClickLanguage} language={props.language} />
+            <NavMenu loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language} />
             <Container>
-                {props.children}
+                {children}
             </Container>
         </div>
     );

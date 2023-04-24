@@ -3,7 +3,7 @@ import LocalizedStrings from 'localized-strings'
 import { Link } from 'react-router-dom'
 import MyAPI from '../MyAPI';
 
-export function Families(props) {
+export function Families(loginInfo) {
 
     const [families, setFamilies] = useState([]);
 
@@ -22,7 +22,7 @@ export function Families(props) {
     }
 
     useEffect(() => {
-        MyAPI.getFamilies(props.loginInfo.jwt).then(families => {
+        MyAPI.getFamilies(loginInfo.jwt).then(families => {
             if (families) {
                 setFamilies(families);
             }

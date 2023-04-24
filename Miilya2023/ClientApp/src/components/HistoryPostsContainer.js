@@ -2,7 +2,7 @@
 import MyAPI from '../MyAPI';
 import { HistoryPost } from './HistoryPost';
 
-export function HistoryPostsContainer(props) {
+export function HistoryPostsContainer(loginInfo, loadMoreFlag, onLoadingStop) {
 
     const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);
@@ -10,7 +10,7 @@ export function HistoryPostsContainer(props) {
     // Initial history posts load
     useEffect(() => {
         tryLoadMorePosts();
-    }, [props.loginInfo, props.loadMoreFlag]);
+    }, [loginInfo, loadMoreFlag]);
 
     // To keep everything in sync
     function setHistoryPostsVariables(newHistoryPosts) {
@@ -19,11 +19,11 @@ export function HistoryPostsContainer(props) {
     }
 
     function tryLoadMorePosts() {
-        if (!props.loginInfo) {
+        if (!loginInfo) {
             return;
         }
 
-        if (!props.loginInfo.loggedIn) {
+        if (!loginInfo.loggedIn) {
             return;
         }
 
@@ -32,9 +32,9 @@ export function HistoryPostsContainer(props) {
             startingFromIndex = Math.min(...historyPostsRef.current.map(historyPost => historyPost.Index)) - 1;
         }
 
-        if (props.loginInfo.loggedIn) {
-            MyAPI.getHistoryPosts(props.loginInfo.jwt, startingFromIndex).then(historyPostsResponse => {
-                props.onLoadingStop();
+        if (loginInfo.loggedIn) {
+            MyAPI.getHistoryPosts(loginInfo.jwt, startingFromIndex).then(historyPostsResponse => {
+                onLoadingStop();
                 if (historyPostsResponse) {
                     if (historyPostsResponse.length == 0) {
                         console.log('No more posts in site')
@@ -70,6 +70,8 @@ export function HistoryPostsContainer(props) {
                         setHistoryPostsVariables(historyPostsResponse);
                     }
                 }
+            }).catch(ex => {
+                onLoadingStop();
             });
         }
     }
@@ -84,7 +86,7 @@ export function HistoryPostsContainer(props) {
                         imageName={historyPost.ImageName}
                         title={historyPost.Title}
                         description={historyPost.Description}
-                        loginInfo={props.loginInfo}
+                        loginInfo={loginInfo}
                     />
                 ))
             }

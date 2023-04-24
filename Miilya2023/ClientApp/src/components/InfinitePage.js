@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 
-export function InfinitePage(props) {
+export function InfinitePage(children, loginInfo) {
 
     const [loading, setLoading] = useState(false);
     const [loadMoreFlag, setLoadMoreFlag] = useState(0);
@@ -65,7 +65,7 @@ export function InfinitePage(props) {
                 className={"infinite-page-container"}>
 
                 {
-                    React.cloneElement(props.children, { loginInfo: props.loginInfo, loadMoreFlag: loadMoreFlag, onLoadingStop: onLoadingStop })
+                    React.cloneElement(children, { loginInfo: loginInfo, loadMoreFlag: loadMoreFlag, onLoadingStop: onLoadingStop })
                 }
                 {
                     // Show loading animation or leave space
