@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Miilya2023.Constants;
 using Miilya2023.Middlewares;
 using Miilya2023.Services.Abstract;
 using Miilya2023.Services.Concrete;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -67,31 +69,6 @@ namespace Miilya2023
                 ServeUnknownFileTypes = true
             });
 
-            /*
-            var key = GenerateRsaCryptoServiceProviderKey();
-            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
-
-            // Create JWT token with private key
-            var securityKey = GenerateRsaCryptoServiceProviderKey();
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(),
-                Expires = DateTime.UtcNow.AddDays(7),
-                NotBefore = DateTime.UtcNow,
-                SigningCredentials = credentials,
-                IssuedAt = DateTime.UtcNow
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler
-            {
-                SetDefaultTimesOnTokenCreation = false
-            };
-
-            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-
-            Console.WriteLine("JWT token: " + token);*/
-
             app.UseSpaStaticFiles();
 
             app.UseRouting();
@@ -112,13 +89,6 @@ namespace Miilya2023
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-        }
-
-        public SecurityKey GenerateRsaCryptoServiceProviderKey()
-        {
-            var rsaProvider = new RSACryptoServiceProvider(512);
-            SecurityKey key = new RsaSecurityKey(rsaProvider);
-            return key;
         }
     }
 }
