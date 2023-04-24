@@ -15,6 +15,7 @@ export default function App() {
     const cookies = new Cookies();
     const [language, setLanguage] = useState('ar');
     const [loginInfo, setLoginInfo] = useState({ loggedIn: false })
+    const [msalInstance, setMsalInstance] = useState(null);
 
     useEffect(() => {
         setLanguage('ar');
@@ -50,8 +51,6 @@ export default function App() {
         cookies.remove('login-jwt', { path: '/' });
         setLoginInfo({ loggedIn: false });
     }
-
-    const [msalInstance, setMsalInstance] = useState(null);
 
     useEffect(() => {
         const newMsalInstance = new msal.UserAgentApplication({
