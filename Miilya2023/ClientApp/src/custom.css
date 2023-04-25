@@ -55,7 +55,7 @@ code {
 }
 
 .create-history-post-input {
-    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5);
     border: none;
     outline: none;
 }
@@ -88,4 +88,13 @@ code {
 
 .login-button-container:hover {
     cursor: pointer;
+}
+
+#upload-image-container {
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+#upload-image-container:hover {
+    background-color: #ddd;
 }
