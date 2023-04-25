@@ -62,6 +62,7 @@ namespace Miilya2023
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            // TODO: Split to two serves, images, and dzi files
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(PrivateHistoryConstants.RootPath, "Media")),

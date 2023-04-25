@@ -1,5 +1,6 @@
 ﻿import React, { useEffect, useState, useRef } from 'react';
 import MyAPI from '../MyAPI';
+import { CreateHistoryPost } from './CreateHistoryPost';
 import { HistoryPost } from './HistoryPost';
 
 export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }) {
@@ -41,6 +42,8 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                         return;
                     }
 
+                    console.log(historyPostsResponse);
+
                     // Use Ref instead of State History Posts because this function could be called from callback
                     // And there's no access to State variables from callback since the callback captures only
                     // The initial value of the State variable
@@ -78,6 +81,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
 
     return (
         <div className={"history-posts-container"}>
+            <CreateHistoryPost loginInfo={loginInfo} />
             {
                 historyPosts.map((historyPost) => (
                     <HistoryPost

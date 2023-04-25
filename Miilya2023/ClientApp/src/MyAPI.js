@@ -99,4 +99,35 @@ export default class MyAPI {
 
         return null;
     }
+
+    static async submitHistoryPost(title, description, image, jwt) {
+
+        const formData = new FormData();
+
+        if (title !== null && title !== '') {
+            formData.append('title', title);
+        }
+
+        if (description !== null && description !== '') {
+            formData.append('description', description);
+        }
+
+        if (image !== null) {
+            formData.append('image', image);
+        }
+
+        const response = await fetch('/PrivateHistory/HistoryPost/Submit', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.blob();
+        }
+
+        return null;
+    }
 }

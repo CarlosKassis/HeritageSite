@@ -2,9 +2,14 @@
 
 namespace Miilya2023.Services.Concrete
 {
+    using Microsoft.AspNetCore.Http;
+    using Miilya2023.Constants;
     using Miilya2023.Services.Abstract;
     using MongoDB.Driver;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection.Metadata;
     using System.Threading.Tasks;
     using static Miilya2023.Services.Utils.Documents;
 
@@ -20,9 +25,9 @@ namespace Miilya2023.Services.Concrete
             //_collection.InsertMany(docs);
         }
 
-        public async Task<List<HistoryPostDocument>> GetFirstBatchGreaterEqualThanIndex(int? index, int batchSize = 20)
+        public async Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize)
         {
-            index ??= 100;
+            index ??= GetNewMaxDocumentIndexInDb();
             var filter = Builders<HistoryPostDocument>.Filter.Lte(x => x.Index, index);
             var results = await _collection
                 .Find(filter)
@@ -33,10 +38,30 @@ namespace Miilya2023.Services.Concrete
             return results;
         }
 
-        private int GetMaxDocumentIndexInDb()
+        public async Task InsertHistoryPost(string title, string description, IFormFile imageFile)
         {
-            //var maxIndexDocument = _collection.Find(x => true).SortByDescending(x => x[nameof(ImageDocument.Index)]).FirstOrDefault();
-            return 1; // maxIndexDocument == null ? 0 : BsonSerializer.Deserialize<ImageDocument>(maxIndexDocument).Index;
+            // TODO: assert image
+            if (imageFile != null)
+            {
+                try
+                {
+                    using FileStream outputFile = new FileStream(Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", imageFile.FileName), FileMode.OpenOrCreate);
+                    await imageFile.CopyToAsync(outputFile);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw new Exception($"Unable to save image: {imageFile.Name}");
+                }
+            }
+
+            _collection.InsertOne(new HistoryPostDocument { Title = title, Description = description, ImageName = imageFile?.FileName, Index = GetNewMaxDocumentIndexInDb() });
+        }
+
+        private int GetNewMaxDocumentIndexInDb()
+        {
+            var maxIndexDocument = _collection.Find(x => true).SortByDescending(x => x.Index).FirstOrDefault()?.Index ?? 0;
+            return maxIndexDocument + 1;
         }
     }
 }

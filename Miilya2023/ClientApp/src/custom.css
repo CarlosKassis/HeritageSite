@@ -41,13 +41,23 @@ code {
     background-color: #0d47a1;
 }
 
-.history-post {
+.history-post, .create-history-post {
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     width: 100%;
+}
+
+.create-history-post * {
+    display: block;
+}
+
+.create-history-post-input {
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.5);
+    border: none;
+    outline: none;
 }
 
 .history-post-image {
