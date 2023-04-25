@@ -49,11 +49,11 @@ export function CreateHistoryPost({ loginInfo }) {
 
                 <UploadImage onUploadImage={onUploadImage}/>
 
-                <h4 htmlFor="description" style={{ marginTop: '20px' }} >وصف:</h4>
-                <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%' }} onChange={handleDescriptionChange} />
+                <h4 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h4>
+                <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%', height: '50px' }} onChange={handleDescriptionChange} />
 
                 <button type="submit"
-                    style={{ marginTop: '20px', marginRight: 'auto', border: 'none', borderRadius: '2px', boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}>Submit</button>
+                    style={{ marginTop: '10px', marginRight: 'auto', border: 'none', borderRadius: '2px', boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}>Submit</button>
             </form>
         </div>
     );

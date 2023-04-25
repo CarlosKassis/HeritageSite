@@ -8,7 +8,7 @@ namespace Miilya2023.Services.Abstract
 
     public interface IHistoryPostService
     {
-        public Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize = 2);
+        public Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize);
 
         public Task InsertHistoryPost(string title, string description, IFormFile imageFile);
     }

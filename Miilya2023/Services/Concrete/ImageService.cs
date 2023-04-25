@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Miilya2023.Constants;
+using Miilya2023.Shared;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
@@ -19,11 +20,15 @@ namespace Miilya2023.Services.Abstract
 
         public async Task<byte[]> GetImage(string imageName)
         {
+            Validation.EnsureValidSupportedImageFileName(imageName);
+
             return await GetImageArray(imageName, lowResolution: false);
         }
 
         public async Task<byte[]> GetImageLowResolution(string imageName)
         {
+            Validation.EnsureValidSupportedImageFileName(imageName);
+
             return await GetImageArray(imageName, lowResolution: true);
         }
 

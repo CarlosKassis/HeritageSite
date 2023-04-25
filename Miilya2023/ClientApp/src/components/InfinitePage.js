@@ -37,7 +37,7 @@ export function InfinitePage({ loginInfo, children }) {
     }
 
     function onLoadingStop() {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000)
     }
 
     const previousPointerY = useRef(null);

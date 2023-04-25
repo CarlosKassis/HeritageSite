@@ -32,10 +32,10 @@ export function UploadImage({ onUploadImage }) {
             id={"upload-image-container" }
             style={{
                 padding: '20px',
-                marginTop: '20px',
+                marginTop: '10px',
                 boxShadow: 'inset 1px 1px 6px rgba(0, 0, 0, 0.5)',
                 width: '100%',
-                minHeight: '200px',
+                minHeight: '80px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -54,7 +54,7 @@ export function UploadImage({ onUploadImage }) {
             {
                 !uploadedImage &&
                 <img src={"/file-upload-outline.svg"} alt={"Upload Image"}
-                    style={{ width: '80px', height: '80px', margin: 'auto' }} />
+                    style={{ width: '60px', height: '60px', margin: 'auto' }} />
             }
             {
                 uploadedImage &&

@@ -5,11 +5,12 @@ namespace Miilya2023.Services.Concrete
     using Microsoft.AspNetCore.Http;
     using Miilya2023.Constants;
     using Miilya2023.Services.Abstract;
+    using Miilya2023.Shared;
     using MongoDB.Driver;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Reflection.Metadata;
+    using System.Linq;
     using System.Threading.Tasks;
     using static Miilya2023.Services.Utils.Documents;
 
@@ -19,11 +20,7 @@ namespace Miilya2023.Services.Concrete
         private static readonly IMongoDatabase _database = _mongoClient.GetDatabase("Miilya");
         private static readonly IMongoCollection<HistoryPostDocument> _collection = _database.GetCollection<HistoryPostDocument>("HistoryPosts");
 
-        public HistoryPostService()
-        {
-            //var docs = Enumerable.Range(0, 1000).Select(i => new ImageDocument { Index = i });
-            //_collection.InsertMany(docs);
-        }
+        private static readonly Random _random = new ();
 
         public async Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize)
         {
@@ -40,28 +37,43 @@ namespace Miilya2023.Services.Concrete
 
         public async Task InsertHistoryPost(string title, string description, IFormFile imageFile)
         {
-            // TODO: assert image
-            if (imageFile != null)
+            string fileExtension = Validation.EnsureValidSupportedImageFileName(imageFile?.FileName);
+
+            try
             {
-                try
-                {
-                    using FileStream outputFile = new FileStream(Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", imageFile.FileName), FileMode.OpenOrCreate);
-                    await imageFile.CopyToAsync(outputFile);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    throw new Exception($"Unable to save image: {imageFile.Name}");
-                }
+                string generatedFileName = GenerateUniqueFilename(fileExtension);
+                using FileStream outputFile = new (Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", generatedFileName), FileMode.OpenOrCreate);
+                await imageFile.CopyToAsync(outputFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception($"Unable to save image: {imageFile.Name}");
             }
 
             _collection.InsertOne(new HistoryPostDocument { Title = title, Description = description, ImageName = imageFile?.FileName, Index = GetNewMaxDocumentIndexInDb() });
         }
 
-        private int GetNewMaxDocumentIndexInDb()
+        private static int GetNewMaxDocumentIndexInDb()
         {
             var maxIndexDocument = _collection.Find(x => true).SortByDescending(x => x.Index).FirstOrDefault()?.Index ?? 0;
             return maxIndexDocument + 1;
+        }
+
+        private static string GenerateUniqueFilename(string fileExtension)
+        {
+            if (string.IsNullOrWhiteSpace(fileExtension))
+            {
+                throw new ArgumentException("Invalid file extension");
+            }
+
+            return $"{DateTimeOffset.UtcNow:yyyyMMdd-HHmmss}-{RandomNumericString()}.{fileExtension}";
+        }
+
+        private static string RandomNumericString(int length = 6)
+        {
+            const string chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[_random.Next(s.Length)]).ToArray());
         }
     }
 }

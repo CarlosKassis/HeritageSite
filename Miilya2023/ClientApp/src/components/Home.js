@@ -31,8 +31,6 @@ export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInsta
 
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
-            <h1 style={{ textAlign: 'center' }}><b>{getString(language, 'title')}</b></h1>
-            <br/>
             {
                 !loginInfo.loggedIn &&
                 <div>

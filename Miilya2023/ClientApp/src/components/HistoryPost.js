@@ -45,7 +45,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description })
 
     return (
         <div key={index} className={"history-post"}>
-            <h4 style={{ padding: '10px' }}>{title}</h4>
+            <h4>{title}</h4>
             {
                 imageUrl &&
                 <img
@@ -61,7 +61,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description })
                     <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
                 </div>
             }
-            <h6 style={{ paddingTop: '20px', overflowWrap: 'break-word' }}>{description}</h6>
+            <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
         </div>
     );
 }

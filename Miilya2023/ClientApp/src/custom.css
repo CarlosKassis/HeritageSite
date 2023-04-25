@@ -44,7 +44,7 @@ code {
 .history-post, .create-history-post {
     margin-top: 20px;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     width: 100%;

@@ -3,6 +3,7 @@ namespace Miilya2023.Controllers.PrivateHistory
 {
     using Microsoft.AspNetCore.Mvc;
     using Miilya2023.Services.Abstract;
+    using Miilya2023.Shared;
     using System.Threading.Tasks;
 
     [ApiController]
@@ -20,6 +21,8 @@ namespace Miilya2023.Controllers.PrivateHistory
         [Route("LowRes/{imageName}")]
         public async Task<IActionResult> GetImageLowResolution(string imageName)
         {
+            Validation.EnsureValidSupportedImageFileName(imageName);
+
             var image = await _imageService.GetImageLowResolution(imageName);
             return File(image, "image/jpeg");
         }
@@ -28,6 +31,8 @@ namespace Miilya2023.Controllers.PrivateHistory
         [Route("{imageName}")]
         public async Task<IActionResult> GetImage(string imageName)
         {
+            Validation.EnsureValidSupportedImageFileName(imageName);
+
             var image = await _imageService.GetImage(imageName);
             return File(image, "image/jpeg");
         }
