@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef } from "react";
 import MyAPI from "../MyAPI";
-import UploadImage2 from "./UploadImage2";
+import UploadImage from "./UploadImage";
 
 export function CreateHistoryPost({ loginInfo }) {
     const [title, setTitle] = useState(null);
@@ -14,11 +14,6 @@ export function CreateHistoryPost({ loginInfo }) {
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-    };
-
-    const onDropImage = (e) => {
-        e.preventDefault();
-        setImage(e.dataTransfer.files[0]);
     };
 
     function onSubmit(e) {
@@ -41,6 +36,10 @@ export function CreateHistoryPost({ loginInfo }) {
         document.getElementById('post-description').style.height = '150px';
     }
 
+    function onUploadImage(image) {
+        setImage(image)
+    }
+
     return (
         <div className={"create-history-post"} >
             <form onSubmit={onSubmit}>
@@ -48,7 +47,7 @@ export function CreateHistoryPost({ loginInfo }) {
                 <h4 htmlFor="title">عنوان:</h4>
                 <input className={"create-history-post-input"} autoComplete="off" style={{ width: '100%' }} type="text" id="post-title" onChange={handleTitleChange} />
 
-                <UploadImage2></UploadImage2>
+                <UploadImage onUploadImage={onUploadImage}/>
 
                 <h4 htmlFor="description" style={{ marginTop: '20px' }} >وصف:</h4>
                 <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%' }} onChange={handleDescriptionChange} />

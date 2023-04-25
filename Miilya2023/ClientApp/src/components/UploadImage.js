@@ -1,62 +1,77 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useRef } from 'react';
 
 export function UploadImage({ onUploadImage }) {
-    const [image, setImage] = useState(null);
 
-    const handleImageUpload = (e) => {
-        e.preventDefault()
-        console.log(e)
-        var file = e.dataTransfer.files[0];
+    const [uploadedImage, setUploadedImage] = useState(null);
+    const fileInputRef = useRef(null);
+
+    function handleFileUpload(file) {
         const fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = () => {
-            setImage(fileReader.result);
+            setUploadedImage(fileReader.result);
             onUploadImage(file);
         };
-        //setImage(URL.createObjectURL(e.dataTransfer.files[0]));
+    }
+
+    function onDropFile(e) {
+        e.preventDefault();
+        handleFileUpload(e.dataTransfer.files[0]);
+    };
+
+    function onClickEnterFile(e) {
+        handleFileUpload(e.target.files[0]);
+    };
+
+    function handleDragOver(e) {
+        e.preventDefault();
     };
 
     return (
         <div
-            htmlFor="imageUpload"
+            id={"upload-image-container" }
             style={{
-                border: '2px dashed grey',
-                marginTop: '10px',
                 padding: '20px',
-                boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.2)',
+                marginTop: '20px',
+                boxShadow: 'inset 1px 1px 6px rgba(0, 0, 0, 0.5)',
                 width: '100%',
-                minHeight: '100px',
+                minHeight: '200px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'
-            }}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={handleImageUpload}
+                } }
+            onDragOver={handleDragOver}
+            onDrop={onDropFile}
+            onClick={() => fileInputRef.current.click()}
         >
-            {!image && (
-                <>
-                    <input
-                        type="file"
-                        id="imageUpload"
-                        style={{ display: 'none' }}
-                        onChange={handleImageUpload}
-                        style={{ width: '100%', height: ' 100%', display: 'none' }}
-                    />
-                    <label >Upload Image</label>
-                </>
-            )}
-            {image && (
+            <input
+                type="file"
+                multiple={false}
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                onChange={onClickEnterFile}
+            />
+            {
+                !uploadedImage &&
+                <img src={"/file-upload-outline.svg"} alt={"Upload Image"}
+                    style={{ width: '80px', height: '80px', margin: 'auto' }} />
+            }
+            {
+                uploadedImage &&
                 <>
                     <img
-                        src={image}
-                        alt="Uploaded file"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        src={uploadedImage}
+                        alt="Uploaded Image"
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.5)',
+                        }}
                     />
-
                 </>
-            )}
+            }
         </div>
-    );
+        )
 };
 
 export default UploadImage;
