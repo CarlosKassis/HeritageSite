@@ -24,10 +24,8 @@ export function CreateHistoryPost({ loginInfo }) {
         e.preventDefault();
 
         MyAPI.submitHistoryPost(title, description, image, loginInfo.jwt).then(response => {
-            console.log('wow')
-            setTitle(null);
-            setDescription(null);
-            setImage(null);
+            console.log('wow');
+            location.reload();
         }).catch(error => {
             console.log(error);
         })
