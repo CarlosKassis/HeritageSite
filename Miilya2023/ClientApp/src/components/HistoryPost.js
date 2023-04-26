@@ -59,23 +59,28 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
                     position: 'relative',
                     marginRight: 'auto',
                     marginBlock: '5px',
-                    height: '50px'
+                    height: '36px'
                 }}>
                     {
                         // Delete post
                         myPost &&
-                        <img src={'./delete.png'} style={{ filter: 'drop-shadow(1px 1px 2px #555)', height: '100%' }} />
+                        <img
+                            className={"history-post-button"}
+                            src={'./delete.png'}/>
                     }
                     {
                         // Bookmark post
-                        <img onClick={() => { setBookmarked(!bookmarked); }} src={bookmarked ? './bookmarked.png' : './bookmark.png'} style={{ filter: 'drop-shadow(1px 1px 2px #555)', height: '100%' }} />
+                        <img
+                            className={"history-post-button"}
+                            onClick={() => { setBookmarked(!bookmarked); }}
+                            src={bookmarked ? './bookmarked.png' : './bookmark.png'}/>
                     }
                 </div>
             }
 
             {
                 // Title
-                title && <h4 style={{ overflowWrap: 'break-word' }}>{title}</h4> ||
+                title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
                 !title && <br/>
             }
             {
