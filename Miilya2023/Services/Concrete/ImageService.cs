@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Miilya2023.Constants;
-using Miilya2023.Shared;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+﻿
 
 namespace Miilya2023.Services.Abstract
 {
+    using Miilya2023.Constants;
+    using Miilya2023.Shared;
+    using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Formats.Jpeg;
+    using SixLabors.ImageSharp.Processing;
+    using System;
+    using System.Collections.Concurrent;
+    using System.IO;
+    using System.Threading.Tasks;
+
     public class ImageService : IImageService
     {
         private const int _maxImageWidth = 600;
@@ -45,7 +45,7 @@ namespace Miilya2023.Services.Abstract
 
             var imagePath = Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", imageName);
 
-            using var image = Image.Load(imagePath);
+            using var image = await Image.LoadAsync(imagePath);
 
             if (lowResolution)
             {
