@@ -66,10 +66,10 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                             }
                         }
 
-                        console.log('consecutive load!!')
+                        console.log('Consecutive load!')
                         setHistoryPostsVariables(newCombinedHistoryPosts);
                     } else {
-                        console.log('first load!!')
+                        console.log('First load!')
                         setHistoryPostsVariables(historyPostsResponse);
                     }
                 }

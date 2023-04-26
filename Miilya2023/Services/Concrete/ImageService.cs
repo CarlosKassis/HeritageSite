@@ -15,24 +15,22 @@ namespace Miilya2023.Services.Abstract
     public class ImageService : IImageService
     {
         private const int _maxImageWidth = 600;
-        private static readonly ConcurrentDictionary<string, byte[]> _imageCache = new ConcurrentDictionary<string, byte[]>();
-        private static readonly ConcurrentDictionary<string, byte[]> _lowResImageCache = new ConcurrentDictionary<string, byte[]>();
+        private static readonly ConcurrentDictionary<string, byte[]> _imageCache = new ();
+        private static readonly ConcurrentDictionary<string, byte[]> _lowResImageCache = new();
 
         public async Task<byte[]> GetImage(string imageName)
         {
             Validation.EnsureValidSupportedImageFileName(imageName);
-
             return await GetImageArray(imageName, lowResolution: false);
         }
 
         public async Task<byte[]> GetImageLowResolution(string imageName)
         {
             Validation.EnsureValidSupportedImageFileName(imageName);
-
             return await GetImageArray(imageName, lowResolution: true);
         }
 
-        private async Task<byte[]> GetImageArray(string imageName, bool lowResolution)
+        private static async Task<byte[]> GetImageArray(string imageName, bool lowResolution)
         {
             var imageCache = lowResolution switch
             {

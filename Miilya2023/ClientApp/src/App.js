@@ -22,7 +22,6 @@ export default function App() {
 
         // Validate login token and try set state to logged in
         const loginJwt = cookies.get(`login-jwt`);
-        console.log(loginJwt);
         if (loginJwt) {
             MyAPI.validateLoginJwt(loginJwt).then(validJwt => {
                 if (validJwt) {
@@ -38,7 +37,6 @@ export default function App() {
     }, []);
 
     function onValidLoginJwt(loginJwt, setCookie) {
-        console.log('aaaaaaaaaaaaaaaaaa ' + loginJwt + ' ' + setCookie);
         setLoginInfo({ loggedIn: true, jwt: loginJwt });
         if (setCookie) {
             cookies.set(`login-jwt`, loginJwt, { path: 'https://localhost/' });

@@ -6,6 +6,14 @@ export function UploadImage({ onUploadImage }) {
     const fileInputRef = useRef(null);
 
     function handleFileUpload(file) {
+        setUploadedImage(null);
+        if (file.type !== "image/jpeg" && file.type !== "image/png" && file.type !== "image/gif" && file.type !== "image/tiff" && file.type !== "image/webp" && file.type !== "image/bmp") {
+            document.getElementById('upload-image-container').style.backgroundColor = '#fcc';
+            return;
+        }
+
+        document.getElementById('upload-image-container').style.backgroundColor = '#fff';
+
         const fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = () => {
