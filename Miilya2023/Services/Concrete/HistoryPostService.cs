@@ -7,6 +7,7 @@ namespace Miilya2023.Services.Concrete
     using Miilya2023.Services.Abstract;
     using Miilya2023.Shared;
     using MongoDB.Driver;
+    using SixLabors.ImageSharp;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -35,23 +36,22 @@ namespace Miilya2023.Services.Concrete
             return results;
         }
 
-        public async Task InsertHistoryPost(string title, string description, IFormFile imageFile)
+        public async Task InsertHistoryPost(string title, string description, Image image)
         {
-            string fileExtension = Validation.EnsureValidSupportedImageFileName(imageFile?.FileName);
+            string generatedFileName = GenerateUniqueFilename();
 
             try
             {
-                string generatedFileName = GenerateUniqueFilename(fileExtension);
                 using FileStream outputFile = new (Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", generatedFileName), FileMode.OpenOrCreate);
-                await imageFile.CopyToAsync(outputFile);
+                await image.SaveAsJpegAsync(outputFile);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                throw new Exception($"Unable to save image: {imageFile.Name}");
+                throw new Exception($"Unable to save image");
             }
 
-            _collection.InsertOne(new HistoryPostDocument { Title = title, Description = description, ImageName = imageFile?.FileName, Index = GetNewMaxDocumentIndexInDb() });
+            _collection.InsertOne(new HistoryPostDocument { Title = title, Description = description, ImageName = generatedFileName, Index = GetNewMaxDocumentIndexInDb() });
         }
 
         private static int GetNewMaxDocumentIndexInDb()
@@ -60,14 +60,9 @@ namespace Miilya2023.Services.Concrete
             return maxIndexDocument + 1;
         }
 
-        private static string GenerateUniqueFilename(string fileExtension)
+        private static string GenerateUniqueFilename()
         {
-            if (string.IsNullOrWhiteSpace(fileExtension))
-            {
-                throw new ArgumentException("Invalid file extension");
-            }
-
-            return $"{DateTimeOffset.UtcNow:yyyyMMdd-HHmmss}-{RandomNumericString()}.{fileExtension}";
+            return $"{DateTimeOffset.UtcNow:yyyyMMdd-HHmmss}-{RandomNumericString()}.jpg";
         }
 
         private static string RandomNumericString(int length = 6)

@@ -25,7 +25,7 @@ namespace Miilya2023.Shared
             }
 
             var fileExtension = parts.Last();
-            if (!_supportedImageFileExtensions.Contains(fileExtension))
+            if (!_supportedImageFileExtensions.Contains(fileExtension.ToLower()))
             {
                 throw new ArgumentException($"Unsupported file type: {fileExtension}");
             }

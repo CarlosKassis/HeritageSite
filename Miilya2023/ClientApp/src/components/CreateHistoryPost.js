@@ -6,6 +6,7 @@ export function CreateHistoryPost({ loginInfo }) {
     const [title, setTitle] = useState(null);
     const [image, setImage] = useState(null);
     const [description, setDescription] = useState(null);
+    const [imageUploadError, setImageUploadError] = useState(null);
     const clickedDescriptionOnce = useRef(false);
 
     const handleTitleChange = (e) => {
@@ -19,9 +20,18 @@ export function CreateHistoryPost({ loginInfo }) {
     function onSubmit(e) {
         e.preventDefault();
 
+        if (image == null) {
+            setImageUploadError("يرجى تحميل صورة")
+            return;
+        }
+
         MyAPI.submitHistoryPost(title, description, image, loginInfo.jwt).then(response => {
-            console.log('wow');
-            location.reload();
+            if (response) {
+                location.reload();
+            } else {
+                setImageUploadError('صورة غير صالحة')
+            }
+
         }).catch(error => {
             console.log(error);
         })
@@ -44,13 +54,16 @@ export function CreateHistoryPost({ loginInfo }) {
         <div className={"create-history-post"} >
             <form onSubmit={onSubmit}>
 
-                <h4 htmlFor="title">عنوان:</h4>
+                <h5 htmlFor="title">عنوان:</h5>
                 <input className={"create-history-post-input"} autoComplete="off" style={{ width: '100%' }} type="text" id="post-title" onChange={handleTitleChange} />
 
                 <UploadImage onUploadImage={onUploadImage}/>
-
-                <h4 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h4>
-                <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%', height: '50px' }} onChange={handleDescriptionChange} />
+                {
+                    imageUploadError &&
+                    <p style={{ color: '#f55', fontSize: '14px', marginTop: '5px' }}>{imageUploadError}</p>
+                }
+                <h5 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h5>
+                <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%', height: '40px' }} onChange={handleDescriptionChange} />
 
                 <button type="submit"
                     style={{ marginTop: '10px', marginRight: 'auto', border: 'none', borderRadius: '2px', boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}>Submit</button>

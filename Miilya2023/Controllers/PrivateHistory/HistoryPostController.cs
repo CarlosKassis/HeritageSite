@@ -3,10 +3,11 @@ namespace Miilya2023.Controllers.PrivateHistory
 {
     using Microsoft.AspNetCore.Mvc;
     using Miilya2023.Services.Abstract;
-    using Miilya2023.Shared;
     using Newtonsoft.Json;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using SixLabors.ImageSharp;
 
     [ApiController]
     [Route("PrivateHistory/[Controller]")]
@@ -30,9 +31,26 @@ namespace Miilya2023.Controllers.PrivateHistory
         [HttpPost("Submit")]
         public async Task<IActionResult> SubmitHistoryPost()
         {
+            var formFile = Request.Form.Files["image"];
+            if (formFile == null)
+            {
+                throw new ArgumentException("Image wasn't supplied");
+            }
+
+            Image image = null;
+            try
+            {
+                using var stream = formFile.OpenReadStream();
+                image = await Image.LoadAsync(stream);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+
             var title = Request.Form["title"].FirstOrDefault();
             var description = Request.Form["description"].FirstOrDefault();
-            var image = Request.Form.Files["image"];
+
             await _historyPostService.InsertHistoryPost(title, description, image);
 
             return Ok();

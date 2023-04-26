@@ -125,7 +125,7 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return await response.blob();
+            return "ok";
         }
 
         return null;
