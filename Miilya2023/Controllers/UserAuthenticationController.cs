@@ -1,5 +1,4 @@
-﻿
-namespace Miilya2023.Controllers.PrivateHistory
+﻿namespace Miilya2023.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Miilya2023.Services.Abstract;

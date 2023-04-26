@@ -69,6 +69,11 @@ namespace Miilya2023.Services.Abstract
             }
 
             var validationResult = await _tokenHandler.ValidateTokenAsync(jwt, _tokenValidationParameters);
+            if (validationResult.Claims["login"] as string != "login" && !string.IsNullOrEmpty(validationResult.Claims["aud"] as string))
+            {
+                throw new InvalidOperationException();
+            }
+            
             _loginJwtsValidationResults.TryAdd(jwt, validationResult.IsValid);
 
             return validationResult.IsValid;
@@ -88,6 +93,10 @@ namespace Miilya2023.Services.Abstract
             {
                 SigningCredentials = _jwtSigningCredentials,
                 Subject = new ClaimsIdentity(),
+                Claims = new Dictionary<string, object>
+                {
+                    { "login", "login" }
+                },
                 Expires = DateTime.UtcNow.AddYears(1),
                 NotBefore = DateTime.UtcNow,
                 IssuedAt = DateTime.UtcNow,

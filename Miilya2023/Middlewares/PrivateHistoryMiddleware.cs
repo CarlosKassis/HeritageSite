@@ -20,8 +20,6 @@ namespace Miilya2023.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            await _next(context);
-            return;
             if (!context.Request.Path.HasValue || !context.Request.Path.Value.StartsWith(PrivateHistoryConstants.UrlPrefix))
             {
                 await _next(context);

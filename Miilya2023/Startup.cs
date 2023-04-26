@@ -1,19 +1,18 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Miilya2023.Constants;
 using Miilya2023.Middlewares;
 using Miilya2023.Services.Abstract;
 using Miilya2023.Services.Concrete;
-using System;
 using System.IO;
-using System.Security.Cryptography;
+using static Miilya2023.Services.Utils.Documents;
+using static Miilya2023.Services.Utils.DocumentsExternal;
 
 namespace Miilya2023
 {
@@ -30,6 +29,16 @@ namespace Miilya2023
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.CreateMap<UserDocument, UserDocumentExternal>();
+                mc.CreateMap<FamilyDocument, FamilyDocumentExternal>();
+                mc.CreateMap<HistoryPostDocument, HistoryPostDocumentExternal>();
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
@@ -42,6 +51,7 @@ namespace Miilya2023
             services.AddSingleton<IFamilyService, FamilyService>();
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             services.AddSingleton<IImageService, ImageService>();
+            services.AddSingleton<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

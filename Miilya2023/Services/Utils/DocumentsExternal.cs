@@ -4,17 +4,14 @@ namespace Miilya2023.Services.Utils
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
 
-    public class Documents
+    public class DocumentsExternal
     {
         /// <summary>
         /// Descripts a family tree
         /// </summary>
         [BsonIgnoreExtraElements]
-        public class FamilyDocument
+        public class FamilyDocumentExternal
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
-
             /// <summary>
             /// Display name of the family
             /// </summary>
@@ -27,13 +24,8 @@ namespace Miilya2023.Services.Utils
         }
 
         [BsonIgnoreExtraElements]
-        public class HistoryPostDocument
+        public class HistoryPostDocumentExternal
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
-
-            public ObjectId UserId { get; set; }
-
             public string ImageName { get; set; }
 
             public BsonDateTime ImageDate { get; set; }
@@ -43,14 +35,13 @@ namespace Miilya2023.Services.Utils
             public string Description { get; set; }
 
             public int Index { get; set; }
+
+            public bool MyPost { get; set; }
         }
 
         [BsonIgnoreExtraElements]
-        public class UserDocument
+        public class UserDocumentExternal
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
-
             public string EmailSHA256 { get; set; }
         }
     }

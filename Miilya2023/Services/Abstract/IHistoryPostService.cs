@@ -10,6 +10,8 @@ namespace Miilya2023.Services.Abstract
     {
         public Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize);
 
-        public Task InsertHistoryPost(string title, string description, Image image);
+        public Task InsertHistoryPost(string email, string title, string description, Image image);
+
+        public Task InsertHistoryPost(UserDocument user, string title, string description, Image image);
     }
 }
