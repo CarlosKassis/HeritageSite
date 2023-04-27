@@ -32,9 +32,17 @@ namespace Miilya2023.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
             var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks?.BookmarkedHistoryPostsIndexes != null)
+            if (bookmarks != null)
             {
-                bookmarks.BookmarkedHistoryPostsIndexes.Add(historyPostIndex);
+                if (bookmarks.BookmarkedHistoryPostsIndexes == null)
+                {
+                    bookmarks.BookmarkedHistoryPostsIndexes = new HashSet<int> { historyPostIndex };
+                }
+                else
+                {
+                    bookmarks.BookmarkedHistoryPostsIndexes.Add(historyPostIndex);
+                }
+
                 await _collection.ReplaceOneAsync(filter, bookmarks);
                 return;
             }
@@ -46,9 +54,13 @@ namespace Miilya2023.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
             var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks?.BookmarkedHistoryPostsIndexes != null)
+            if (bookmarks != null)
             {
-                bookmarks.BookmarkedHistoryPostsIndexes.Remove(historyPostIndex);
+                if (bookmarks.BookmarkedHistoryPostsIndexes != null)
+                {
+                    bookmarks.BookmarkedHistoryPostsIndexes.Remove(historyPostIndex);
+                }
+
                 await _collection.ReplaceOneAsync(filter, bookmarks);
                 return;
             }
