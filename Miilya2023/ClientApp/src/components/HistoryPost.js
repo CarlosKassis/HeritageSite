@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, control, bookmarked, onDeletePost }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost }) {
     const [imageUrl, setImageUrl] = useState(null);
     const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
@@ -21,8 +21,8 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
     }
 
     useEffect(() => {
-        setBookmarkedDisplay(bookmarked);
-    }, [bookmarked])
+        setBookmarkedDisplay(initialBookmarkState);
+    }, [initialBookmarkState])
 
     useEffect(() => {
         if (!loginInfo.loggedIn) {
@@ -70,7 +70,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
             return;
         }
 
-        const result = confirm("هل تريد ان تمحى المنشور?");
+        const result = confirm("هل تريد ان تحذف المنشور?");
         if (!result) {
             return;
         }
@@ -83,66 +83,71 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
     }
 
     return (
-        <div
-            key={index}
-            className={"history-post"}
-            style=
-            {{
-                backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
-            }}>
-
+        <div key={index}>
             {
-                <div style={{
-                    width: 'fit-content',
-                    position: 'relative',
-                    marginRight: 'auto',
-                    marginBlock: '5px',
-                    height: '36px'
-                }}>
+                (!showOnlyBookmarks || bookmarkedDisplay) &&
+                <div
+
+                    className={"card"}
+                    style=
+                    {{
+                        backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
+                    }}>
+
                     {
-                        // Delete post
-                        control !== null && control > 0 &&
-                        <img
-                            onClick={onClickDelete}
-                            className={"history-post-button"}
-                            src={'./delete.png'}/>
+                        <div style={{
+                            width: 'fit-content',
+                            position: 'relative',
+                            marginRight: 'auto',
+                            marginBlock: '5px',
+                            height: '36px'
+                        }}>
+                            {
+                                // Delete post
+                                control !== null && control > 0 &&
+                                <img
+                                    onClick={onClickDelete}
+                                    className={"history-button"}
+                                    src={'./delete.png'} />
+                            }
+                            {
+                                // Bookmark post
+                                <img
+                                    className={"history-button"}
+                                    onClick={onClickBookmark}
+                                    src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'} />
+                            }
+                        </div>
+                    }
+
+                    {
+                        // Title
+                        title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
+                        !title && <br />
                     }
                     {
-                        // Bookmark post
+                        // Image
+                        imageUrl &&
                         <img
-                            className={"history-post-button"}
-                            onClick={onClickBookmark}
-                            src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'}/>
+                            onClick={() => onClickHistoryImage(imageName)}
+                            className={"history-post-image"}
+                            src={imageUrl}
+                            alt={imageName}
+                        />
                     }
-                </div>
-            }
+                    {
+                        // Image loading
+                        imageName && !imageUrl &&
+                        <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
+                            <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
+                        </div>
+                    }
 
-            {
-                // Title
-                title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
-                !title && <br/>
-            }
-            {
-                // Image
-                imageUrl &&
-                <img
-                    onClick={() => onClickHistoryImage(imageName)}
-                    className={"history-post-image"}
-                    src={imageUrl}
-                    alt={imageName}
-                />
-            }
-            {
-                // Image loading
-                imageName && !imageUrl &&
-                <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
-                    <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
-                </div>
-            }
-
-            {
-                // Description
-                <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
+                    {
+                        // Description
+                        <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
+                        }
+                </div >
             }
         </div>
     );

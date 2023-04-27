@@ -7,7 +7,8 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
 
     const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);
-
+    const [onlyBookmarks, setOnlyBookmarks] = useState(false);
+    const [searchText, setSearchText] = useState(null);
     // Initial history posts load
     useEffect(() => {
         tryLoadMorePosts();
@@ -80,9 +81,46 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
         setHistoryPostsVariables(newHistoryPosts);
     }
 
+    const searchStamp = useRef(0);
+
+    function onChangeSearch(e) {
+        // Change stamp to make other timeout stamps irrelevant
+        searchStamp.current++
+        // Avoid overflow (somehow)
+        searchStamp.current = searchStamp.current > 1000000 ? 0 : searchStamp.current; 
+
+        const stamp = searchStamp.current;
+        const text = e.target.value;
+        setTimeout(() => { 
+            onCooldownSearchType(stamp, text);
+        }, 1000)
+    }
+
+    function onCooldownSearchType(stamp, text) {
+        if (stamp != searchStamp.current) {
+            return;
+        }
+
+        //console.log(text);
+    }
+
     return (
         <div className={"history-posts-container"}>
             <CreateHistoryPost loginInfo={loginInfo} />
+            <div className={"card"}
+                style={{
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    display: 'grid',
+                    gridTemplateColumns: '0fr 0fr',
+                    gridGap: '10px',
+                    padding: '12px',
+                    width: 'fit-content',
+                    height: 'fit-content'
+                }} >
+                <input onChange={onChangeSearch} className={"floating"} style={{ maxWidth: '400px' }}></input>
+                <img style={{ height: '32px' }} className={"history-button"} src={onlyBookmarks ? './bookmarked.png' : './bookmark.png'} onClick={() => setOnlyBookmarks(!onlyBookmarks)} />
+            </div>
             {
                 historyPosts.map((historyPost) => (
                     <HistoryPost
@@ -92,8 +130,9 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                         title={historyPost.Title}
                         description={historyPost.Description}
                         control={historyPost.Control}
-                        bookmarked={historyPost.Bookmarked}
+                        initialBookmarkState={historyPost.Bookmarked}
                         onDeletePost={onDeletePost}
+                        showOnlyBookmarks={onlyBookmarks}
                         loginInfo={loginInfo}
                     />
                 ))

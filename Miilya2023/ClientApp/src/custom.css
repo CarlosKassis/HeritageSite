@@ -31,7 +31,7 @@ code {
     color: #fff;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 2px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     user-select: none;
@@ -41,11 +41,11 @@ code {
     background-color: #0d47a1;
 }
 
-.history-post, .create-history-post {
+.card, .create-history-post {
     margin-top: 20px;
     margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 5px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     width: 100%;
 }
@@ -99,11 +99,15 @@ code {
     background-color: #ddd;
 }
 
-.history-post-button {
+.floating {
+    filter: drop-shadow(1px 1px 2px #555);
+}
+
+.history-button {
     height: 100%;
     filter: drop-shadow(1px 1px 2px #555);
 }
 
-.history-post-button:hover {
+.history-button:hover {
     cursor: pointer;
 }

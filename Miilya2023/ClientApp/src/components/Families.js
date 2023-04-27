@@ -39,7 +39,7 @@ export function Families({ loginInfo }) {
                             style={{
                                 margin: '20px auto 20px auto',
                                 padding: '20px',
-                                borderRadius: '10px',
+                                borderRadius: '5px',
                                 maxWidth: '300px',
                                 boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'
                             }}>
