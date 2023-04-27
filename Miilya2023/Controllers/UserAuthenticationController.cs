@@ -70,21 +70,14 @@
         [Route("Validate")]
         public async Task<IActionResult> ValidateJwt()
         {
-            if (!Request.Headers.TryGetValue(_jwtHeaderKey, out var jwtValues))
+            var jwt = Request.Headers["Authorization"].First();
+            if (jwt == null)
             {
-                throw new ArgumentException("Received Google login validation without response credentials");
+                throw new InvalidOperationException("Received validation request without token");
             }
 
-            var jwt = jwtValues.First();
-            bool isJwtValid = await _userAuthenticationService.IsLoginJwtValid(jwt);
-            if (isJwtValid)
-            {
-                return Ok();
-            }
-            else
-            {
-                return Forbid();
-            }
+            await _userAuthenticationService.ValidateLoginJwtAndGetUser(jwt);
+            return Ok();
         }
 
     }

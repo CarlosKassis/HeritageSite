@@ -101,14 +101,9 @@ code {
 
 .history-post-button {
     height: 100%;
-    -webkit-filter: brightness(100%) drop-shadow(1px 1px 2px #555);
+    filter: drop-shadow(1px 1px 2px #555);
 }
 
 .history-post-button:hover {
-    -webkit-filter: brightness(80%) drop-shadow(1px 1px 2px #555);
-    -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;
-    -o-transition: all 0.25s ease;
-    transition: all 0.25s ease;
     cursor: pointer;
 }

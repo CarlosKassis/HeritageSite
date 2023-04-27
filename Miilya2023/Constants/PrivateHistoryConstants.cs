@@ -2,7 +2,7 @@
 {
     public static class PrivateHistoryConstants
     {
-        public const string UrlPrefix = "/PrivateHistory";
+        public const string UrlPrefix = "/api/PrivateHistory";
 
         public const string MediaUrlPrefix = "/PrivateHistory/Media";
 

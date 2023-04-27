@@ -7,7 +7,7 @@ namespace Miilya2023.Controllers.PrivateHistory
     using System.Threading.Tasks;
 
     [ApiController]
-    [Route("PrivateHistory/[Controller]")]
+    [Route("api/PrivateHistory/[Controller]")]
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;

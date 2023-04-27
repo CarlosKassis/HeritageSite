@@ -50,7 +50,6 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                     if (historyPostsRef.current) {
                         // Keep track of which posts were already fetched
                         const setOfHistoryPostsIndexes = new Set(historyPostsRef.current.map(historyPost => historyPost.Index));
-                        console.log(setOfHistoryPostsIndexes);
 
                         // Create new array with new reference
                         var newCombinedHistoryPosts = [].concat(historyPostsRef.current);
@@ -59,10 +58,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                         for (const historyPost of historyPostsResponse) {
 
                             if (!(historyPost.Index in setOfHistoryPostsIndexes)) {
-                                console.log('added ' + historyPost.Index)
                                 newCombinedHistoryPosts.push(historyPost);
-                            } else {
-                                console.log('Not added ' + historyPost.Index)
                             }
                         }
 

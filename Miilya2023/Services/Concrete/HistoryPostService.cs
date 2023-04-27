@@ -10,8 +10,10 @@ namespace Miilya2023.Services.Concrete
     using SixLabors.ImageSharp;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using static Miilya2023.Services.Utils.Documents;
 
@@ -34,11 +36,17 @@ namespace Miilya2023.Services.Concrete
             index ??= GetNewMaxDocumentIndexInDb();
             var filter = Builders<HistoryPostDocument>.Filter.Lte(x => x.Index, index);
 
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
             var results = await _collection
                 .Find(filter)
                 .SortByDescending(x => x.Index)
                 .Limit(batchSize)
                 .ToListAsync();
+
+            Console.WriteLine(watch.ElapsedMilliseconds);
+            watch.Stop();
 
             return results;
         }

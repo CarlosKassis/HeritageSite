@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using static Miilya2023.Services.Abstract.Authentication;
+using static Miilya2023.Services.Utils.Documents;
 
 namespace Miilya2023.Services.Abstract
 {
@@ -40,7 +41,8 @@ namespace Miilya2023.Services.Abstract
                 ValidateAudience = false
             };
 
-        private static readonly ConcurrentDictionary<string, bool> _loginJwtsValidationResults = new ConcurrentDictionary<string, bool>();
+        // Error-prone: make sure to refresh from database on data change
+        private static readonly ConcurrentDictionary<string, UserDocument> _loginJwtsValidationResults = new ConcurrentDictionary<string, UserDocument>();
 
         private static Task _microsoftJwkRetrieverDaemon;
 
@@ -48,35 +50,45 @@ namespace Miilya2023.Services.Abstract
 
         private static readonly JwtSecurityTokenHandler _microsoftTokenHandler = new JwtSecurityTokenHandler();
 
-        private ILogger<UserAuthenticationService> _logger;
+        private readonly IUserService _userService;
 
-        public UserAuthenticationService(ILogger<UserAuthenticationService> logger)
+        private readonly ILogger<UserAuthenticationService> _logger;
+
+        public UserAuthenticationService(IUserService userService, ILogger<UserAuthenticationService> logger)
         {
+            _userService = userService;
             _logger = logger;
             _microsoftJwkRetrieverDaemon ??= Task.Factory.StartNew(() => RetrieveMicrosoftJsonWebKeysLoop(logger));
         }
 
-        public async Task<bool> IsLoginJwtValid(string jwt)
+        public async Task<UserDocument> ValidateLoginJwtAndGetUser(string jwt)
         {
             if (jwt == null)
             {
-                return false;
+                throw new InvalidOperationException("Token is empty");
             }
 
-            if (_loginJwtsValidationResults.TryGetValue(jwt, out bool valid))
+            if (_loginJwtsValidationResults.TryGetValue(jwt, out var user))
             {
-                return valid;
+                return user;
             }
 
             var validationResult = await _tokenHandler.ValidateTokenAsync(jwt, _tokenValidationParameters);
-            if (validationResult.Claims["login"] as string != "login" && !string.IsNullOrEmpty(validationResult.Claims["aud"] as string))
+            if (validationResult.Claims["login"] as string != "login")
             {
                 throw new InvalidOperationException();
             }
-            
-            _loginJwtsValidationResults.TryAdd(jwt, validationResult.IsValid);
 
-            return validationResult.IsValid;
+            string email = validationResult.Claims["aud"] as string;
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new InvalidOperationException("Email is empty");
+            }
+
+            user = await _userService.GetUserWithEmail(email);
+
+            _loginJwtsValidationResults.TryAdd(jwt, user);
+            return user;
         }
 
 

@@ -10,66 +10,6 @@ export default class MyAPI {
          return response.ok;
     }
 
-    static async getFamilies(jwt) {
-        const response = await fetch('PrivateHistory/Family/All', {
-            headers: {
-                'Authorization': jwt
-            }
-        });
-
-        if (response.ok) {
-            return await response.json();
-        }
-
-        return null;
-    }
-
-    static async getHistoryImageLowRes(jwt, name) {
-        const response = await fetch(`PrivateHistory/Image/LowRes/${name}`, {
-            headers: {
-                'Authorization': jwt
-            }
-        });
-
-        if (response.ok) {
-            return await response.blob();
-        }
-
-        return null;
-    }
-
-    static async getHistoryImage(jwt, name) {
-        const response = await fetch(`PrivateHistory/Image/${name}`, {
-            headers: {
-                'Authorization': jwt
-            }
-        });
-
-        if (response.ok) {
-            return await response.blob();
-        }
-
-        return null;
-    }
-
-    static async getHistoryPosts(jwt, startingFromIndex) {
-
-        // If start index is empty then don't pass it
-        var url = startingFromIndex !== null ? `PrivateHistory/HistoryPost/${startingFromIndex}` : 'PrivateHistory/HistoryPost';
-
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': jwt
-            }
-        });
-
-        if (response.ok) {
-            return await response.json();
-        }
-
-        return null;
-    }
-
     static async getLoginJwtFromGoogleJwt(jwt) {
         const response = await fetch('/UserAuthentication/Google/Login', {
             method: "POST",
@@ -100,6 +40,66 @@ export default class MyAPI {
         return null;
     }
 
+    static async getFamilies(jwt) {
+        const response = await fetch('api/PrivateHistory/Family/All', {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        return null;
+    }
+
+    static async getHistoryImageLowRes(jwt, name) {
+        const response = await fetch(`api/PrivateHistory/Image/LowRes/${name}`, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.blob();
+        }
+
+        return null;
+    }
+
+    static async getHistoryImage(jwt, name) {
+        const response = await fetch(`api/PrivateHistory/Image/${name}`, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.blob();
+        }
+
+        return null;
+    }
+
+    static async getHistoryPosts(jwt, startingFromIndex) {
+
+        // If start index is empty then don't pass it
+        var url = `api/PrivateHistory/HistoryPost${(startingFromIndex !== null ? ('/' + startingFromIndex) : '')}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        return null;
+    }
+
     static async submitHistoryPost(title, description, image, jwt) {
 
         const formData = new FormData();
@@ -116,7 +116,7 @@ export default class MyAPI {
             formData.append('image', image);
         }
 
-        const response = await fetch('/PrivateHistory/HistoryPost/Submit', {
+        const response = await fetch('api/PrivateHistory/HistoryPost/Submit', {
             method: 'POST',
             body: formData,
             headers: {

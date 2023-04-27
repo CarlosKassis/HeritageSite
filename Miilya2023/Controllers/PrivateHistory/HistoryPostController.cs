@@ -8,12 +8,12 @@ namespace Miilya2023.Controllers.PrivateHistory
     using System.Linq;
     using System.Threading.Tasks;
     using SixLabors.ImageSharp;
-    using System.IdentityModel.Tokens.Jwt;
     using AutoMapper;
     using static Miilya2023.Services.Utils.DocumentsExternal;
+    using static Miilya2023.Services.Utils.Documents;
 
     [ApiController]
-    [Route("PrivateHistory/[Controller]")]
+    [Route("api/PrivateHistory/[Controller]")]
     public class HistoryPostController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -31,8 +31,7 @@ namespace Miilya2023.Controllers.PrivateHistory
         [Route("{startIndex:int?}")]
         public async Task<IActionResult> GetHistoryPostsBatchStartingFromIndex(int? startIndex)
         {
-            var jwt = Request.Headers["Authorization"].ToString();
-            var user = await _userService.GetUserWithLoginJwt(jwt);
+            var user = Request.HttpContext.Items["User"] as UserDocument;
 
             var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 8);
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>
@@ -46,8 +45,7 @@ namespace Miilya2023.Controllers.PrivateHistory
         [HttpPost("Submit")]
         public async Task<IActionResult> SubmitHistoryPost()
         {
-            var jwt = Request.Headers["Authorization"].First();
-            var user = await _userService.GetUserWithLoginJwt(jwt);
+            var user = Request.HttpContext.Items["User"] as UserDocument;
 
             var formFile = Request.Form.Files["image"];
             if (formFile == null)

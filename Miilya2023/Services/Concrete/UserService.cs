@@ -69,7 +69,7 @@ namespace Miilya2023.Services.Abstract
 
         private static string GetEmailBase64SHA256(string email)
         {
-            return Convert.ToBase64String(_sha256.ComputeHash(Encoding.UTF8.GetBytes(email)));
+            return Convert.ToBase64String(_sha256.ComputeHash(Encoding.UTF8.GetBytes(email.ToLower())));
         }
     }
 }

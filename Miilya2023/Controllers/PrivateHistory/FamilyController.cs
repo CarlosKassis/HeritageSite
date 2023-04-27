@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     [ApiController]
-    [Route("PrivateHistory/[Controller]")]
+    [Route("api/PrivateHistory/[Controller]")]
     public class FamilyController : ControllerBase
     {
         private readonly IFamilyService _familyService;
