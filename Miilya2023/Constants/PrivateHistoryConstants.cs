@@ -2,6 +2,8 @@
 {
     public static class PrivateHistoryConstants
     {
+        public const string DatabaseName = "Miilya";
+
         public const string UrlPrefix = "/api/PrivateHistory";
 
         public const string MediaUrlPrefix = "/PrivateHistory/Media";

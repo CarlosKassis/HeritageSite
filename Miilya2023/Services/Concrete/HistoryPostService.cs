@@ -20,7 +20,7 @@ namespace Miilya2023.Services.Concrete
     public class HistoryPostService : IHistoryPostService
     {
         private static readonly IMongoClient _mongoClient = new MongoClient("mongodb://localhost:27017");
-        private static readonly IMongoDatabase _database = _mongoClient.GetDatabase("Miilya");
+        private static readonly IMongoDatabase _database = _mongoClient.GetDatabase(PrivateHistoryConstants.DatabaseName);
         private static readonly IMongoCollection<HistoryPostDocument> _collection = _database.GetCollection<HistoryPostDocument>("HistoryPosts");
         private static readonly Random _random = new ();
 
