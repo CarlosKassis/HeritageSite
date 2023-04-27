@@ -41,7 +41,7 @@ namespace Miilya2023.Controllers.PrivateHistory
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>
             {
                 var historyPostExternal = _mapper.Map<HistoryPostDocumentExternal>(historyPost);
-                historyPostExternal.MyPost = historyPost.UserId == user.Id;
+                historyPostExternal.Control = user.IsAdmin ? 2 : historyPost.UserId == user.Id ? 1 : 0;
                 historyPostExternal.Bookmarked = bookmarkedPosts?.Contains(historyPost.Index) ?? false;
                 return historyPostExternal;
             })));
@@ -77,5 +77,13 @@ namespace Miilya2023.Controllers.PrivateHistory
             return Ok();
         }
 
+        [HttpPost("Delete/{index:int?}")]
+        public async Task<IActionResult> DeleteHistoryPost(int? index)
+        {
+            var user = Request.HttpContext.Items["User"] as UserDocument;
+            await _historyPostService.DeleteHistoryPost(user, index.Value);
+
+            return Ok();
+        }
     }
 }

@@ -53,6 +53,8 @@ namespace Miilya2023.Services.Utils
             public ObjectId Id { get; set; }
 
             public string EmailSHA256 { get; set; }
+
+            public bool IsAdmin { get; set; }
         }
 
         [BsonIgnoreExtraElements]

@@ -13,5 +13,7 @@ namespace Miilya2023.Services.Abstract
         public Task AddBookmark(UserDocument user, int historyPostIndex);
 
         public Task RemoveBookmark(UserDocument user, int historyPostIndex);
+
+        public Task DeleteBookmarksForHistoryPost(int historyPostIndex);
     }
 }

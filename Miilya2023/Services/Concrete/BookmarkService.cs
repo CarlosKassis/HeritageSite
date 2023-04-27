@@ -7,7 +7,6 @@ namespace Miilya2023.Services.Abstract
     using MongoDB.Driver;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
     using static Miilya2023.Services.Utils.Documents;
 
     public class BookmarkService : IBookmarkService
@@ -43,6 +42,12 @@ namespace Miilya2023.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id)
                 & Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
+            await _collection.DeleteManyAsync(filter);
+        }
+
+        public async Task DeleteBookmarksForHistoryPost(int historyPostIndex)
+        {
+            var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
             await _collection.DeleteManyAsync(filter);
         }
     }

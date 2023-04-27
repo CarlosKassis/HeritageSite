@@ -20,28 +20,28 @@ namespace Miilya2023.Controllers.PrivateHistory
         }
 
         [HttpGet]
-        [Route("Add/{historyPostIndex:int?}")]
-        public async Task<IActionResult> AddBookmark(int? historyPostIndex)
+        [Route("Add/{index:int?}")]
+        public async Task<IActionResult> AddBookmark(int? index)
         {
-            if (historyPostIndex == null)
+            if (index == null)
             {
-                throw new ArgumentException("No history post was specified");
+                throw new ArgumentException("No history post index was specified");
             }
 
-            await _imageService.AddBookmark(HttpContext.Items["User"] as UserDocument, historyPostIndex.Value);
+            await _imageService.AddBookmark(HttpContext.Items["User"] as UserDocument, index.Value);
             return Ok();
         }
 
         [HttpGet]
-        [Route("Remove/{historyPostIndex:int?}")]
-        public async Task<IActionResult> RemoveBookmark(int? historyPostIndex)
+        [Route("Remove/{index:int?}")]
+        public async Task<IActionResult> RemoveBookmark(int? index)
         {
-            if (historyPostIndex == null)
+            if (index == null)
             {
-                throw new ArgumentException("No history post was specified");
+                throw new ArgumentException("No history post index was specified");
             }
 
-            await _imageService.RemoveBookmark(HttpContext.Items["User"] as UserDocument, historyPostIndex.Value);
+            await _imageService.RemoveBookmark(HttpContext.Items["User"] as UserDocument, index.Value);
             return Ok();
         }
     }

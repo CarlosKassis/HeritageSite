@@ -13,5 +13,7 @@ namespace Miilya2023.Services.Abstract
         public Task InsertHistoryPost(string email, string title, string description, Image image);
 
         public Task InsertHistoryPost(UserDocument user, string title, string description, Image image);
+
+        public Task DeleteHistoryPost(UserDocument user, int index);
     }
 }

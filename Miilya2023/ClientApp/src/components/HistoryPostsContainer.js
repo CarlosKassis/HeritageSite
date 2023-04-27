@@ -75,6 +75,11 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
         }
     }
 
+    function onDeletePost(index) {
+        const newHistoryPosts = [...historyPosts].filter(historyPost => historyPost.Index != index);
+        setHistoryPostsVariables(newHistoryPosts);
+    }
+
     return (
         <div className={"history-posts-container"}>
             <CreateHistoryPost loginInfo={loginInfo} />
@@ -86,8 +91,9 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                         imageName={historyPost.ImageName}
                         title={historyPost.Title}
                         description={historyPost.Description}
-                        myPost={historyPost.MyPost}
+                        control={historyPost.Control}
                         bookmarked={historyPost.Bookmarked}
+                        onDeletePost={onDeletePost}
                         loginInfo={loginInfo}
                     />
                 ))

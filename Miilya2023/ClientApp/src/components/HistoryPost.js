@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, myPost, bookmarked }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, control, bookmarked, onDeletePost }) {
     const [imageUrl, setImageUrl] = useState(null);
     const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
@@ -65,13 +65,30 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
         }
     }
 
+    function onClickDelete() {
+        if (!control) {
+            return;
+        }
+
+        const result = confirm("هل تريد ان تمحى المنشور?");
+        if (!result) {
+            return;
+        }
+
+        MyAPI.deleteHistoryPost(loginInfo.jwt, index).then(() => {
+            onDeletePost(index);
+        }).catch(ex => {
+            console.log(ex);
+        })
+    }
+
     return (
         <div
             key={index}
             className={"history-post"}
             style=
             {{
-                backgroundColor: myPost == true ? '#dfd' : 'white'
+                backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
             }}>
 
             {
@@ -84,8 +101,9 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
                 }}>
                     {
                         // Delete post
-                        myPost &&
+                        control !== null && control > 0 &&
                         <img
+                            onClick={onClickDelete}
                             className={"history-post-button"}
                             src={'./delete.png'}/>
                     }

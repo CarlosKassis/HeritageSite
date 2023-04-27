@@ -25,10 +25,12 @@ namespace Miilya2023.Services.Concrete
         private static readonly Random _random = new ();
 
         private readonly IUserService _userService;
+        private readonly IBookmarkService _bookmarkService;
 
-        public HistoryPostService(IUserService userService)
+        public HistoryPostService(IUserService userService, IBookmarkService bookmarkService)
         {
             _userService = userService;
+            _bookmarkService = bookmarkService;
         }
 
         public async Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize)
@@ -36,17 +38,11 @@ namespace Miilya2023.Services.Concrete
             index ??= GetNewMaxDocumentIndexInDb();
             var filter = Builders<HistoryPostDocument>.Filter.Lte(x => x.Index, index);
 
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-
             var results = await _collection
                 .Find(filter)
                 .SortByDescending(x => x.Index)
                 .Limit(batchSize)
                 .ToListAsync();
-
-            Console.WriteLine(watch.ElapsedMilliseconds);
-            watch.Stop();
 
             return results;
         }
@@ -84,6 +80,52 @@ namespace Miilya2023.Services.Concrete
             _collection.InsertOne(historyPost);
         }
 
+
+        public async Task DeleteHistoryPost(UserDocument user, int index)
+        {
+            // Delete history post document
+            var filter = Builders<HistoryPostDocument>.Filter.Eq(x => x.Index, index);
+            if (!user.IsAdmin)
+            {
+                filter &= Builders<HistoryPostDocument>.Filter.Eq(x => x.UserId, user.Id);
+            }
+
+            var historyPost = await _collection.Find(filter).FirstAsync();
+            if (historyPost == null)
+            {
+                throw new InvalidOperationException("Invalid delete");
+            }
+
+            var deleteResult = await _collection.DeleteOneAsync(filter);
+            if (deleteResult.DeletedCount == 0)
+            {
+                throw new InvalidOperationException("Unable to delete to post");
+            }
+
+            // Beyond this point there's no return, since post document was deleted from DB
+            // Failures here will be considered OK to user, but should be cleaned up by daemons
+
+            // Delete bookmarks for this post
+            await _bookmarkService.DeleteBookmarksForHistoryPost(historyPost.Index);
+
+            try
+            {
+                // Delete image file
+                if (!IsSecureImageFilename(historyPost.ImageName))
+                {
+                    return;
+                }
+
+                // TODO: add lock once daemons that clean up files get added
+                await Task.Run(() => File.Delete(Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", historyPost.ImageName)));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+
         private static int GetNewMaxDocumentIndexInDb()
         {
             var maxIndexDocument = _collection.Find(x => true).SortByDescending(x => x.Index).FirstOrDefault()?.Index ?? 0;
@@ -99,6 +141,38 @@ namespace Miilya2023.Services.Concrete
         {
             const string chars = "0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[_random.Next(s.Length)]).ToArray());
+        }
+
+        private static bool IsSecureImageFilename(string filename)
+        {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return false;
+            }
+
+            var parts = filename.Split('.');
+
+            if (parts.Length != 2 )
+            {
+                return false;
+            }
+
+            if (parts.Last() != "jpg")
+            {
+                return false;
+            }
+
+            if (parts.Length > 16)
+            {
+                return false;
+            }
+
+            if (parts.First().Any(c => !char.IsNumber(c) && c != '-'))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

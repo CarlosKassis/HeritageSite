@@ -33,7 +33,8 @@ namespace Miilya2023.Middlewares
             try
             {
                 string loginJwt = context.Request.Headers["Authorization"];
-                context.Items["User"] = await _userAuthenticationService.ValidateLoginJwtAndGetUser(loginJwt);
+                var user = await _userAuthenticationService.ValidateLoginJwtAndGetUser(loginJwt);
+                context.Items["User"] = user ?? throw new Exception("Unable to get user");
             }
             catch (Exception ex)
             {

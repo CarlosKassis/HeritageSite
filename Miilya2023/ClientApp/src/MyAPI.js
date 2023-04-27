@@ -166,4 +166,23 @@ export default class MyAPI {
 
         return null;
     }
+
+    static async deleteHistoryPost(jwt, historyPostIndex) {
+
+        // If start index is empty then don't pass it
+        var url = `api/PrivateHistory/HistoryPost/Delete/${historyPostIndex}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return "ok";
+        }
+
+        return null;
+    }
 }

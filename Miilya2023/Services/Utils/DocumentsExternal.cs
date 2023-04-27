@@ -36,7 +36,7 @@ namespace Miilya2023.Services.Utils
 
             public int Index { get; set; }
 
-            public bool MyPost { get; set; }
+            public int Control { get; set; }
 
             public bool Bookmarked { get; set; }
         }
