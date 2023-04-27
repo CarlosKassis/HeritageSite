@@ -2,9 +2,9 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, myPost }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, myPost, bookmarked }) {
     const [imageUrl, setImageUrl] = useState(null);
-    const [bookmarked, setBookmarked] = useState(false);
+    const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
     const strings = new LocalizedStrings({
         ar: {
@@ -19,6 +19,10 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
         strings.setLanguage(language);
         return strings[str];
     }
+
+    useEffect(() => {
+        setBookmarkedDisplay(bookmarked);
+    }, [bookmarked])
 
     useEffect(() => {
         if (!loginInfo.loggedIn) {
@@ -42,6 +46,23 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
                 const url = URL.createObjectURL(historyImage);
                 window.open(url);
             })
+    }
+
+    function onClickBookmark() {
+        if (!bookmarkedDisplay) {
+            MyAPI.bookmarkHistoryPost(loginInfo.jwt, index).then(() => {
+                setBookmarkedDisplay(true);
+            }).catch(ex => {
+                console.log(ex);
+            })
+        }
+        else {
+            MyAPI.unbookmarkHistoryPost(loginInfo.jwt, index).then(() => {
+                setBookmarkedDisplay(false);
+            }).catch(ex => {
+                console.log(ex);
+            })
+        }
     }
 
     return (
@@ -72,8 +93,8 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, m
                         // Bookmark post
                         <img
                             className={"history-post-button"}
-                            onClick={() => { setBookmarked(!bookmarked); }}
-                            src={bookmarked ? './bookmarked.png' : './bookmark.png'}/>
+                            onClick={onClickBookmark}
+                            src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'}/>
                     }
                 </div>
             }

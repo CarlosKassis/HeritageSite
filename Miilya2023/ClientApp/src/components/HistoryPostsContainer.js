@@ -86,7 +86,8 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
                         imageName={historyPost.ImageName}
                         title={historyPost.Title}
                         description={historyPost.Description}
-                        myPost={historyPost.MyPost }
+                        myPost={historyPost.MyPost}
+                        bookmarked={historyPost.Bookmarked}
                         loginInfo={loginInfo}
                     />
                 ))

@@ -19,12 +19,14 @@ namespace Miilya2023.Controllers.PrivateHistory
         private readonly IMapper _mapper;
         private readonly IHistoryPostService _historyPostService;
         private readonly IUserService _userService;
+        private readonly IBookmarkService _bookmarkService;
 
-        public HistoryPostController(IMapper mapper, IHistoryPostService historyPostService, IUserService userService)
+        public HistoryPostController(IMapper mapper, IHistoryPostService historyPostService, IUserService userService, IBookmarkService bookmarkService)
         {
             _mapper = mapper;
             _historyPostService = historyPostService;
             _userService = userService;
+            _bookmarkService = bookmarkService;
         }
 
         [HttpGet]
@@ -34,10 +36,13 @@ namespace Miilya2023.Controllers.PrivateHistory
             var user = Request.HttpContext.Items["User"] as UserDocument;
 
             var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 8);
+            var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.BookmarkedHistoryPostsIndexes?.ToHashSet();
+
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>
             {
                 var historyPostExternal = _mapper.Map<HistoryPostDocumentExternal>(historyPost);
                 historyPostExternal.MyPost = historyPost.UserId == user.Id;
+                historyPostExternal.Bookmarked = bookmarkedPosts?.Contains(historyPost.Index) ?? false;
                 return historyPostExternal;
             })));
         }

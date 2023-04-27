@@ -5,8 +5,6 @@ namespace Miilya2023.Middlewares
     using Miilya2023.Constants;
     using Miilya2023.Services.Abstract;
     using System;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class PrivateHistoryMiddleware

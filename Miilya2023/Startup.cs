@@ -52,6 +52,7 @@ namespace Miilya2023
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             services.AddSingleton<IImageService, ImageService>();
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IBookmarkService, BookmarkService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

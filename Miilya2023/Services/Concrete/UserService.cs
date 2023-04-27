@@ -3,6 +3,7 @@
 namespace Miilya2023.Services.Abstract
 {
     using Microsoft.Extensions.Logging;
+    using Miilya2023.Constants;
     using MongoDB.Bson;
     using MongoDB.Driver;
     using System;
@@ -16,7 +17,7 @@ namespace Miilya2023.Services.Abstract
     public class UserService : IUserService
     {
         private static readonly IMongoClient _mongoClient = new MongoClient("mongodb://localhost:27017");
-        private static readonly IMongoDatabase _database = _mongoClient.GetDatabase("Miilya");
+        private static readonly IMongoDatabase _database = _mongoClient.GetDatabase(PrivateHistoryConstants.DatabaseName);
         private static readonly IMongoCollection<UserDocument> _collection = _database.GetCollection<UserDocument>("Users");
         private static readonly SHA256 _sha256 = SHA256.Create();
         private ILogger<UserAuthenticationService> _logger;

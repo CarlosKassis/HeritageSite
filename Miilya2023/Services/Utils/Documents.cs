@@ -3,6 +3,7 @@ namespace Miilya2023.Services.Utils
 {
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
+    using System.Collections.Generic;
 
     public class Documents
     {
@@ -52,6 +53,17 @@ namespace Miilya2023.Services.Utils
             public ObjectId Id { get; set; }
 
             public string EmailSHA256 { get; set; }
+        }
+
+        [BsonIgnoreExtraElements]
+        public class BookmarkDocument
+        {
+            [BsonElement("_id")]
+            public ObjectId Id { get; set; }
+
+            public ObjectId UserId { get; set; }
+
+            public List<int> BookmarkedHistoryPostsIndexes { get; set; }
         }
     }
 }

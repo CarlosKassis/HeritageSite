@@ -130,4 +130,40 @@ export default class MyAPI {
 
         return null;
     }
+
+    static async bookmarkHistoryPost(jwt, historyPostIndex) {
+
+        // If start index is empty then don't pass it
+        var url = `api/PrivateHistory/Bookmark/Add/${historyPostIndex}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return "ok";
+        }
+
+        return null;
+    }
+
+    static async unbookmarkHistoryPost(jwt, historyPostIndex) {
+
+        // If start index is empty then don't pass it
+        var url = `api/PrivateHistory/Bookmark/Remove/${historyPostIndex}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return "ok";
+        }
+
+        return null;
+    }
 }
