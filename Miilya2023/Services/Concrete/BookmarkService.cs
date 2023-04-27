@@ -7,6 +7,7 @@ namespace Miilya2023.Services.Abstract
     using MongoDB.Driver;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
     using static Miilya2023.Services.Utils.Documents;
 
     public class BookmarkService : IBookmarkService
@@ -21,49 +22,28 @@ namespace Miilya2023.Services.Abstract
             _logger = logger;
         }
 
-        public async Task<BookmarkDocument> GetUserBookmarks(UserDocument user)
+        public async Task<IEnumerable<BookmarkDocument>> GetUserBookmarks(UserDocument user)
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
-            var bookmarks = (await _collection.Find(filter).FirstOrDefaultAsync());
+            var bookmarks = await _collection.Find(filter).ToListAsync();
             return bookmarks;
         }
 
         public async Task AddBookmark(UserDocument user, int historyPostIndex)
         {
-            var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
-            var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks != null)
-            {
-                if (bookmarks.BookmarkedHistoryPostsIndexes == null)
-                {
-                    bookmarks.BookmarkedHistoryPostsIndexes = new HashSet<int> { historyPostIndex };
-                }
-                else
-                {
-                    bookmarks.BookmarkedHistoryPostsIndexes.Add(historyPostIndex);
-                }
-
-                await _collection.ReplaceOneAsync(filter, bookmarks);
-                return;
-            }
-
-            await _collection.InsertOneAsync(new BookmarkDocument { UserId = user.Id, BookmarkedHistoryPostsIndexes = new HashSet<int> { historyPostIndex } });
+            var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id)
+                & Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
+            var update = Builders<BookmarkDocument>.Update
+                            .Set(x => x.UserId, user.Id)
+                            .Set(x => x.HistoryPostIndex, historyPostIndex);
+            await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
 
         public async Task RemoveBookmark(UserDocument user, int historyPostIndex)
         {
-            var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
-            var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks != null)
-            {
-                if (bookmarks.BookmarkedHistoryPostsIndexes != null)
-                {
-                    bookmarks.BookmarkedHistoryPostsIndexes.Remove(historyPostIndex);
-                }
-
-                await _collection.ReplaceOneAsync(filter, bookmarks);
-                return;
-            }
+            var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id)
+                & Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
+            await _collection.DeleteManyAsync(filter);
         }
     }
 }
