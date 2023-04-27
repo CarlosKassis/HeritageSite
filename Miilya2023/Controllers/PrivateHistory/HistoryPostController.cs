@@ -36,7 +36,7 @@ namespace Miilya2023.Controllers.PrivateHistory
             var user = Request.HttpContext.Items["User"] as UserDocument;
 
             var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 8);
-            var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.BookmarkedHistoryPostsIndexes?.ToHashSet();
+            var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.BookmarkedHistoryPostsIndexes;
 
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>
             {

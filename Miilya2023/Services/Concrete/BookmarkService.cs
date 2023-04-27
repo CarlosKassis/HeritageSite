@@ -32,21 +32,21 @@ namespace Miilya2023.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
             var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks != null)
+            if (bookmarks?.BookmarkedHistoryPostsIndexes != null)
             {
                 bookmarks.BookmarkedHistoryPostsIndexes.Add(historyPostIndex);
                 await _collection.ReplaceOneAsync(filter, bookmarks);
                 return;
             }
 
-            await _collection.InsertOneAsync(new BookmarkDocument { UserId = user.Id, BookmarkedHistoryPostsIndexes = new List<int> { historyPostIndex } });
+            await _collection.InsertOneAsync(new BookmarkDocument { UserId = user.Id, BookmarkedHistoryPostsIndexes = new HashSet<int> { historyPostIndex } });
         }
 
         public async Task RemoveBookmark(UserDocument user, int historyPostIndex)
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id);
             var bookmarks = await _collection.Find(filter).FirstOrDefaultAsync();
-            if (bookmarks != null)
+            if (bookmarks?.BookmarkedHistoryPostsIndexes != null)
             {
                 bookmarks.BookmarkedHistoryPostsIndexes.Remove(historyPostIndex);
                 await _collection.ReplaceOneAsync(filter, bookmarks);

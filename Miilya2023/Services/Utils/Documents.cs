@@ -63,7 +63,7 @@ namespace Miilya2023.Services.Utils
 
             public ObjectId UserId { get; set; }
 
-            public List<int> BookmarkedHistoryPostsIndexes { get; set; }
+            public HashSet<int> BookmarkedHistoryPostsIndexes { get; set; }
         }
     }
 }
