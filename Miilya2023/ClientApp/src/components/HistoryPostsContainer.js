@@ -9,6 +9,8 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
     const [historyPosts, setHistoryPosts] = useState([]);
     const [onlyBookmarks, setOnlyBookmarks] = useState(false);
     const [searchText, setSearchText] = useState(null);
+    const [viewMode, setViewMode] = useState("vertical");
+
     // Initial history posts load
     useEffect(() => {
         tryLoadMorePosts();
@@ -35,7 +37,6 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
         }
 
         if (loginInfo.loggedIn) {
-            console.log("aaaaaaaaaaaaaaaaaa");
             MyAPI.getHistoryPosts(loginInfo.jwt, startingFromIndex, searchText).then(historyPostsResponse => {
                 onHistoryPostsResponse(historyPostsResponse);
             }).catch(ex => {
@@ -130,8 +131,10 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                 style={{
                     marginLeft: 'auto',
                     marginRight: 'auto',
+                    marginTop: '1rem',
+                    marginBottom: '1rem',
                     display: 'grid',
-                    gridTemplateColumns: '0fr 0fr',
+                    gridTemplateColumns: '0fr 0fr 0fr',
                     gridGap: '10px',
                     padding: '12px',
                     width: 'fit-content',
@@ -139,24 +142,38 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                 }} >
                 <input onChange={onChangeSearch} className={"floating"} style={{ maxWidth: '400px' }}></input>
                 <img style={{ height: '32px' }} className={"history-button"} src={onlyBookmarks ? './bookmarked.png' : './bookmark.png'} onClick={() => setOnlyBookmarks(!onlyBookmarks)} />
+                <img style={{ height: '32px' }} className={"history-button"} src={viewMode == "grid" ? './grid.png' : './vertical.png'} onClick={() => setViewMode(viewMode == "grid" ? "vertical" : "grid")} />
             </div>
-            {
-                historyPosts.map((historyPost) => (
-                    <HistoryPost
-                        getImageUrl={getImageUrl}
-                        key={historyPost.Index}
-                        index={historyPost.Index}
-                        imageName={historyPost.ImageName}
-                        title={historyPost.Title}
-                        description={historyPost.Description}
-                        control={historyPost.Control}
-                        initialBookmarkState={historyPost.Bookmarked}
-                        onDeletePost={onDeletePost}
-                        showOnlyBookmarks={onlyBookmarks}
-                        loginInfo={loginInfo}
-                    />
-                ))
-            }
+                <div
+                    style={
+                        viewMode == "grid" ?
+                        {
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr 1fr',
+                            gridAutoFlow: 'row dense',
+                            gridGap: '0.5rem'
+                        } :
+                        {}
+                    }>
+                {
+                    historyPosts.map((historyPost) => (
+                        <HistoryPost
+                            containerViewMode={viewMode}
+                            getImageUrl={getImageUrl}
+                            key={historyPost.Index}
+                            index={historyPost.Index}
+                            imageName={historyPost.ImageName}
+                            title={historyPost.Title}
+                            description={historyPost.Description}
+                            control={historyPost.Control}
+                            initialBookmarkState={historyPost.Bookmarked}
+                            onDeletePost={onDeletePost}
+                            showOnlyBookmarks={onlyBookmarks}
+                            loginInfo={loginInfo}
+                        />
+                    ))
+                }
+            </div>
         </div>
     );
 }

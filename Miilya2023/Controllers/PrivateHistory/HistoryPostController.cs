@@ -37,16 +37,7 @@ namespace Miilya2023.Controllers.PrivateHistory
             var user = Request.HttpContext.Items["User"] as UserDocument;
             var searchText = Request.Form["searchText"].FirstOrDefault();
 
-            List<HistoryPostDocument> historyPosts = null;
-            if (searchText == null)
-            {
-                historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20);
-            }
-            else
-            {
-                historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20, searchText: searchText);
-            }
-
+            var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20, searchText);
             var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.Select(bookmark => bookmark.HistoryPostIndex)?.ToHashSet();
 
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>

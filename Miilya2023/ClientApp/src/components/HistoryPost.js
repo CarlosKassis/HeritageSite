@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost, getImageUrl }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost, getImageUrl, containerViewMode }) {
     const [imageUrl, setImageUrl] = useState(null);
     const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
@@ -90,18 +90,18 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
                 (!showOnlyBookmarks || bookmarkedDisplay) &&
                 <div
 
-                    className={"card"}
+                    className={`card ${containerViewMode == "grid" ? 'history-post-gridcell' : ''}`}
                     style=
                     {{
                         backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
                     }}>
 
-                    {
+                        {
+                            containerViewMode != "grid" &&
                         <div style={{
                             width: 'fit-content',
                             position: 'relative',
                             marginRight: 'auto',
-                            marginBlock: '5px',
                             height: '36px'
                             }}>
                                 {
@@ -127,34 +127,44 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
                                         src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'} />
                                 }
                             </div>
-                    }
+                        }
 
-                    {
-                        // Title
-                        title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
-                        !title && <br />
-                    }
-                    {
-                        // Image
-                        imageUrl &&
-                        <img
-                            onClick={() => onClickHistoryImage(imageName)}
-                            className={"history-post-image"}
-                            src={imageUrl}
-                            alt={imageName}
-                        />
-                    }
-                    {
-                        // Image loading
-                        imageName && !imageUrl &&
-                        <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
-                            <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
-                        </div>
-                    }
+                        {
+                            containerViewMode != "grid" &&
+                            // Title
+                            title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
+                            !title && <br />
+                        }
+                        {
+                            // Image
+                            imageUrl &&
+                            <img
+                                onClick={() => onClickHistoryImage(imageName)}
+                                className={"history-post-image"}
+                                src={imageUrl}
+                                alt={imageName}
+                                style=
+                                {
+                                    containerViewMode == "grid" ? {
+                                        maxHeight: '200px',
+                                        marginTop: 'auto',
+                                        marginBottom: 'auto'
+                                    } : {}
+                                }
+                            />
+                        }
+                        {
+                            // Image loading
+                            imageName && !imageUrl &&
+                            <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
+                                <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
+                            </div>
+                        }
 
-                    {
-                        // Description
-                        <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
+                        {
+                            containerViewMode != "grid" &&
+                            // Description
+                            <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
                         }
                 </div >
             }
