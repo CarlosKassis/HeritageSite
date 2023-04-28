@@ -82,15 +82,23 @@ export default class MyAPI {
         return null;
     }
 
-    static async getHistoryPosts(jwt, startingFromIndex) {
+    static async getHistoryPosts(jwt, startingFromIndex, searchText) {
 
         // If start index is empty then don't pass it
         var url = `api/PrivateHistory/HistoryPost${(startingFromIndex !== null ? ('/' + startingFromIndex) : '')}`;
 
+        const formData = new FormData();
+
+        if (searchText !== null) {
+            formData.append('searchText', searchText);
+        }
+
         const response = await fetch(url, {
+            method: 'POST',
             headers: {
                 'Authorization': jwt
-            }
+            },
+            body: formData
         });
 
         if (response.ok) {

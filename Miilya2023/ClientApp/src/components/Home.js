@@ -5,7 +5,7 @@ import { HistoryPostsContainer } from './HistoryPostsContainer'
 import GoogleAuth from './GoogleAuth';
 import MicrosoftAuth from './MicrosoftAuth';
 
-export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInstance }) {
+export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInstance, getImageUrl }) {
 
     const strings = new LocalizedStrings({
         ar: {
@@ -41,7 +41,7 @@ export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInsta
             {
                 loginInfo.loggedIn &&
                 <InfinitePage loginInfo={loginInfo}>
-                        <HistoryPostsContainer />
+                        <HistoryPostsContainer getImageUrl={getImageUrl} />
                     </InfinitePage>
             }
 

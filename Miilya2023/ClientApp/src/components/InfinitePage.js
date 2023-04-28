@@ -6,7 +6,7 @@ export function InfinitePage({ loginInfo, children }) {
     const [loadMoreFlag, setLoadMoreFlag] = useState(0);
 
     const loadPostsCoolingDownFlag = useRef(false);
-    const scrollBottomMargin = 500;
+    const scrollBottomMargin = 750;
 
     function checkIfPageBottomAndLoadMorePosts() {
         // Check if hit page bottom
@@ -43,7 +43,8 @@ export function InfinitePage({ loginInfo, children }) {
     const previousPointerY = useRef(null);
 
     return (
-        <div className={"infinite-page-max"}
+        <div
+            className={"infinite-page-max"}
             style={{ width: '100%' }}
             onTouchMove={(e) => {
                     if (!previousPointerY.current) {

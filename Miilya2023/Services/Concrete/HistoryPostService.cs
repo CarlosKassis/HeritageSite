@@ -2,18 +2,15 @@
 
 namespace Miilya2023.Services.Concrete
 {
-    using Microsoft.AspNetCore.Http;
     using Miilya2023.Constants;
     using Miilya2023.Services.Abstract;
-    using Miilya2023.Shared;
+    using MongoDB.Bson;
     using MongoDB.Driver;
     using SixLabors.ImageSharp;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using static Miilya2023.Services.Utils.Documents;
 
@@ -33,10 +30,37 @@ namespace Miilya2023.Services.Concrete
             _bookmarkService = bookmarkService;
         }
 
-        public async Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize)
+        public async Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize, string searchText)
         {
+            /*int counter = 90;
+            for (int i = 0; i < 10; i++)
+            {
+                foreach (var filename in Directory.EnumerateFiles(@"C:\MiilyaSiteFiles\test"))
+                {
+                    Image img = Image.Load(filename);
+                    InsertHistoryPost("carlos_kassis@hotmail.com", $"عناوني {counter}", "وصف وصف", img).Wait();
+                    counter++;
+                }
+            }*/
+
             index ??= GetNewMaxDocumentIndexInDb();
             var filter = Builders<HistoryPostDocument>.Filter.Lte(x => x.Index, index);
+
+            // Filter by keywords if search text is supplied
+            if (searchText != null)
+            {
+                var keywords = searchText
+                    .Split(' ')
+                    .Where(part => !string.IsNullOrEmpty(part));
+
+                if (keywords.Any())
+                {
+                    filter &= Builders<HistoryPostDocument>.Filter.Or(
+                       Builders<HistoryPostDocument>.Filter.Regex(x => x.Title, new BsonRegularExpression(string.Join("|", keywords))),
+                       Builders<HistoryPostDocument>.Filter.Regex(x => x.Description, new BsonRegularExpression(string.Join("|", keywords)))
+                   );
+                }
+            }
 
             var results = await _collection
                 .Find(filter)

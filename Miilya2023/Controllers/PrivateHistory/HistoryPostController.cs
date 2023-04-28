@@ -11,6 +11,7 @@ namespace Miilya2023.Controllers.PrivateHistory
     using AutoMapper;
     using static Miilya2023.Services.Utils.DocumentsExternal;
     using static Miilya2023.Services.Utils.Documents;
+    using System.Collections.Generic;
 
     [ApiController]
     [Route("api/PrivateHistory/[Controller]")]
@@ -29,13 +30,23 @@ namespace Miilya2023.Controllers.PrivateHistory
             _bookmarkService = bookmarkService;
         }
 
-        [HttpGet]
-        [Route("{startIndex:int?}")]
+
+        [HttpPost("{startIndex:int?}")]
         public async Task<IActionResult> GetHistoryPostsBatchStartingFromIndex(int? startIndex)
         {
             var user = Request.HttpContext.Items["User"] as UserDocument;
+            var searchText = Request.Form["searchText"].FirstOrDefault();
 
-            var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 8);
+            List<HistoryPostDocument> historyPosts = null;
+            if (searchText == null)
+            {
+                historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20);
+            }
+            else
+            {
+                historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20, searchText: searchText);
+            }
+
             var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.Select(bookmark => bookmark.HistoryPostIndex)?.ToHashSet();
 
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>

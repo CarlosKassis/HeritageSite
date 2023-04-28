@@ -3,7 +3,7 @@ import MyAPI from '../MyAPI';
 import { CreateHistoryPost } from './CreateHistoryPost';
 import { HistoryPost } from './HistoryPost';
 
-export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }) {
+export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, getImageUrl }) {
 
     const historyPostsRef = useRef(null);
     const [historyPosts, setHistoryPosts] = useState([]);
@@ -35,44 +35,49 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
         }
 
         if (loginInfo.loggedIn) {
-            MyAPI.getHistoryPosts(loginInfo.jwt, startingFromIndex).then(historyPostsResponse => {
-                onLoadingStop();
-                if (historyPostsResponse) {
-                    if (historyPostsResponse.length == 0) {
-                        console.log('No more posts in site')
-                        return;
-                    }
-
-                    console.log(historyPostsResponse);
-
-                    // Use Ref instead of State History Posts because this function could be called from callback
-                    // And there's no access to State variables from callback since the callback captures only
-                    // The initial value of the State variable
-                    if (historyPostsRef.current) {
-                        // Keep track of which posts were already fetched
-                        const setOfHistoryPostsIndexes = new Set(historyPostsRef.current.map(historyPost => historyPost.Index));
-
-                        // Create new array with new reference
-                        var newCombinedHistoryPosts = [].concat(historyPostsRef.current);
-
-                        console.log(newCombinedHistoryPosts);
-                        for (const historyPost of historyPostsResponse) {
-
-                            if (!(historyPost.Index in setOfHistoryPostsIndexes)) {
-                                newCombinedHistoryPosts.push(historyPost);
-                            }
-                        }
-
-                        console.log('Consecutive load!')
-                        setHistoryPostsVariables(newCombinedHistoryPosts);
-                    } else {
-                        console.log('First load!')
-                        setHistoryPostsVariables(historyPostsResponse);
-                    }
-                }
+            console.log("aaaaaaaaaaaaaaaaaa");
+            MyAPI.getHistoryPosts(loginInfo.jwt, startingFromIndex, searchText).then(historyPostsResponse => {
+                onHistoryPostsResponse(historyPostsResponse);
             }).catch(ex => {
                 onLoadingStop();
             });
+        }
+    }
+
+    function onHistoryPostsResponse(historyPostsResponse) {
+        onLoadingStop();
+        if (historyPostsResponse) {
+            if (historyPostsResponse.length == 0) {
+                console.log('No more posts in site')
+                return;
+            }
+
+            console.log(historyPostsResponse);
+
+            // Use Ref instead of State History Posts because this function could be called from callback
+            // And there's no access to State variables from callback since the callback captures only
+            // The initial value of the State variable
+            if (historyPostsRef.current) {
+                // Keep track of which posts were already fetched
+                const setOfHistoryPostsIndexes = new Set(historyPostsRef.current.map(historyPost => historyPost.Index));
+
+                // Create new array with new reference
+                var newCombinedHistoryPosts = [].concat(historyPostsRef.current);
+
+                console.log(newCombinedHistoryPosts);
+                for (const historyPost of historyPostsResponse) {
+
+                    if (!(historyPost.Index in setOfHistoryPostsIndexes)) {
+                        newCombinedHistoryPosts.push(historyPost);
+                    }
+                }
+
+                console.log('Consecutive load!')
+                setHistoryPostsVariables(newCombinedHistoryPosts);
+            } else {
+                console.log('First load!')
+                setHistoryPostsVariables(historyPostsResponse);
+            }
         }
     }
 
@@ -96,12 +101,26 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
         }, 1000)
     }
 
+    function isEmptyOrSpace(str) {
+        return str === null || str.match(/^ *$/) !== null;
+    }
+
     function onCooldownSearchType(stamp, text) {
         if (stamp != searchStamp.current) {
             return;
         }
 
-        //console.log(text);
+        setSearchText(text);
+
+        // Reset posts
+        setHistoryPostsVariables([]);
+
+        // Query posts with search text
+        MyAPI.getHistoryPosts(loginInfo.jwt, null, text).then(historyPostsResponse => {
+            onHistoryPostsResponse(historyPostsResponse);
+        }).catch(ex => {
+            onLoadingStop();
+        });
     }
 
     return (
@@ -124,6 +143,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop }
             {
                 historyPosts.map((historyPost) => (
                     <HistoryPost
+                        getImageUrl={getImageUrl}
                         key={historyPost.Index}
                         index={historyPost.Index}
                         imageName={historyPost.ImageName}

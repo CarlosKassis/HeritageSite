@@ -2,7 +2,7 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost, getImageUrl }) {
     const [imageUrl, setImageUrl] = useState(null);
     const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
@@ -33,19 +33,21 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
             return;
         }
 
-        MyAPI.getHistoryImageLowRes(loginInfo.jwt, imageName).then(historyImageResponse => {
-            if (historyImageResponse) {
-                setImageUrl(URL.createObjectURL(historyImageResponse));
-            }
-        });
+        getImageUrl(imageName, onAquireImageUrl);
     }, [imageName, loginInfo])
+
+    function onAquireImageUrl(imageUrl) {
+        if (imageUrl) {
+            setImageUrl(imageUrl);
+        }
+    }
 
     function onClickHistoryImage(imageName) {
         MyAPI.getHistoryImage(loginInfo.jwt, imageName)
             .then(historyImage => {
                 const url = URL.createObjectURL(historyImage);
                 window.open(url);
-            })
+            });
     }
 
     function onClickBookmark() {
@@ -101,23 +103,30 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
                             marginRight: 'auto',
                             marginBlock: '5px',
                             height: '36px'
-                        }}>
-                            {
-                                // Delete post
-                                control !== null && control > 0 &&
-                                <img
-                                    onClick={onClickDelete}
-                                    className={"history-button"}
-                                    src={'./delete.png'} />
-                            }
-                            {
-                                // Bookmark post
-                                <img
-                                    className={"history-button"}
-                                    onClick={onClickBookmark}
-                                    src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'} />
-                            }
-                        </div>
+                            }}>
+                                {
+                                    // Edit post
+                                    control !== null && control > 0 &&
+                                    <img
+                                        className={"history-button"}
+                                        src={'./edit.png'} />
+                                }
+                                {
+                                    // Delete post
+                                    control !== null && control > 0 &&
+                                    <img
+                                        onClick={onClickDelete}
+                                        className={"history-button"}
+                                        src={'./delete.png'} />
+                                }
+                                {
+                                    // Bookmark post
+                                    <img
+                                        className={"history-button"}
+                                        onClick={onClickBookmark}
+                                        src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'} />
+                                }
+                            </div>
                     }
 
                     {

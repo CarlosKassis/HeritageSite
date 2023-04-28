@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
@@ -16,6 +16,7 @@ export default function App() {
     const [language, setLanguage] = useState('ar');
     const [loginInfo, setLoginInfo] = useState({ loggedIn: false })
     const [msalInstance, setMsalInstance] = useState(null);
+    const imageCache = useRef({}); // Image name to image blob URL
 
     useEffect(() => {
         setLanguage('ar');
@@ -68,9 +69,33 @@ export default function App() {
         setMsalInstance(newMsalInstance)
     }, [])
 
+    function getImageUrl(imageName, onAquireImageUrl) {
+        const cachedImageURL = imageCache.current[imageName];
+        if (cachedImageURL) {
+            onAquireImageUrl(cachedImageURL);
+            return;
+        }
+
+        MyAPI.getHistoryImageLowRes(loginInfo.jwt, imageName).then(historyImageResponse => {
+            if (historyImageResponse) {
+                const newImageURL = URL.createObjectURL(historyImageResponse);
+                imageCache.current[imageName] = newImageURL;
+                onAquireImageUrl(newImageURL);
+            }
+        });
+    }
+
     return (
         <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language} >
-            <Route exact path='/' render={() => <Home msalInstance={msalInstance} onLogOut={onLogOut} loginInfo={loginInfo} language={language} onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)} />} />
+            <Route exact path='/' render={() =>
+                <Home
+                    msalInstance={msalInstance}
+                    onLogOut={onLogOut}
+                    loginInfo={loginInfo}
+                    language={language}
+                    onLogin={(loginJwt) => onValidLoginJwt(loginJwt, true)}
+                    getImageUrl={getImageUrl}
+                />} />
             <Route exact path='/PrivateHistory/Families' render={() => <Families loginInfo={loginInfo} language={language} />} />
             <Route path='/PrivateHistory/FamilyTree/:id' render={() => <FamilyTree loginInfo={loginInfo} language={language} />} />
             <Route exact path='/Logout' render={() => <Logout onLogOut={onLogOut} />} />

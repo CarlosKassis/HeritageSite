@@ -14,7 +14,7 @@ namespace Miilya2023.Services.Abstract
 
     public class ImageService : IImageService
     {
-        private const int _maxImageWidth = 600;
+        private const int _maxImageWidth = 720;
         private static readonly ConcurrentDictionary<string, byte[]> _imageCache = new ();
         private static readonly ConcurrentDictionary<string, byte[]> _lowResImageCache = new();
 
@@ -58,7 +58,7 @@ namespace Miilya2023.Services.Abstract
 
             var jpegEncoder = new JpegEncoder();
 
-            // Return the resized image
+            // Return the final image
             using var outputStream = new MemoryStream();
             await image.SaveAsync(outputStream, jpegEncoder);
             outputStream.Seek(0, SeekOrigin.Begin);
