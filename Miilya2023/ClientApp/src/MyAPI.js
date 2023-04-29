@@ -140,8 +140,6 @@ export default class MyAPI {
     }
 
     static async bookmarkHistoryPost(jwt, historyPostIndex) {
-
-        // If start index is empty then don't pass it
         var url = `api/PrivateHistory/Bookmark/Add/${historyPostIndex}`;
 
         const response = await fetch(url, {
@@ -158,8 +156,6 @@ export default class MyAPI {
     }
 
     static async unbookmarkHistoryPost(jwt, historyPostIndex) {
-
-        // If start index is empty then don't pass it
         var url = `api/PrivateHistory/Bookmark/Remove/${historyPostIndex}`;
 
         const response = await fetch(url, {
@@ -176,8 +172,6 @@ export default class MyAPI {
     }
 
     static async deleteHistoryPost(jwt, historyPostIndex) {
-
-        // If start index is empty then don't pass it
         var url = `api/PrivateHistory/HistoryPost/Delete/${historyPostIndex}`;
 
         const response = await fetch(url, {
@@ -189,6 +183,22 @@ export default class MyAPI {
 
         if (response.ok) {
             return "ok";
+        }
+
+        return null;
+    }
+
+    static async getFamilyTree(jwt, familyId) {
+        var url = `api/PrivateHistory/Family/Tree/${familyId}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
         }
 
         return null;

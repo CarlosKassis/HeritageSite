@@ -58,7 +58,7 @@ namespace Miilya2023.Services.Abstract
         {
             _userService = userService;
             _logger = logger;
-            _microsoftJwkRetrieverDaemon ??= Task.Factory.StartNew(() => RetrieveMicrosoftJsonWebKeysLoop(logger));
+            _microsoftJwkRetrieverDaemon ??= Task.Factory.StartNew(async () => await RetrieveMicrosoftJsonWebKeysLoop(logger));
         }
 
         public async Task<UserDocument> ValidateLoginJwtAndGetUser(string jwt)

@@ -9,5 +9,8 @@
         public const string MediaUrlPrefix = "/PrivateHistory/Media";
 
         public static string RootPath { get; set; }
+        public static string ImagesDirectoryPath { get; set; }
+
+        public static string FamiliesDirectoryPath { get; set; }
     }
 }

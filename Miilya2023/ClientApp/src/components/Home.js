@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useRef } from 'react';
 import LocalizedStrings from 'localized-strings'
 import { InfinitePage } from './InfinitePage';
 import { HistoryPostsContainer } from './HistoryPostsContainer'
@@ -41,8 +41,8 @@ export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInsta
             {
                 loginInfo.loggedIn &&
                 <InfinitePage loginInfo={loginInfo}>
-                        <HistoryPostsContainer getImageUrl={getImageUrl} />
-                    </InfinitePage>
+                    <HistoryPostsContainer getImageUrl={getImageUrl} />
+                </InfinitePage>
             }
 
         </div>

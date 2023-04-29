@@ -36,6 +36,10 @@ code {
     user-select: none;
 }
 
+text {
+    font-family: 'Droid Arabic Kufi', sans-serif;
+}
+
 .family-hoverable:hover {
     background-color: #0d47a1;
 }

@@ -83,7 +83,7 @@ namespace Miilya2023.Services.Concrete
 
             try
             {
-                using FileStream outputFile = new(Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", generatedFileName), FileMode.OpenOrCreate);
+                using FileStream outputFile = new(Path.Combine(PrivateHistoryConstants.ImagesDirectoryPath, generatedFileName), FileMode.OpenOrCreate);
                 await image.SaveAsJpegAsync(outputFile);
             }
             catch (Exception ex)
@@ -141,7 +141,7 @@ namespace Miilya2023.Services.Concrete
                 }
 
                 // TODO: add lock once daemons that clean up files get added
-                await Task.Run(() => File.Delete(Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images", historyPost.ImageName)));
+                await Task.Run(() => File.Delete(Path.Combine(PrivateHistoryConstants.ImagesDirectoryPath, historyPost.ImageName)));
             }
             catch (Exception ex)
             {

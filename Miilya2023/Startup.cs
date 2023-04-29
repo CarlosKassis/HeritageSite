@@ -24,6 +24,8 @@ namespace Miilya2023
         {
             Configuration = configuration;
             PrivateHistoryConstants.RootPath = configuration.GetValue<string>("PrivateHistoryRoot");
+            PrivateHistoryConstants.ImagesDirectoryPath = Path.Combine(PrivateHistoryConstants.RootPath, "Media", "Images");
+            PrivateHistoryConstants.FamiliesDirectoryPath = Path.Combine(PrivateHistoryConstants.RootPath, "Families");
             AuthenticationConstants.MicrosoftClientSecret = configuration.GetValue<string>("MicrosoftClientSecret");
         }
 

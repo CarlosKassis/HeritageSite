@@ -1,8 +1,8 @@
 ﻿import React, { useEffect } from 'react';
-import { DragonWrapper } from './DragonWrapper';
 import LocalizedStrings from 'localized-strings'
 import { useParams } from "react-router-dom"
- 
+import { BalkanFamilyTreeWrapper } from './BalkanFamilyTreeWrapper';
+
 export function FamilyTree({ loginInfo }) {
 
     const { id } = useParams();
@@ -23,7 +23,7 @@ export function FamilyTree({ loginInfo }) {
     return (
         <div style={{ height: '90vh', width: '100%' }}>
             {
-                id && loginInfo.loggedIn && <DragonWrapper loginInfo={loginInfo} familyId={id} />
+                id && loginInfo.loggedIn && <BalkanFamilyTreeWrapper loginInfo={loginInfo} familyId={ id } />
             }
         </div>
     );

@@ -8,5 +8,7 @@ namespace Miilya2023.Services.Abstract
     public interface IFamilyService
     {
         public Task<List<FamilyDocument>> GetAll();
+
+        public string GetFamilyTreeSerialized(string familyId);
     }
 }
