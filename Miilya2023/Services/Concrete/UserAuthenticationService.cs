@@ -74,9 +74,14 @@ namespace Miilya2023.Services.Abstract
             }
 
             var validationResult = await _tokenHandler.ValidateTokenAsync(jwt, _tokenValidationParameters);
-            if (validationResult.Claims["login"] as string != "login")
+            if (!validationResult.IsValid)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Login token is invalid");
+            }
+
+            if (!validationResult.Claims.TryGetValue("login", out var loginValue) || loginValue as string != "login")
+            {
+                throw new InvalidOperationException("Invalid token content");
             }
 
             string email = validationResult.Claims["aud"] as string;

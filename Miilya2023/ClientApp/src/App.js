@@ -14,7 +14,7 @@ export default function App() {
 
     const cookies = new Cookies();
     const [language, setLanguage] = useState('ar');
-    const [loginInfo, setLoginInfo] = useState({ loggedIn: false })
+    const [loginInfo, setLoginInfo] = useState({ loggedIn: false, initialVariableState: true })
     const [msalInstance, setMsalInstance] = useState(null);
     const imageCache = useRef({}); // Image name to image blob URL
 
@@ -33,6 +33,9 @@ export default function App() {
             }).catch(ex => {
                 cookies.remove('login-jwt', { path: '/' });
             })
+        }
+        else {
+            setLoginInfo({loggedIn: false});
         }
 
     }, []);

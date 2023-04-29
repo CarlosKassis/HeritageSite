@@ -25,9 +25,8 @@ code {
     text-align: right;
 }
 
-.hoverable {
+.family-hoverable {
     font-family: 'Droid Arabic Kufi', sans-serif;
-    background-color: #2196f3;
     color: #fff;
     font-size: 16px;
     font-weight: bold;
@@ -37,7 +36,7 @@ code {
     user-select: none;
 }
 
-.hoverable:hover {
+.family-hoverable:hover {
     background-color: #0d47a1;
 }
 

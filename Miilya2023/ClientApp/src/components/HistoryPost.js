@@ -106,10 +106,10 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
                             }}>
                                 {
                                     // Edit post
-                                    control !== null && control > 0 &&
-                                    <img
-                                        className={"history-button"}
-                                        src={'./edit.png'} />
+                                    //control !== null && control > 0 &&
+                                    //<img
+                                    //    className={"history-button"}
+                                    //    src={'./edit.png'} />
                                 }
                                 {
                                     // Delete post

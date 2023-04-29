@@ -22,25 +22,29 @@ export function Families({ loginInfo }) {
     }
 
     useEffect(() => {
+        if (!loginInfo.loggedIn) {
+            return;
+        }
         MyAPI.getFamilies(loginInfo.jwt).then(families => {
             if (families) {
                 setFamilies(families);
             }
         });
-    }, []);
+    }, [loginInfo]);
 
     return (
         <div style={{ alignContent: 'center', display: 'block' }}>
             {
                 families.map((family) => (
-                    <Link key={family.Identifier} to={`./FamilyTree/${family.Identifier}`}>
+                    <Link key={family.Identifier} to={`./FamilyTree/${family.Identifier}`} onClick={(event) => !family.Available && event.preventDefault()}>
                         <div
-                            className={'hoverable'}
+                            className={'family-hoverable'}
                             style={{
+                                backgroundColor: family.Available ? '#2196f3' : '#444',
                                 margin: '20px auto 20px auto',
                                 padding: '20px',
                                 borderRadius: '5px',
-                                maxWidth: '300px',
+                                width: 'fit-content',
                                 boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'
                             }}>
                             <h3 style={{ textAlign: 'center' }}>{family.Name}</h3>

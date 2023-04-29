@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -10,6 +11,7 @@ using Miilya2023.Constants;
 using Miilya2023.Middlewares;
 using Miilya2023.Services.Abstract;
 using Miilya2023.Services.Concrete;
+using System.Collections.Generic;
 using System.IO;
 using static Miilya2023.Services.Utils.Documents;
 using static Miilya2023.Services.Utils.DocumentsExternal;
@@ -73,12 +75,17 @@ namespace Miilya2023
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            // TODO: Split to two serves, images, and dzi files
+
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".dzi"] = "application/octet-stream";
+            provider.Mappings[".jpg"] = "image/jpeg";
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(PrivateHistoryConstants.RootPath, "Media")),
                 RequestPath = PrivateHistoryConstants.MediaUrlPrefix,
-                ServeUnknownFileTypes = true
+                ServeUnknownFileTypes = false,
+                ContentTypeProvider = provider
             });
 
             app.UseSpaStaticFiles();

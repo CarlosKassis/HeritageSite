@@ -8,7 +8,7 @@ namespace Miilya2023.Services.Utils
     public class Documents
     {
         /// <summary>
-        /// Descripts a family tree
+        /// Describes a family tree.
         /// </summary>
         [BsonIgnoreExtraElements]
         public class FamilyDocument
@@ -17,14 +17,20 @@ namespace Miilya2023.Services.Utils
             public ObjectId Id { get; set; }
 
             /// <summary>
-            /// Display name of the family
+            /// Display name of the family.
             /// </summary>
             public string Name { get; set; }
 
             /// <summary>
-            /// Used to search family tree files on server
+            /// Used to search family tree files on server.
             /// </summary>
             public string Identifier { get; set; }
+
+
+            /// <summary>
+            /// Indicates whether there are files or not.
+            /// </summary>
+            public bool Available { get; set; }
         }
 
         [BsonIgnoreExtraElements]

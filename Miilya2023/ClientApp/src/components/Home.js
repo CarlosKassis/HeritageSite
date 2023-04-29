@@ -32,7 +32,7 @@ export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInsta
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', height: '90vh', width: '100%' }} className="middle-east">
             {
-                !loginInfo.loggedIn &&
+                !loginInfo.initialVariableState && !loginInfo.loggedIn &&
                 <div>
                     <GoogleAuth onLogin={(loginJwt) => onLogin(loginJwt)} />
                     {msalInstance && < MicrosoftAuth onLogin={(loginJwt) => onLogin(loginJwt)} msalInstance={msalInstance} />}
