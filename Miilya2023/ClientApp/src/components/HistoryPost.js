@@ -2,9 +2,8 @@
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, control, initialBookmarkState, showOnlyBookmarks, onDeletePost, getImageUrl, containerViewMode }) {
+export function HistoryPost({ loginInfo, imageName, title, index, description, control, onClickBookmarkPost, bookmarked, onDeletePost, getImageUrl, containerViewMode }) {
     const [imageUrl, setImageUrl] = useState(null);
-    const [bookmarkedDisplay, setBookmarkedDisplay] = useState(false);
 
     const strings = new LocalizedStrings({
         ar: {
@@ -19,10 +18,6 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
         strings.setLanguage(language);
         return strings[str];
     }
-
-    useEffect(() => {
-        setBookmarkedDisplay(initialBookmarkState);
-    }, [initialBookmarkState])
 
     useEffect(() => {
         if (!loginInfo.loggedIn) {
@@ -51,20 +46,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
     }
 
     function onClickBookmark() {
-        if (!bookmarkedDisplay) {
-            MyAPI.bookmarkHistoryPost(loginInfo.jwt, index).then(() => {
-                setBookmarkedDisplay(true);
-            }).catch(ex => {
-                console.log(ex);
-            })
-        }
-        else {
-            MyAPI.unbookmarkHistoryPost(loginInfo.jwt, index).then(() => {
-                setBookmarkedDisplay(false);
-            }).catch(ex => {
-                console.log(ex);
-            })
-        }
+        onClickBookmarkPost(index);
     }
 
     function onClickDelete() {
@@ -86,88 +68,84 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
 
     return (
         <div key={index}>
-            {
-                (!showOnlyBookmarks || bookmarkedDisplay) &&
-                <div
+            <div
 
-                    className={`card ${containerViewMode == "grid" ? 'history-post-gridcell' : ''}`}
-                    style=
-                    {{
-                        backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
+                className={`card ${containerViewMode == "grid" ? 'history-post-gridcell' : ''}`}
+                style=
+                {{
+                    backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
+                }}>
+                {
+                    containerViewMode != "grid" &&
+                    <div style={{
+                        width: 'fit-content',
+                        position: 'relative',
+                        marginRight: 'auto',
+                        height: '36px'
                     }}>
-
                         {
-                            containerViewMode != "grid" &&
-                        <div style={{
-                            width: 'fit-content',
-                            position: 'relative',
-                            marginRight: 'auto',
-                            height: '36px'
-                            }}>
-                                {
-                                    // Edit post
-                                    //control !== null && control > 0 &&
-                                    //<img
-                                    //    className={"history-button"}
-                                    //    src={'./edit.png'} />
-                                }
-                                {
-                                    // Delete post
-                                    control !== null && control > 0 &&
-                                    <img
-                                        onClick={onClickDelete}
-                                        className={"history-button"}
-                                        src={'./delete.png'} />
-                                }
-                                {
-                                    // Bookmark post
-                                    <img
-                                        className={"history-button"}
-                                        onClick={onClickBookmark}
-                                        src={bookmarkedDisplay ? './bookmarked.png' : './bookmark.png'} />
-                                }
-                            </div>
-                        }
-
-                        {
-                            containerViewMode != "grid" &&
-                            // Title
-                            title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
-                            !title && <br />
+                            // Edit post
+                            //control !== null && control > 0 &&
+                            //<img
+                            //    className={"history-button"}
+                            //    src={'./edit.png'} />
                         }
                         {
-                            // Image
-                            imageUrl &&
+                            // Delete post
+                            control !== null && control > 0 &&
                             <img
-                                onClick={() => onClickHistoryImage(imageName)}
-                                className={"history-post-image"}
-                                src={imageUrl}
-                                alt={imageName}
-                                style=
-                                {
-                                    containerViewMode == "grid" ? {
-                                        maxHeight: '200px',
-                                        marginTop: 'auto',
-                                        marginBottom: 'auto'
-                                    } : {}
-                                }
-                            />
+                                onClick={onClickDelete}
+                                className={"history-button"}
+                                src={'./delete.png'} />
                         }
                         {
-                            // Image loading
-                            imageName && !imageUrl &&
-                            <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
-                                <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
-                            </div>
+                            // Bookmark post
+                            <img
+                                className={"history-button"}
+                                onClick={onClickBookmark}
+                                src={bookmarked ? './bookmarked.png' : './bookmark.png'} />
                         }
+                    </div>
+                }
 
+                {
+                    containerViewMode != "grid" &&
+                    // Title
+                    title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
+                    !title && <br />
+                }
+                {
+                    // Image
+                    imageUrl &&
+                    <img
+                        onClick={() => onClickHistoryImage(imageName)}
+                        className={"history-post-image"}
+                        src={imageUrl}
+                        alt={imageName}
+                        style=
                         {
-                            containerViewMode != "grid" &&
-                            // Description
-                            <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
+                            containerViewMode == "grid" ? {
+                                maxHeight: '200px',
+                                marginTop: 'auto',
+                                marginBottom: 'auto'
+                            } : {}
                         }
-                </div >
-            }
+                    />
+                }
+                {
+                    // Image loading
+                    imageName && !imageUrl &&
+                    <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
+                        <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
+                    </div>
+                }
+
+                {
+                    containerViewMode != "grid" &&
+                    // Description
+                    <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
+                }
+            </div >
         </div>
     );
 }

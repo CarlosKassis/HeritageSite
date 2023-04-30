@@ -124,6 +124,35 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
         });
     }
 
+    function onClickBookmarkPost(index) {
+        const historyPost = historyPostsRef.current.find(historyPost => historyPost.Index == index);
+        if (!historyPost) {
+            return;
+        }
+
+        if (!historyPost.Bookmarked) {
+            MyAPI.bookmarkHistoryPost(loginInfo.jwt, index).then(() => {
+                changeBookmarked(index, true);
+            }).catch(ex => {
+                console.log(ex);
+            })
+        }
+        else {
+            MyAPI.unbookmarkHistoryPost(loginInfo.jwt, index).then(() => {
+                changeBookmarked(index, false);
+            }).catch(ex => {
+                console.log(ex);
+            })
+        }
+    }
+
+    function changeBookmarked(index, bookmarked) {
+        const newHistoryPosts = [...historyPostsRef.current];
+        const historyPost = newHistoryPosts.find(post => post.Index == index);
+        historyPost.Bookmarked = bookmarked;
+        setHistoryPostsVariables(newHistoryPosts);
+    }
+
     return (
         <div className={"history-posts-container"}>
             <CreateHistoryPost loginInfo={loginInfo} />
@@ -156,8 +185,10 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                         {}
                     }>
                 {
-                    historyPosts.map((historyPost) => (
+                    historyPosts.filter((historyPost) => !onlyBookmarks || historyPost.Bookmarked).map((historyPost) => (
                         <HistoryPost
+                            bookmarked={historyPost.Bookmarked}
+                            onClickBookmarkPost={onClickBookmarkPost}
                             containerViewMode={viewMode}
                             getImageUrl={getImageUrl}
                             key={historyPost.Index}
@@ -168,7 +199,6 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                             control={historyPost.Control}
                             initialBookmarkState={historyPost.Bookmarked}
                             onDeletePost={onDeletePost}
-                            showOnlyBookmarks={onlyBookmarks}
                             loginInfo={loginInfo}
                         />
                     ))
