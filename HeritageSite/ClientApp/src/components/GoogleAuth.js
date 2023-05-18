@@ -17,7 +17,7 @@ const GoogleAuth = ({ onLogin }) => {
 
     useEffect(() => {
         const src = 'https://accounts.google.com/gsi/client'
-        const id = "774040641386-74otf6r69gv7nd92efvbh5kf5l6j8jf8.apps.googleusercontent.com"
+        const id = "INSERT_GOOGLE_SECRET_HERE"
 
         loadScript(src)
             .then(() => {

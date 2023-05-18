@@ -59,8 +59,8 @@ export default function App() {
     useEffect(() => {
         const newMsalInstance = new msal.UserAgentApplication({
             auth: {
-                clientId: "3ee7d2ed-3ea7-4790-b63c-e06ccd058189",
-                authority: 'https://login.microsoftonline.com/10f100d7-a82a-4e12-8033-7d4c66a96a04',
+                clientId: "INSERT_MSAL_CLIENT_ID",
+                authority: 'INSERT_MSAL_AUTH',
                 redirectUri: window.location.origin
             },
             cache: {
