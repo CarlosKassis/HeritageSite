@@ -1,0 +1,121 @@
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #E01A76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.container {
+    min-width: 100%
+}
+
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+
+.middle-east {
+    font-family: 'Droid Arabic Kufi', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+.family-hoverable {
+    font-family: 'Droid Arabic Kufi', sans-serif;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+}
+
+text {
+    font-family: 'Droid Arabic Kufi', sans-serif;
+}
+
+.family-hoverable:hover {
+    background-color: #0d47a1;
+}
+
+.card, .create-history-post {
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+.card {
+    margin-top: 0.5rem;
+}
+
+.create-history-post * {
+    display: block;
+}
+
+.create-history-post-input {
+    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5);
+    border: none;
+    outline: none;
+}
+
+.history-post-image {
+    width: 100%;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.history-post-image:hover {
+    cursor: pointer;
+}
+
+.history-posts-container {
+    align-content: center;
+    display: block;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: visible;
+}
+
+.login-button-container {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.login-button-container:hover {
+    cursor: pointer;
+}
+
+#upload-image-container {
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+#upload-image-container:hover {
+    background-color: #ddd;
+}
+
+.floating {
+    filter: drop-shadow(1px 1px 2px #555);
+}
+
+.history-button {
+    height: 100%;
+    filter: drop-shadow(1px 1px 2px #555);
+}
+
+.history-button:hover {
+    cursor: pointer;
+}
+
+.history-post-gridcell {
+    height: 100%;
+}
