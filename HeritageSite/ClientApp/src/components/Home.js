@@ -7,21 +7,6 @@ import MicrosoftAuth from './MicrosoftAuth';
 
 export function Home({ loginInfo, logout, onLogOut, onLogin, language, msalInstance, getImageUrl }) {
 
-    const strings = new LocalizedStrings({
-        ar: {
-            title: 'موقع تراث معليا'
-        },
-        he: {
-            title: 'אתר מורשת מעיליא'
-        },
-    });
-
-    function getString(language, str) {
-        strings.setLanguage(language);
-        return strings[str];
-    }
-
-
     // Handle logout URL
     useEffect(() => {
         if (logout) {

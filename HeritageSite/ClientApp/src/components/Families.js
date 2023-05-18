@@ -7,20 +7,6 @@ export function Families({ loginInfo }) {
 
     const [families, setFamilies] = useState([]);
 
-    const strings = new LocalizedStrings({
-        ar: {
-            families: 'عائلات'
-        },
-        he: {
-            families: 'משפחות'
-        },
-    });
-
-    function getString(language, str) {
-        strings.setLanguage(language);
-        return strings[str];
-    }
-
     useEffect(() => {
         if (!loginInfo.loggedIn) {
             return;

@@ -6,24 +6,24 @@ import LocalizedStrings from 'localized-strings'
 
 export default function NavMenu({ loginInfo, onClickLanguage, language }) {
 
-    const localizedMiilya = {
-        ar: "معليا",
-        he: "מעיליא"
+    const localizedSiteName = {
+        he: "אתר מורשת",
+        ar: "موقع تراث"
     };
 
     const strings = new LocalizedStrings({
-        ar: {
-            home: 'المنزل',
-            families: 'عائلات',
-            login: 'الدخول',
-            logout: 'الخروج',
-        },
         he: {
             home: 'בית',
             families: 'משפחות',
             login: 'כניסה',
             logout: 'יציאה'
         },
+        ar: {
+            home: 'المنزل',
+            families: 'عائلات',
+            login: 'الدخول',
+            logout: 'الخروج',
+        }
     });
 
     function getString(language, str) {
@@ -41,7 +41,7 @@ export default function NavMenu({ loginInfo, onClickLanguage, language }) {
        <header>
             <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3 middle-east" light>
                 <Container>
-                    <NavbarBrand tag={Link} to="/">{localizedMiilya[language]}</NavbarBrand>
+                    <NavbarBrand tag={Link} to="/">{localizedSiteName[language]}</NavbarBrand>
                     <NavLink href="#" className="text-dark" onClick={onClickLanguage}>{language == "ar" ? 'עברית' : 'عربية'}</NavLink>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={state.collapsed} navbar>

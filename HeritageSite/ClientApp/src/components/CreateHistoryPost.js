@@ -21,7 +21,7 @@ export function CreateHistoryPost({ loginInfo }) {
         e.preventDefault();
 
         if (image == null) {
-            setImageUploadError("يرجى تحميل صورة")
+            setImageUploadError("Please submit an image")
             return;
         }
 
@@ -29,7 +29,7 @@ export function CreateHistoryPost({ loginInfo }) {
             if (response) {
                 location.reload();
             } else {
-                setImageUploadError('صورة غير صالحة')
+                setImageUploadError('Invalid image')
             }
 
         }).catch(error => {
@@ -54,7 +54,7 @@ export function CreateHistoryPost({ loginInfo }) {
         <div className={"create-history-post"} >
             <form onSubmit={onSubmit}>
 
-                <h5 htmlFor="title">عنوان:</h5>
+                <h5 htmlFor="title">כותרת:</h5>
                 <input className={"create-history-post-input"} autoComplete="off" style={{ width: '100%' }} type="text" id="post-title" onChange={handleTitleChange} />
 
                 <UploadImage onUploadImage={onUploadImage}/>

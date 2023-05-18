@@ -5,20 +5,6 @@ import MyAPI from '../MyAPI';
 export function HistoryPost({ loginInfo, imageName, title, index, description, control, onClickBookmarkPost, bookmarked, onDeletePost, getImageUrl, containerViewMode }) {
     const [imageUrl, setImageUrl] = useState(null);
 
-    const strings = new LocalizedStrings({
-        ar: {
-            families: 'عائلات'
-        },
-        he: {
-            families: 'משפחות'
-        },
-    });
-
-    function getString(language, str) {
-        strings.setLanguage(language);
-        return strings[str];
-    }
-
     useEffect(() => {
         if (!loginInfo.loggedIn) {
             return;
@@ -54,7 +40,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
             return;
         }
 
-        const result = confirm("هل تريد ان تحذف المنشور?");
+        const result = confirm("Do you want to remove this post?");
         if (!result) {
             return;
         }
