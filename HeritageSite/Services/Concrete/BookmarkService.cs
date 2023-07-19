@@ -32,9 +32,11 @@ namespace HeritageSite.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id)
                 & Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
+
             var update = Builders<BookmarkDocument>.Update
                             .Set(x => x.UserId, user.Id)
                             .Set(x => x.HistoryPostIndex, historyPostIndex);
+
             await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
 
@@ -42,6 +44,7 @@ namespace HeritageSite.Services.Abstract
         {
             var filter = Builders<BookmarkDocument>.Filter.Eq(x => x.UserId, user.Id)
                 & Builders<BookmarkDocument>.Filter.Eq(x => x.HistoryPostIndex, historyPostIndex);
+
             await _collection.DeleteManyAsync(filter);
         }
 
