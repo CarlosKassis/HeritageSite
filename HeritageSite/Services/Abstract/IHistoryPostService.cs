@@ -14,7 +14,7 @@ namespace HeritageSite.Services.Abstract
 
         public Task DeleteHistoryPost(string userId, long index, bool isAdmin);
 
-        public Task CreateUserIfDoesntExist(string userId);
+        public Task CreateGraphUserIfDoesntExist(string userId);
 
         public Task<IEnumerable<long>> GetUserBookmarkPostIndexes(string userId);
 

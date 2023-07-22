@@ -8,5 +8,7 @@ namespace HeritageSite.Services.Abstract
     public interface IUserService
     {
         Task<UserDocument> GetUserWithEmail(string email, bool createIfDoesntExist = true);
+
+        Task<UserDocument> GetUserWithId(string userId);
     }
 }

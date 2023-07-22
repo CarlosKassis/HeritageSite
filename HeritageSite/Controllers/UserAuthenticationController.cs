@@ -39,7 +39,7 @@
                 throw new ArgumentException("Received custom login validation without email");
             }
 
-            if (!Request.Headers.TryGetValue("email", out var password))
+            if (!Request.Headers.TryGetValue("password", out var password))
             {
                 throw new ArgumentException("Received custom login validation without password");
             }

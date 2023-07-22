@@ -112,7 +112,7 @@ DESC LIMIT {batchSize}";
 
         public async Task InsertHistoryPost(string userId, string title, string description, Image image)
         {
-            await CreateUserIfDoesntExist(userId);
+            await CreateGraphUserIfDoesntExist(userId);
             string generatedFileName = GenerateUniqueFilename();
 
             try
@@ -188,7 +188,7 @@ RETURN post");
             });
         }
 
-        public async Task CreateUserIfDoesntExist(string userId)
+        public async Task CreateGraphUserIfDoesntExist(string userId)
         {
             await _driver.AsyncSession().ExecuteWriteAsync(async tx =>
             {

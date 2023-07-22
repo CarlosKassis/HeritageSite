@@ -43,5 +43,17 @@ namespace HeritageSite.Services.Abstract
 
             return userDocument;
         }
+
+        public async Task<UserDocument> GetUserWithId(string userId)
+        {
+            var filter = Builders<UserDocument>.Filter.Eq(x => x.Id, userId);
+            var userDocument = await _collection.Find(filter).Limit(1).FirstOrDefaultAsync();
+            if (userDocument == null)
+            {
+                throw new InvalidOperationException("User doesn't exit");
+            }
+
+            return userDocument;
+        }
     }
 }

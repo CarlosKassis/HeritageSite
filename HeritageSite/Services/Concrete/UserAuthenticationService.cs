@@ -84,13 +84,13 @@ namespace HeritageSite.Services.Abstract
                 throw new InvalidOperationException("Invalid token content");
             }
 
-            string email = validationResult.Claims["aud"] as string;
-            if (string.IsNullOrEmpty(email))
+            string userId = validationResult.Claims["aud"] as string;
+            if (string.IsNullOrEmpty(userId))
             {
-                throw new InvalidOperationException("Email is empty");
+                throw new InvalidOperationException("UserId is empty");
             }
 
-            user = await _userService.GetUserWithEmail(email);
+            user = await _userService.GetUserWithId(userId);
 
             _loginJwtsValidationResults.TryAdd(jwt, user);
             return user;
