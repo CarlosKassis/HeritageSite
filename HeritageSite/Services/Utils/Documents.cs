@@ -3,7 +3,7 @@ namespace HeritageSite.Services.Utils
 {
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
-    using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public class Documents
     {
@@ -33,43 +33,40 @@ namespace HeritageSite.Services.Utils
             public bool Available { get; set; }
         }
 
-        [BsonIgnoreExtraElements]
         public class HistoryPostDocument
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
+            public string Id { get; set; }
 
-            public ObjectId UserId { get; set; }
+            [JsonIgnore]
+            public string PosterId { get; set; }
 
             public string ImageName { get; set; }
 
-            public BsonDateTime ImageDate { get; set; }
+            public long CreatedOn { get; set; }
+
+            public long ImageDate { get; set; }
 
             public string Title { get; set; }
 
             public string Description { get; set; }
 
-            public int Index { get; set; }
+            public long Index { get; set; }
         }
 
-        [BsonIgnoreExtraElements]
         public class UserDocument
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
+            public string Id { get; set; }
 
-            public string EmailSHA256 { get; set; }
+            public string Email { get; set; }
 
             public bool IsAdmin { get; set; }
         }
 
-        [BsonIgnoreExtraElements]
         public class BookmarkDocument
         {
-            [BsonElement("_id")]
-            public ObjectId Id { get; set; }
+            public string Id { get; set; }
 
-            public ObjectId UserId { get; set; }
+            public string UserId { get; set; }
 
             public int HistoryPostIndex { get; set; }
         }

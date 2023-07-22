@@ -3,6 +3,7 @@ namespace HeritageSite.Services.Utils
 {
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
+    using System;
 
     public class DocumentsExternal
     {
@@ -34,7 +35,7 @@ namespace HeritageSite.Services.Utils
 
             public string Description { get; set; }
 
-            public int Index { get; set; }
+            public long Index { get; set; }
 
             public int Control { get; set; }
 
@@ -44,7 +45,7 @@ namespace HeritageSite.Services.Utils
         [BsonIgnoreExtraElements]
         public class UserDocumentExternal
         {
-            public string EmailSHA256 { get; set; }
+            public string Id { get; set; }
         }
     }
 }

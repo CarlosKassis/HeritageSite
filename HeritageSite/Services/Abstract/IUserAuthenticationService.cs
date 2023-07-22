@@ -9,6 +9,8 @@ namespace HeritageSite.Services.Abstract
     {
         public Task<string> CreateSiteLoginJwtFromThirdPartyLoginJwt(string jwt, AccountAuthentication accountAuthentication);
 
+        public Task<string> CreateSiteLoginkJwtFromCustomLogin(string email, string password);
+
         public Task<UserDocument> ValidateLoginJwtAndGetUser(string jwt);
     }
 }

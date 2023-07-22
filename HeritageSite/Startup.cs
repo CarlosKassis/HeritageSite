@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using static HeritageSite.Services.Utils.Documents;
 using static HeritageSite.Services.Utils.DocumentsExternal;
+using Neo4j.Driver;
 
 namespace HeritageSite
 {
@@ -51,12 +52,15 @@ namespace HeritageSite
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddSingleton<IHistoryPostService, HistoryPostService>();
+            services.AddSingleton<IHistoryPostService, HistoryPostServiceNeo>();
             services.AddSingleton<IFamilyService, FamilyService>();
             services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             services.AddSingleton<IImageService, ImageService>();
             services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<IBookmarkService, BookmarkService>();
+            services.AddSingleton(provider =>
+            {
+                return GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "123123123"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

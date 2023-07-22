@@ -13,13 +13,10 @@ namespace HeritageSite.Middlewares
 
         private readonly IUserAuthenticationService _userAuthenticationService;
 
-        private readonly IUserService _userService;
-
-        public PrivateHistoryMiddleware(RequestDelegate next, IUserAuthenticationService userAuthenticationService, IUserService userService)
+        public PrivateHistoryMiddleware(RequestDelegate next, IUserAuthenticationService userAuthenticationService)
         {
             _next = next;
             _userAuthenticationService = userAuthenticationService;
-            _userService = userService;
         }
 
         public async Task InvokeAsync(HttpContext context)

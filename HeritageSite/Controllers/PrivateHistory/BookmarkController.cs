@@ -1,9 +1,8 @@
 ﻿
 namespace HeritageSite.Controllers.PrivateHistory
 {
-    using Microsoft.AspNetCore.Mvc;
     using HeritageSite.Services.Abstract;
-    using HeritageSite.Shared;
+    using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
     using static HeritageSite.Services.Utils.Documents;
@@ -12,11 +11,11 @@ namespace HeritageSite.Controllers.PrivateHistory
     [Route("api/PrivateHistory/[Controller]")]
     public class BookmarkController : ControllerBase
     {
-        private readonly IBookmarkService _imageService;
+        private readonly IHistoryPostService _historyPostService;
 
-        public BookmarkController(IBookmarkService bookmarkService)
+        public BookmarkController(IHistoryPostService historyPostService)
         {
-            _imageService = bookmarkService;
+            _historyPostService = historyPostService;
         }
 
         [HttpGet]
@@ -28,7 +27,8 @@ namespace HeritageSite.Controllers.PrivateHistory
                 throw new ArgumentException("No history post index was specified");
             }
 
-            await _imageService.AddBookmark(HttpContext.Items["User"] as UserDocument, index.Value);
+            var user = HttpContext.Items["User"] as UserDocument;
+            await _historyPostService.AddBookmark(user.Id, index.Value);
             return Ok();
         }
 
@@ -41,7 +41,8 @@ namespace HeritageSite.Controllers.PrivateHistory
                 throw new ArgumentException("No history post index was specified");
             }
 
-            await _imageService.RemoveBookmark(HttpContext.Items["User"] as UserDocument, index.Value);
+            var user = HttpContext.Items["User"] as UserDocument;
+            await _historyPostService.RemoveBookmark(user.Id, index.Value);
             return Ok();
         }
     }

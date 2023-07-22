@@ -20,14 +20,12 @@ namespace HeritageSite.Controllers.PrivateHistory
         private readonly IMapper _mapper;
         private readonly IHistoryPostService _historyPostService;
         private readonly IUserService _userService;
-        private readonly IBookmarkService _bookmarkService;
 
-        public HistoryPostController(IMapper mapper, IHistoryPostService historyPostService, IUserService userService, IBookmarkService bookmarkService)
+        public HistoryPostController(IMapper mapper, IHistoryPostService historyPostService, IUserService userService)
         {
             _mapper = mapper;
             _historyPostService = historyPostService;
             _userService = userService;
-            _bookmarkService = bookmarkService;
         }
 
 
@@ -38,12 +36,12 @@ namespace HeritageSite.Controllers.PrivateHistory
             var searchText = Request.Form["searchText"].FirstOrDefault();
 
             var historyPosts = await _historyPostService.GetFirstBatchLowerEqualThanIndex(startIndex, batchSize: 20, searchText);
-            var bookmarkedPosts = (await _bookmarkService.GetUserBookmarks(user))?.Select(bookmark => bookmark.HistoryPostIndex)?.ToHashSet();
+            var bookmarkedPosts = (await _historyPostService.GetUserBookmarkPostIndexes(user.Id))?.ToHashSet();
 
             return Content(JsonConvert.SerializeObject(historyPosts.Select(historyPost =>
             {
                 var historyPostExternal = _mapper.Map<HistoryPostDocumentExternal>(historyPost);
-                historyPostExternal.Control = user.IsAdmin ? 2 : historyPost.UserId == user.Id ? 1 : 0;
+                historyPostExternal.Control = user.IsAdmin ? 2 : historyPost.PosterId == user.Id ? 1 : 0;
                 historyPostExternal.Bookmarked = bookmarkedPosts?.Contains(historyPost.Index) ?? false;
                 return historyPostExternal;
             })));
@@ -74,7 +72,7 @@ namespace HeritageSite.Controllers.PrivateHistory
             var title = Request.Form["title"].FirstOrDefault();
             var description = Request.Form["description"].FirstOrDefault();
 
-            await _historyPostService.InsertHistoryPost(user, title, description, image);
+            await _historyPostService.InsertHistoryPost(user.Id, title, description, image);
 
             return Ok();
         }
@@ -83,7 +81,7 @@ namespace HeritageSite.Controllers.PrivateHistory
         public async Task<IActionResult> DeleteHistoryPost(int? index)
         {
             var user = Request.HttpContext.Items["User"] as UserDocument;
-            await _historyPostService.DeleteHistoryPost(user, index.Value);
+            await _historyPostService.DeleteHistoryPost(user.Id, index.Value, user.IsAdmin);
 
             return Ok();
         }

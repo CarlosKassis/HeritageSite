@@ -13,6 +13,8 @@
     {
         private const string _jwtHeaderKey = "Authorization";
 
+        private const string _customCredentialHeaderKey = "custom-credentials";
+
         private const string _googleCredentialHeaderKey = "google-credentials";
 
         private const string _microsoftCredentialHeaderKey = "microsoft-credentials";
@@ -22,6 +24,28 @@
         public UserAuthenticationController(IUserAuthenticationService userAuthenticationService)
         {
             _userAuthenticationService = userAuthenticationService;
+        }
+
+        /// <summary>
+        /// Receives a Custom login response from header and returns a login JWT
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Custom/Login")]
+        public async Task<IActionResult> CustomLogin()
+        {
+            if (!Request.Headers.TryGetValue("email", out var email))
+            {
+                throw new ArgumentException("Received custom login validation without email");
+            }
+
+            if (!Request.Headers.TryGetValue("email", out var password))
+            {
+                throw new ArgumentException("Received custom login validation without password");
+            }
+
+            string loginJwt = await _userAuthenticationService.CreateSiteLoginkJwtFromCustomLogin(email, password);
+            return Content(loginJwt);
         }
 
         /// <summary>

@@ -96,16 +96,29 @@ namespace HeritageSite.Services.Abstract
             return user;
         }
 
+        public async Task<string> CreateSiteLoginkJwtFromCustomLogin(string email, string password)
+        {
+            // TODO: add email+password check
+
+            var user = await _userService.GetUserWithEmail(email);
+            return CreateLoginJwtForUser(user.Id);
+        }
 
         public async Task<string> CreateSiteLoginJwtFromThirdPartyLoginJwt(string jwt, AccountAuthentication accountAuthentication)
         {
             string email = accountAuthentication switch
             {
-                AccountAuthentication.Google => await ValidateGoogleLoginJwt(jwt),
-                AccountAuthentication.Microsoft => ValidateMicrosoftLoginJwt(jwt),
-                _ => throw new NotSupportedException("Only Microsoft and Google accounts are supported")
+                AccountAuthentication.Google => await ValidateGoogleLoginJwtAndGetEmail(jwt),
+                AccountAuthentication.Microsoft => ValidateMicrosoftLoginJwtAndGetEmail(jwt),
+                _ => throw new NotSupportedException("Only Custom, Microsoft and Google login is supported")
             };
 
+            var user = await _userService.GetUserWithEmail(email);
+            return CreateLoginJwtForUser(user.Id);
+        }
+
+        private string CreateLoginJwtForUser(string userId)
+        {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 SigningCredentials = _jwtSigningCredentials,
@@ -117,13 +130,13 @@ namespace HeritageSite.Services.Abstract
                 Expires = DateTime.UtcNow.AddYears(1),
                 NotBefore = DateTime.UtcNow,
                 IssuedAt = DateTime.UtcNow,
-                Audience = email
+                Audience = userId
             };
 
             return _tokenHandler.CreateEncodedJwt(tokenDescriptor);
         }
 
-        private string ValidateMicrosoftLoginJwt(string jwt)
+        private string ValidateMicrosoftLoginJwtAndGetEmail(string jwt)
         {
             if (_microsoftJsonWebKeys == null)
             {
@@ -165,7 +178,7 @@ namespace HeritageSite.Services.Abstract
             throw new Exception("Login is invalid");
         }
 
-        private async Task<string> ValidateGoogleLoginJwt(string jwt)
+        private async Task<string> ValidateGoogleLoginJwtAndGetEmail(string jwt)
         {
             GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(jwt);
 
@@ -198,7 +211,7 @@ namespace HeritageSite.Services.Abstract
         {
             // Temporary way to store RSA key for development purposes
             // TODO: use a different method to store keys
-            string rsaFile = ".\\RSA.txt";
+            string rsaFile = Path.Combine(".", "RSA.txt");
             if (File.Exists(rsaFile))
             {
                 string rsaJson = File.ReadAllText(rsaFile);

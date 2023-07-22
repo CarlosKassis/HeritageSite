@@ -7,8 +7,6 @@ namespace HeritageSite.Services.Abstract
 
     public interface IUserService
     {
-        Task<UserDocument> GetUserWithLoginJwt(string jwt, bool createIfDoesntExist = true);
-
         Task<UserDocument> GetUserWithEmail(string email, bool createIfDoesntExist = true);
     }
 }

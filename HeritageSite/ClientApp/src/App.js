@@ -35,7 +35,13 @@ export default function App() {
             })
         }
         else {
-            setLoginInfo({loggedIn: false});
+            // DEBUG AUTO LOGIN!!!!
+            MyAPI.getLoginJwtFromLoginCredentials('my-email@hotmail.com', '123123').then(loginJwt => {
+                onValidLoginJwt(loginJwt, true);
+            });
+
+            // DEBUG, RESTORE LATER
+            //setLoginInfo({loggedIn: false});
         }
 
     }, []);
@@ -57,19 +63,6 @@ export default function App() {
     }
 
     useEffect(() => {
-        const newMsalInstance = new msal.UserAgentApplication({
-            auth: {
-                clientId: "INSERT_MSAL_CLIENT_ID",
-                authority: 'INSERT_MSAL_AUTH',
-                redirectUri: window.location.origin
-            },
-            cache: {
-                cacheLocation: "sessionStorage",
-                storeAuthStateInCookie: false
-            }
-        });
-
-        setMsalInstance(newMsalInstance)
     }, [])
 
     function getImageUrl(imageName, onAquireImageUrl) {
@@ -92,7 +85,6 @@ export default function App() {
         <Layout loginInfo={loginInfo} onClickLanguage={onClickLanguage} language={language} >
             <Route exact path='/' render={() =>
                 <Home
-                    msalInstance={msalInstance}
                     onLogOut={onLogOut}
                     loginInfo={loginInfo}
                     language={language}

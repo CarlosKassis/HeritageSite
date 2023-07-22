@@ -25,6 +25,22 @@ export default class MyAPI {
         return null;
     }
 
+    static async getLoginJwtFromLoginCredentials(email, password) {
+        const response = await fetch('/UserAuthentication/Custom/Login', {
+            method: "POST",
+            headers: {
+                'email': email,
+                'password': password
+            }
+        });
+
+        if (response.ok) {
+            return await response.text();
+        }
+
+        return null;
+    }
+
     static async getLoginJwtFromMicrosoftJwt(jwt) {
         const response = await fetch('/UserAuthentication/Microsoft/Login', {
             method: "POST",
