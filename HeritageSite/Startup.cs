@@ -86,12 +86,14 @@ namespace HeritageSite
             provider.Mappings[".dzi"] = "application/octet-stream";
             provider.Mappings[".jpg"] = "image/jpeg";
 
+            var privateHistoryMediaPath = Path.Combine(PrivateHistoryConstants.RootPath, "Media");
+            Directory.CreateDirectory(privateHistoryMediaPath);
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(PrivateHistoryConstants.RootPath, "Media")),
+                FileProvider = new PhysicalFileProvider(privateHistoryMediaPath),
                 RequestPath = PrivateHistoryConstants.MediaUrlPrefix,
                 ServeUnknownFileTypes = false,
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
             });
 
             app.UseSpaStaticFiles();
