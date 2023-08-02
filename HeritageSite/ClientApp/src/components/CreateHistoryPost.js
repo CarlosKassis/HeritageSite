@@ -26,14 +26,9 @@ export function CreateHistoryPost({ loginInfo }) {
         }
 
         MyAPI.submitHistoryPost(title, description, image, loginInfo.jwt).then(response => {
-            if (response) {
-                location.reload();
-            } else {
-                setImageUploadError('Invalid image')
-            }
-
+            location.reload();
         }).catch(error => {
-            console.log(error);
+            setImageUploadError(error);
         })
     };
 
@@ -58,13 +53,9 @@ export function CreateHistoryPost({ loginInfo }) {
                 <input className={"create-history-post-input"} autoComplete="off" style={{ width: '100%' }} type="text" id="post-title" onChange={handleTitleChange} />
 
                 <UploadImage onUploadImage={onUploadImage}/>
-                {
-                    imageUploadError &&
-                    <p style={{ color: '#f55', fontSize: '14px', marginTop: '5px' }}>{imageUploadError}</p>
-                }
                 <h5 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h5>
                 <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%', height: '40px' }} onChange={handleDescriptionChange} />
-
+                { imageUploadError && <p style={{ color: '#f55', fontSize: '14px', marginTop: '5px' }}>{imageUploadError}</p> }
                 <button type="submit"
                     style={{ marginTop: '10px', marginRight: 'auto', border: 'none', borderRadius: '2px', boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}>Submit</button>
             </form>

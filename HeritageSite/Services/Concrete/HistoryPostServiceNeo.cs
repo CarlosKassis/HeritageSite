@@ -117,6 +117,7 @@ DESC LIMIT {batchSize}";
 
             try
             {
+                Directory.CreateDirectory(PrivateHistoryConstants.ImagesDirectoryPath);
                 using FileStream outputFile = new(Path.Combine(PrivateHistoryConstants.ImagesDirectoryPath, generatedFileName), FileMode.OpenOrCreate);
                 await image.SaveAsJpegAsync(outputFile);
             }

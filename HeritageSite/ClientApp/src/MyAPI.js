@@ -7,7 +7,11 @@ export default class MyAPI {
              }
          });
 
-         return response.ok;
+        if (response.ok) {
+            return true;
+        }
+
+        throw await response.text();
     }
 
     static async getLoginJwtFromGoogleJwt(jwt) {
@@ -22,7 +26,7 @@ export default class MyAPI {
             return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getLoginJwtFromLoginCredentials(email, password) {
@@ -38,7 +42,7 @@ export default class MyAPI {
             return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getLoginJwtFromMicrosoftJwt(jwt) {
@@ -53,7 +57,7 @@ export default class MyAPI {
             return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getFamilies(jwt) {
@@ -67,7 +71,7 @@ export default class MyAPI {
             return await response.json();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getHistoryImageLowRes(jwt, name) {
@@ -81,7 +85,7 @@ export default class MyAPI {
             return await response.blob();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getHistoryImage(jwt, name) {
@@ -95,7 +99,7 @@ export default class MyAPI {
             return await response.blob();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getHistoryPosts(jwt, startingFromIndex, searchText) {
@@ -121,7 +125,7 @@ export default class MyAPI {
             return await response.json();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async submitHistoryPost(title, description, image, jwt) {
@@ -149,10 +153,10 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return "ok";
+            return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async bookmarkHistoryPost(jwt, historyPostIndex) {
@@ -165,10 +169,10 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return "ok";
+            return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async unbookmarkHistoryPost(jwt, historyPostIndex) {
@@ -181,10 +185,10 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return "ok";
+            return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async deleteHistoryPost(jwt, historyPostIndex) {
@@ -198,10 +202,10 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return "ok";
+            return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 
     static async getFamilyTree(jwt, familyId) {
@@ -214,9 +218,9 @@ export default class MyAPI {
         });
 
         if (response.ok) {
-            return await response.json();
+            return await response.text();
         }
 
-        return null;
+        throw await response.text();
     }
 }
