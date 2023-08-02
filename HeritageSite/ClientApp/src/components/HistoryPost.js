@@ -57,10 +57,11 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
             <div
 
                 className={`card ${containerViewMode == "grid" ? 'history-post-gridcell' : ''}`}
-                style=
-                {{
-                    backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
-                }}>
+                //style=
+                //{{
+                //    backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
+                //}}
+                >
                 {
                     containerViewMode != "grid" &&
                     <div style={{
@@ -69,13 +70,6 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
                         marginRight: 'auto',
                         height: '36px'
                     }}>
-                        {
-                            // Edit post
-                            //control !== null && control > 0 &&
-                            //<img
-                            //    className={"history-button"}
-                            //    src={'./edit.png'} />
-                        }
                         {
                             // Delete post
                             control !== null && control > 0 &&
