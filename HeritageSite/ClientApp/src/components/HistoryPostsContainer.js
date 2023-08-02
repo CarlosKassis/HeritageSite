@@ -9,7 +9,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
     const [historyPosts, setHistoryPosts] = useState([]);
     const [onlyBookmarks, setOnlyBookmarks] = useState(false);
     const [searchText, setSearchText] = useState(null);
-    const [viewMode, setViewMode] = useState("grid");
+    const [viewMode, setViewMode] = useState("vertical");
 
     // Initial history posts load
     useEffect(() => {
