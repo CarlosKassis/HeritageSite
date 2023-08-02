@@ -9,7 +9,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
     const [historyPosts, setHistoryPosts] = useState([]);
     const [onlyBookmarks, setOnlyBookmarks] = useState(false);
     const [searchText, setSearchText] = useState(null);
-    const [viewMode, setViewMode] = useState("vertical");
+    const [viewMode, setViewMode] = useState("grid");
 
     // Initial history posts load
     useEffect(() => {
@@ -102,10 +102,6 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
         }, 1000)
     }
 
-    function isEmptyOrSpace(str) {
-        return str === null || str.match(/^ *$/) !== null;
-    }
-
     function onCooldownSearchType(stamp, text) {
         if (stamp != searchStamp.current) {
             return;
@@ -173,14 +169,14 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                 <img style={{ height: '32px' }} className={"history-button"} src={onlyBookmarks ? './bookmarked.png' : './bookmark.png'} onClick={() => setOnlyBookmarks(!onlyBookmarks)} />
                 <img style={{ height: '32px' }} className={"history-button"} src={viewMode == "grid" ? './grid.png' : './vertical.png'} onClick={() => setViewMode(viewMode == "grid" ? "vertical" : "grid")} />
             </div>
-                <div
+                <div 
                     style={
                         viewMode == "grid" ?
                         {
                             display: 'grid',
-                            gridTemplateColumns: '1fr 1fr 1fr',
-                            gridAutoFlow: 'row dense',
-                            gridGap: '0.5rem'
+                            gridTemplateColumns: 'repeat(auto-fit, 200px',
+                            justifyContent: 'center',
+                            gridGap: '0.25rem'
                         } :
                         {}
                     }>

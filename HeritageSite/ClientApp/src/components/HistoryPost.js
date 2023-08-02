@@ -1,6 +1,8 @@
 ﻿import React, { useEffect, useState } from 'react';
 import LocalizedStrings from 'localized-strings';
 import MyAPI from '../MyAPI';
+import { HistoryPostForGrid } from './HistoryPostForGrid';
+import { HistoryPostForVertical } from './HistoryPostForVertical';
 
 export function HistoryPost({ loginInfo, imageName, title, index, description, control, onClickBookmarkPost, bookmarked, onDeletePost, getImageUrl, containerViewMode }) {
     const [imageUrl, setImageUrl] = useState(null);
@@ -54,78 +56,18 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
 
     return (
         <div key={index}>
-            <div
-
-                className={`card ${containerViewMode == "grid" ? 'history-post-gridcell' : ''}`}
-                //style=
-                //{{
-                //    backgroundColor: (!control || control == 0) ? 'white' : (control == 1 ? '#dfd' : '#fdd')
-                //}}
-                >
-                {
-                    containerViewMode != "grid" &&
-                    <div style={{
-                        width: 'fit-content',
-                        position: 'relative',
-                        marginRight: 'auto',
-                        height: '36px'
-                    }}>
-                        {
-                            // Delete post
-                            control !== null && control > 0 &&
-                            <img
-                                onClick={onClickDelete}
-                                className={"history-button"}
-                                src={'./delete.png'} />
-                        }
-                        {
-                            // Bookmark post
-                            <img
-                                className={"history-button"}
-                                onClick={onClickBookmark}
-                                src={bookmarked ? './bookmarked.png' : './bookmark.png'} />
-                        }
-                    </div>
-                }
-
-                {
-                    containerViewMode != "grid" &&
-                    // Title
-                    title && <h5 style={{ overflowWrap: 'break-word' }}>{title}</h5> ||
-                    !title && <br />
-                }
-                {
-                    // Image
-                    imageUrl &&
-                    <img
-                        onClick={() => onClickHistoryImage(imageName)}
-                        className={"history-post-image"}
-                        src={imageUrl}
-                        alt={imageName}
-                        style=
-                        {
-                            containerViewMode == "grid" ? {
-                                maxHeight: '200px',
-                                marginTop: 'auto',
-                                marginBottom: 'auto'
-                            } : {}
-                        }
-                    />
-                }
-                {
-                    // Image loading
-                    imageName && !imageUrl &&
-                    <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
-                        <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
-                    </div>
-                }
-
-                {
-                    containerViewMode != "grid" &&
-                    // Description
-                    <h6 style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>
-                }
-            </div >
+            {containerViewMode == 'grid' && <HistoryPostForGrid imageName={imageName} imageUrl={imageUrl} onClickHistoryImage={onClickHistoryImage} />}
+            {containerViewMode != 'grid' && <HistoryPostForVertical
+                imageUrl={imageUrl}
+                control={control}
+                description={description}
+                title={title}
+                bookmarked={bookmarked}
+                onClickDelete={onClickDelete}
+                onClickBookmark={onClickBookmark}
+                imageName={imageName}
+                onClickHistoryImage={onClickHistoryImage}
+            />}
         </div>
     );
 }

@@ -45,10 +45,13 @@ text {
 }
 
 .card, .create-history-post {
-    padding: 10px;
     border-radius: 3px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     width: 100%;
+}
+
+.padded {
+    padding: 7px;
 }
 
 .card {
@@ -65,10 +68,6 @@ text {
     outline: none;
 }
 
-.history-post-image {
-    width: 100%;
-}
-
 .history-post-image:hover {
     cursor: pointer;
 }
@@ -76,10 +75,15 @@ text {
 .history-posts-container {
     align-content: center;
     display: block;
-    max-width: 750px;
     margin-left: auto;
     margin-right: auto;
     overflow: visible;
+}
+
+.main-column {
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .login-button-container {

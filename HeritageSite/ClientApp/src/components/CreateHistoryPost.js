@@ -46,7 +46,7 @@ export function CreateHistoryPost({ loginInfo }) {
     }
 
     return (
-        <div className={"create-history-post"} >
+        <div className={"create-history-post padded main-column"} >
             <form onSubmit={onSubmit}>
 
                 <h5 htmlFor="title">عنوان:</h5>
