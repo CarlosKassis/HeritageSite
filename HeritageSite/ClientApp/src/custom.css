@@ -66,6 +66,7 @@ text {
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5);
     border: none;
     outline: none;
+    resize: none;
 }
 
 .history-post-image:hover {
@@ -112,7 +113,7 @@ text {
 
 .history-button {
     height: 100%;
-    filter: drop-shadow(1px 1px 2px #555);
+    filter: drop-shadow(0.5px 0.5px 1px #555);
 }
 
 .history-button:hover {
@@ -121,4 +122,7 @@ text {
 
 .history-post-gridcell {
     height: 100%;
+}
+
+.auto-language-direction {
 }

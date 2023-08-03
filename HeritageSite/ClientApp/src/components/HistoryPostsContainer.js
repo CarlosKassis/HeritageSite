@@ -174,7 +174,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                         viewMode == "grid" ?
                         {
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, 200px',
+                            gridTemplateColumns: 'repeat(auto-fit, 200px)',
                             justifyContent: 'center',
                             gridGap: '0.25rem'
                         } :

@@ -7,7 +7,6 @@ export function CreateHistoryPost({ loginInfo }) {
     const [image, setImage] = useState(null);
     const [description, setDescription] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
-    const clickedDescriptionOnce = useRef(false);
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
@@ -15,6 +14,8 @@ export function CreateHistoryPost({ loginInfo }) {
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
+        e.target.style.height = '40px'
+        e.target.style.height = `${e.target.scrollHeight}px`;
     };
 
     function onSubmit(e) {
@@ -32,15 +33,6 @@ export function CreateHistoryPost({ loginInfo }) {
         })
     };
 
-    function onClickDescription() {
-        if (clickedDescriptionOnce.current) {
-            return;
-        }
-
-        clickedDescriptionOnce.current = true;
-        document.getElementById('post-description').style.height = '150px';
-    }
-
     function onUploadImage(image) {
         setImage(image)
     }
@@ -54,10 +46,19 @@ export function CreateHistoryPost({ loginInfo }) {
 
                 <UploadImage onUploadImage={onUploadImage}/>
                 <h5 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h5>
-                <textarea id="post-description" className={"create-history-post-input"} onClick={onClickDescription} style={{ width: '100%', height: '40px' }} onChange={handleDescriptionChange} />
+                <textarea id="post-description" className={"create-history-post-input"} style={{ width: '100%', height: '40px', padding: '10px', unicodeBidi: 'plaintext', overflow: 'hidden' }} onChange={handleDescriptionChange} />
                 { imageUploadError && <p style={{ color: '#f55', fontSize: '14px', marginTop: '5px' }}>{imageUploadError}</p> }
                 <button type="submit"
-                    style={{ marginTop: '10px', marginRight: 'auto', border: 'none', borderRadius: '2px', boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}>Submit</button>
+                    style={{
+                        marginTop: '10px',
+                        marginRight: 'auto',
+                        border: 'none',
+                        borderRadius: '2px',
+                        boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)',
+                        padding: '4px 12px'
+                    }}>
+                    أُنشر
+                </button>
             </form>
         </div>
     );
