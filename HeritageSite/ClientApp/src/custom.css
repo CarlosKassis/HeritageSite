@@ -7,10 +7,13 @@ code {
   color: #E01A76;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+button {
+    margin-top: 10px;
+    margin-right: auto;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    padding: 4px 12px;
 }
 
 .container {
@@ -36,8 +39,13 @@ code {
     user-select: none;
 }
 
-text {
+text, pre {
     font-family: 'Droid Arabic Kufi', sans-serif;
+}
+
+pre {
+    overflow: hidden;
+    font-size: 18px;
 }
 
 .family-hoverable:hover {
@@ -112,8 +120,13 @@ text {
 }
 
 .history-button {
-    height: 100%;
+    height: 48px;
     filter: drop-shadow(0.5px 0.5px 1px #555);
+}
+
+hr {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .history-button:hover {
@@ -124,5 +137,6 @@ text {
     height: 100%;
 }
 
-.auto-language-direction {
+.language-direction {
+    unicode-bidi: plaintext;
 }

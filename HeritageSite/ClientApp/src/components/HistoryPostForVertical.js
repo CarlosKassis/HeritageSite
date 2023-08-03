@@ -8,7 +8,7 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                 width: 'fit-content',
                 position: 'relative',
                 marginRight: 'auto',
-                height: '56px'
+                height: 'fit-content'
             }}>
                 {
                     // Delete post
@@ -26,6 +26,7 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                         src={bookmarked ? './bookmarked.png' : './bookmark.png'} />
                 }
             </div>
+            <hr/>
             {title && <h5 className={'padded'} style={{ overflowWrap: 'break-word' }}>{title}</h5> || !title && <br />}
             {
                 // Image
@@ -53,7 +54,8 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                     <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
                 </div>
             }
-            {<h6 className={'padded'} style={{ paddingTop: '10px', overflowWrap: 'break-word' }}>{description}</h6>}
+            <hr />
+            {<text className={'padded language-direction'} style={{ paddingTop: '10px' }}><pre>{description}</pre></text>}
         </div>
     );
 }
