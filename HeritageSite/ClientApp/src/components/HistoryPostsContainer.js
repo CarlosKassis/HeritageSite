@@ -190,7 +190,7 @@ export function HistoryPostsContainer({ loginInfo, loadMoreFlag, onLoadingStop, 
                             key={historyPost.Index}
                             index={historyPost.Index}
                             imageName={historyPost.ImageName}
-                            ImageDate={historyPost.ImageDate}
+                            imageDate={historyPost.ImageDate}
                             title={historyPost.Title}
                             description={historyPost.Description}
                             control={historyPost.Control}

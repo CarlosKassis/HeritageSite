@@ -74,7 +74,7 @@ namespace HeritageSite.Controllers.PrivateHistory
             var descriptionString = Request.Form["description"].FirstOrDefault();
             var imageDateString = Request.Form["imageDate"].FirstOrDefault();
 
-            if (!DateOnly.TryParseExact(imageDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var imageDate))
+            if (imageDateString != null && !DateOnly.TryParseExact(imageDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var imageDate))
             {
                 throw new InvalidOperationException("Invalid image date");
             }

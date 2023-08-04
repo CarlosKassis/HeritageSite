@@ -31,8 +31,7 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                         src={bookmarked ? './bookmarked.png' : './bookmark.png'} />
                 }
             </div>
-            {title && <hr />}
-            {title && <h5 className={'padded'} style={{ overflowWrap: 'break-word' }}>{title}</h5>}
+            {title && <h6 className={'padded'} style={{ overflowWrap: 'break-word' }}>{title}</h6>}
             {
                 // Image
                 imageUrl &&
@@ -59,8 +58,8 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                    <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
                 </div>
             }
-            <h5 style={{ marginTop: '8px', marginBottom: '8px', marginLeft: '8px', marginRight: 'auto' }} ><b>{imageDate && imageDate !== '' ? imageDate : '01/01/1700'}</b></h5>
-            {description && <text className={'padded language-direction'} style={{ paddingTop: '10px' }}><pre>{description}</pre></text>}
+            <input type="date" value={imageDate ? imageDate : "1700-01-01"} unselectable="on" style={{ fontWeight: 'bold', color: 'black', backgroundColor: 'white', fontSize: '18px', marginLeft: '6px', marginTop: '6px', userSelect: 'none', border: 'none' }} readOnly disabled></input>
+            {description && <text className={'padded language-direction'} style={{ paddingTop: '10px' }}><pre style={{ fontSize: '16px' }} >{description}</pre></text>}
         </div>
     );
 }
