@@ -12,6 +12,7 @@ namespace HeritageSite.Controllers.PrivateHistory
     using static HeritageSite.Services.Utils.DocumentsExternal;
     using static HeritageSite.Services.Utils.Documents;
     using System.Collections.Generic;
+    using System.Globalization;
 
     [ApiController]
     [Route("api/PrivateHistory/[Controller]")]
@@ -69,10 +70,16 @@ namespace HeritageSite.Controllers.PrivateHistory
                 throw new InvalidOperationException(ex.Message);
             }
 
-            var title = Request.Form["title"].FirstOrDefault();
-            var description = Request.Form["description"].FirstOrDefault();
+            var titleString = Request.Form["title"].FirstOrDefault();
+            var descriptionString = Request.Form["description"].FirstOrDefault();
+            var imageDateString = Request.Form["imageDate"].FirstOrDefault();
 
-            await _historyPostService.InsertHistoryPost(user.Id, title, description, image);
+            if (!DateOnly.TryParseExact(imageDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var imageDate))
+            {
+                throw new InvalidOperationException("Invalid image date");
+            }
+
+            await _historyPostService.InsertHistoryPost(user.Id, titleString, descriptionString, image, imageDate);
 
             return Ok();
         }

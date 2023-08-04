@@ -1,6 +1,11 @@
 ﻿import React, { useEffect, useState } from 'react';
 
-export function HistoryPostForVertical({ title, description, imageUrl, imageName, bookmarked, control, onClickDelete, onClickBookmark, onClickHistoryImage }) {
+export function HistoryPostForVertical({ title, description, imageUrl, imageName, imageDate, bookmarked, control, onClickDelete, onClickBookmark, onClickHistoryImage }) {
+
+    useEffect(() => {
+        console.log(imageDate);
+    });
+
     return (
         <div className={'card main-column'} style={{ height: '100%', width: '100%' }} >
             <div className={'padded'}
@@ -26,8 +31,8 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                         src={bookmarked ? './bookmarked.png' : './bookmark.png'} />
                 }
             </div>
-            <hr/>
-            {title && <h5 className={'padded'} style={{ overflowWrap: 'break-word' }}>{title}</h5> || !title && <br />}
+            {title && <hr />}
+            {title && <h5 className={'padded'} style={{ overflowWrap: 'break-word' }}>{title}</h5>}
             {
                 // Image
                 imageUrl &&
@@ -51,11 +56,11 @@ export function HistoryPostForVertical({ title, description, imageUrl, imageName
                 // Image loading
                 imageName && !imageUrl &&
                 <div style={{ backgroundColor: '#ccc', height: '400px', paddingTop: '200px' }}>
-                    <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
+                   <h3 style={{ direction: 'ltr', textAlign: 'center', verticalAlign: 'middle' }}>Loading...</h3>
                 </div>
             }
-            <hr />
-            {<text className={'padded language-direction'} style={{ paddingTop: '10px' }}><pre>{description}</pre></text>}
+            <h5 style={{ marginTop: '8px', marginBottom: '8px', marginLeft: '8px', marginRight: 'auto' }} ><b>{imageDate && imageDate !== '' ? imageDate : '01/01/1700'}</b></h5>
+            {description && <text className={'padded language-direction'} style={{ paddingTop: '10px' }}><pre>{description}</pre></text>}
         </div>
     );
 }

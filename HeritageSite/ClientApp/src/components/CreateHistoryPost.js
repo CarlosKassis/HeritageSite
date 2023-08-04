@@ -1,10 +1,11 @@
-﻿import React, { useState, useRef } from "react";
+﻿import React, { useState, useRef, useEffect } from "react";
 import MyAPI from "../MyAPI";
 import UploadImage from "./UploadImage";
 
 export function CreateHistoryPost({ loginInfo }) {
     const [title, setTitle] = useState(null);
     const [image, setImage] = useState(null);
+    const [imageDate, setImageDate] = useState(null);
     const [description, setDescription] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
 
@@ -18,6 +19,10 @@ export function CreateHistoryPost({ loginInfo }) {
         e.target.style.height = `${e.target.scrollHeight}px`;
     };
 
+    function onImageDateChange(e) {
+        setImageDate(e.target.value);
+    }
+
     function onSubmit(e) {
         e.preventDefault();
 
@@ -26,7 +31,9 @@ export function CreateHistoryPost({ loginInfo }) {
             return;
         }
 
-        MyAPI.submitHistoryPost(title, description, image, loginInfo.jwt).then(response => {
+        console.log(imageDate);
+
+        MyAPI.submitHistoryPost(title, description, image, imageDate, loginInfo.jwt).then(response => {
             location.reload();
         }).catch(error => {
             setImageUploadError(error);
@@ -46,11 +53,14 @@ export function CreateHistoryPost({ loginInfo }) {
 
                 <UploadImage onUploadImage={onUploadImage} />
 
-                <h5 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h5>
+                <h6 htmlFor="image-date" style={{ marginTop: '10px' }} >تاريخ التقاط الصورة:</h6>
+                <input id="image-date" type="date" style={{ marginLeft: 'auto', marginTop: '6px' }} onChange={onImageDateChange}></input>
+
+                <h6 htmlFor="description" style={{ marginTop: '10px' }} >وصف:</h6>
                 <textarea id="post-description" className={"create-history-post-input language-direction"} style={{ width: '100%', height: '40px', padding: '10px', overflow: 'hidden' }} onChange={handleDescriptionChange} />
 
                 {imageUploadError && <p style={{ color: '#f55', fontSize: '14px', marginTop: '5px' }}>{imageUploadError}</p>}
-                <button type="submit" style={{ marginTop: '10px', marginRight: 'auto'}}>أُنشر</button>
+                <button type="submit" style={{ marginTop: '10px', marginRight: 'auto', background: 'white' }}>أُنشر</button>
             </form>
         </div>
     );

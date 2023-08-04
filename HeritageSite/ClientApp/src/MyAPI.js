@@ -128,7 +128,7 @@ export default class MyAPI {
         throw await response.text();
     }
 
-    static async submitHistoryPost(title, description, image, jwt) {
+    static async submitHistoryPost(title, description, image, imageDate, jwt) {
 
         const formData = new FormData();
 
@@ -138,6 +138,10 @@ export default class MyAPI {
 
         if (description !== null && description !== '') {
             formData.append('description', description);
+        }
+
+        if (imageDate !== null && imageDate !== '') {
+            formData.append('imageDate', imageDate);
         }
 
         if (image !== null) {

@@ -2,6 +2,7 @@
 namespace HeritageSite.Services.Abstract
 {
     using SixLabors.ImageSharp;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using static HeritageSite.Services.Utils.Documents;
@@ -10,7 +11,7 @@ namespace HeritageSite.Services.Abstract
     {
         public Task<List<HistoryPostDocument>> GetFirstBatchLowerEqualThanIndex(int? index, int batchSize, string searchText = null);
 
-        public Task InsertHistoryPost(string userId, string title, string description, Image image);
+        public Task InsertHistoryPost(string userId, string title, string description, Image image, DateOnly? imageDate);
 
         public Task DeleteHistoryPost(string userId, long index, bool isAdmin);
 

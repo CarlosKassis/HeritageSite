@@ -4,7 +4,7 @@ import MyAPI from '../MyAPI';
 import { HistoryPostForGrid } from './HistoryPostForGrid';
 import { HistoryPostForVertical } from './HistoryPostForVertical';
 
-export function HistoryPost({ loginInfo, imageName, title, index, description, control, onClickBookmarkPost, bookmarked, onDeletePost, getImageUrl, containerViewMode }) {
+export function HistoryPost({ loginInfo, imageName, imageDate, title, index, description, control, onClickBookmarkPost, bookmarked, onDeletePost, getImageUrl, containerViewMode }) {
     const [imageUrl, setImageUrl] = useState(null);
 
     useEffect(() => {
@@ -59,6 +59,7 @@ export function HistoryPost({ loginInfo, imageName, title, index, description, c
             {containerViewMode == 'grid' && <HistoryPostForGrid imageName={imageName} imageUrl={imageUrl} onClickHistoryImage={onClickHistoryImage} />}
             {containerViewMode != 'grid' && <HistoryPostForVertical
                 imageUrl={imageUrl}
+                imageDate={imageDate}
                 control={control}
                 description={description}
                 title={title}

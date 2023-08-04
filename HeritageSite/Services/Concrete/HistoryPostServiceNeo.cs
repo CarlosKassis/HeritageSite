@@ -110,7 +110,7 @@ DESC LIMIT {batchSize}";
                 .ToList();
         }
 
-        public async Task InsertHistoryPost(string userId, string title, string description, Image image)
+        public async Task InsertHistoryPost(string userId, string title, string description, Image image, DateOnly? imageDate)
         {
             await CreateGraphUserIfDoesntExist(userId);
             string generatedFileName = GenerateUniqueFilename();
@@ -144,6 +144,7 @@ SET post.Index = newIndex
 SET post.Title = '{title}'
 SET post.Description = '{description}'
 SET post.ImageName = '{generatedFileName}'
+SET post.ImageDate = '{(imageDate.HasValue ? imageDate.Value.ToString("yyyy-MM-dd") : null)}'
 SET post.CreatedOn = {DateTimeOffset.UtcNow.ToUnixTimeSeconds()}");
             });
         }

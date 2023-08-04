@@ -44,7 +44,7 @@ namespace HeritageSite.Services.Utils
 
             public long CreatedOn { get; set; }
 
-            public long ImageDate { get; set; }
+            public string ImageDate { get; set; }
 
             public string Title { get; set; }
 

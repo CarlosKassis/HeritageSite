@@ -13,11 +13,11 @@ button {
     border: none;
     border-radius: 2px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-    padding: 4px 12px;
+    padding: 6px 22px;
 }
 
 .container {
-    min-width: 100%
+    min-width: 100%;
 }
 
 @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
@@ -39,7 +39,7 @@ button {
     user-select: none;
 }
 
-text, pre {
+text, pre, h1, h2, h3, h4, h5, h6 {
     font-family: 'Droid Arabic Kufi', sans-serif;
 }
 
@@ -120,7 +120,7 @@ pre {
 }
 
 .history-button {
-    height: 48px;
+    height: 36px;
     filter: drop-shadow(0.5px 0.5px 1px #555);
 }
 

@@ -29,7 +29,7 @@ namespace HeritageSite.Services.Utils
         {
             public string ImageName { get; set; }
 
-            public BsonDateTime ImageDate { get; set; }
+            public string ImageDate { get; set; }
 
             public string Title { get; set; }
 
